@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FENDI STORE</title>
+  
+  <!-- Preload Gambar Profil & Banner biar langsung muncul tanpa delay -->
+  <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
+
   <!-- Menghubungkan File CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,7 +20,7 @@
       <!-- Kiri: Foto Profil & Nama FENDI STORE -->
       <div class="profile-section">
         <div class="profile-avatar">
-          <img src="profile.webp" alt="Foto Profil" class="profile-img">
+          <img src="profile.webp" alt="Foto Profil" class="profile-img" fetchpriority="high" loading="eager">
         </div>
         <div class="brand-wrapper">
           <span class="typing-text">FENDI STORE</span>
@@ -47,10 +52,10 @@
     
     <!-- BANNER PALING ATAS (HOME) -->
     <div class="banner-container">
-      <img src="banner1.png" alt="Banner Utama" class="banner-img">
+      <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager">
     </div>
 
-    <!-- AREA KONTEN LAINNYA -->
+    <!-- AREA KONTEN UTAMA -->
     <div class="accent-frame">
       <div class="corner-line top-left"></div>
       <div class="corner-line top-right"></div>

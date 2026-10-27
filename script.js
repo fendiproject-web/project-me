@@ -1,4 +1,4 @@
-// Preload gambar profil dan banner langsung ke memori browser
+// Preload gambar profil dan banner
 const avatarPreload = new Image();
 avatarPreload.src = 'profile.webp';
 
@@ -14,7 +14,7 @@ themeToggleBtn.addEventListener('click', () => {
   body.classList.toggle('dark-mode');
 });
 
-// --- FITUR 2: PERPINDAHAN HALAMAN TAB & INDIKATOR BOTTOM NAV ---
+// --- FITUR 2: PERPINDAHAN HALAMAN UTAMA (BOTTOM NAV) ---
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -24,7 +24,6 @@ function updateIndicator(index) {
 }
 
 function switchTab(targetTabId, navIndex) {
-  // 1. Reset status active di semua tombol & tab content
   navItems.forEach(nav => {
     nav.classList.remove('active');
     const icon = nav.querySelector('.icon-box');
@@ -35,12 +34,10 @@ function switchTab(targetTabId, navIndex) {
     tab.classList.remove('active');
   });
 
-  // 2. Aktifkan nav item yang sesuai
   const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
   if (targetNavItem) {
     targetNavItem.classList.add('active');
 
-    // Animasi bounce
     const currentIcon = targetNavItem.querySelector('.icon-box');
     if (currentIcon) {
       currentIcon.classList.add('bounce');
@@ -50,17 +47,14 @@ function switchTab(targetTabId, navIndex) {
     }
   }
 
-  // 3. Tampilkan tab content yang dipilih
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) {
     targetTab.classList.add('active');
   }
 
-  // 4. Geser indikator kapsul
   updateIndicator(navIndex);
 }
 
-// Event listener klik tombol navigasi bawah
 navItems.forEach((item) => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
@@ -70,13 +64,32 @@ navItems.forEach((item) => {
   });
 });
 
-// Event listener tombol pemicu antar tab (seperti Cek Keaslian Admin)
+// Event trigger dari tombol Home ke DataMe
 const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
 switchTabTriggers.forEach((trigger) => {
   trigger.addEventListener('click', function() {
     const targetTabId = this.getAttribute('data-target-tab');
     const navIndex = parseInt(this.getAttribute('data-nav-index'));
     switchTab(targetTabId, navIndex);
+  });
+});
+
+// --- FITUR 3: SUB TABS PRODUK (Semua, Free Fire, Mobile Legends) ---
+const subTabItems = document.querySelectorAll('.sub-tab-item');
+const subTabContents = document.querySelectorAll('.sub-tab-content');
+
+subTabItems.forEach((btn) => {
+  btn.addEventListener('click', function() {
+    const targetSub = this.getAttribute('data-sub');
+
+    subTabItems.forEach(b => b.classList.remove('active'));
+    subTabContents.forEach(c => c.classList.remove('active'));
+
+    this.classList.add('active');
+    const activeContent = document.getElementById(`sub-${targetSub}`);
+    if (activeContent) {
+      activeContent.classList.add('active');
+    }
   });
 });
 

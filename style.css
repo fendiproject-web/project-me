@@ -235,39 +235,23 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.action-row .btn-action {
-  flex: 1;
-}
-
-.btn-action svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.btn-action:active {
-  transform: scale(0.97);
-}
+.action-row .btn-action { flex: 1; }
+.btn-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+.btn-action:active { transform: scale(0.97); }
 
 .btn-wa {
   border-color: rgba(37, 211, 102, 0.3);
   background: rgba(37, 211, 102, 0.08);
   color: #25d366;
 }
-
-.btn-wa svg {
-  stroke: #25d366;
-}
+.btn-wa svg { stroke: #25d366; }
 
 .btn-verify {
   border-color: var(--border-color);
   background: var(--card-bg);
   color: var(--text-main);
 }
-
-.btn-verify svg {
-  stroke: var(--text-main);
-}
+.btn-verify svg { stroke: var(--text-main); }
 
 .btn-group {
   width: 100%;
@@ -275,10 +259,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   background: var(--card-bg);
   color: var(--text-main);
 }
-
-.btn-group svg {
-  stroke: var(--text-main);
-}
+.btn-group svg { stroke: var(--text-main); }
 
 /* --- SUB TABS DI MENU PRODUK --- */
 .sub-tab-bar {
@@ -310,33 +291,195 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.sub-tab-content {
-  display: none;
+/* --- PRODUCT ACCOUNT CARDS GRID --- */
+.product-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
 }
 
-.sub-tab-content.active {
+.account-card {
   display: flex;
   flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.account-media {
+  position: relative;
   width: 100%;
+  height: 190px;
+  background: #121214;
+}
+
+.account-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-badge-group {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge-code {
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.badge-cat {
+  background: var(--pill-bg);
+  color: var(--text-main);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--pill-border);
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+}
+
+.account-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-label {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.account-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.account-specs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.spec-item {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: var(--text-sub);
+}
+
+.account-buy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  color: #25d366;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
+.account-buy-btn:active { transform: scale(0.98); }
+
+/* --- FORM ADMIN IN TAB AKUN --- */
+.admin-panel-card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-panel-card h3 { font-size: 16px; font-weight: 700; }
+.admin-subtext { font-size: 11px; color: var(--text-sub); }
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+body.light-mode .form-group input, 
+body.light-mode .form-group select, 
+body.light-mode .form-group textarea {
+  background: #ffffff;
+}
+
+.btn-submit-post {
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 6px;
 }
 
 /* --- DATAME CONTACT CARDS --- */
-.datame-header {
-  text-align: center;
-  margin-bottom: 4px;
-}
-
-.datame-header h2 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.datame-header p {
-  font-size: 12px;
-  color: var(--text-sub);
-}
+.datame-header { text-align: center; margin-bottom: 4px; }
+.datame-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.datame-header p { font-size: 12px; color: var(--text-sub); }
 
 .contact-list {
   display: flex;
@@ -357,12 +500,9 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-main);
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.contact-card:active {
-  transform: scale(0.98);
-}
+.contact-card:active { transform: scale(0.98); }
 
 .card-icon {
   width: 40px;
@@ -376,12 +516,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-main);
 }
 
-.card-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--text-main);
-}
-
+.card-icon svg { width: 22px; height: 22px; stroke: var(--text-main); }
 .wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
 .wa-icon svg { stroke: #25d366; }
 
@@ -392,83 +527,9 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   min-width: 0;
 }
 
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.card-detail {
-  font-size: 11px;
-  color: var(--text-sub);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-arrow {
-  font-size: 14px;
-  color: var(--text-sub);
-}
-
-/* FRAME PLACEHOLDER KOSONG */
-.accent-frame {
-  width: 100%;
-  min-height: 220px;
-  border: 1px dashed var(--border-color);
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--card-bg);
-}
-
-.corner-line {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: var(--accent-color);
-  border-style: solid;
-}
-
-.top-left { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-top-left-radius: 4px; }
-.top-right { top: -1px; right: -1px; border-width: 2px 2px 0 0; border-top-right-radius: 4px; }
-.bottom-left { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; border-bottom-left-radius: 4px; }
-.bottom-right { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-bottom-right-radius: 4px; }
-
-.empty-state {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 20px;
-}
-
-.pulse-ring {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--accent-color);
-  animation: pulse 2s infinite ease-in-out;
-  margin-bottom: 6px;
-}
-
-@keyframes pulse {
-  0% { transform: scale(0.9); opacity: 0.3; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-  100% { transform: scale(0.9); opacity: 0.3; }
-}
-
-.empty-state h2 {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.empty-state p {
-  font-size: 12px;
-  color: var(--text-sub);
-}
+.card-title { font-size: 13px; font-weight: 600; }
+.card-detail { font-size: 11px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-arrow { font-size: 14px; color: var(--text-sub); }
 
 /* --- BOTTOM NAV BAR --- */
 .bottom-nav-wrapper {
@@ -529,13 +590,8 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   transition: stroke 0.3s ease;
 }
 
-.nav-item.active {
-  color: var(--text-main);
-}
-
-.nav-item.active .icon-box svg {
-  stroke: var(--text-main);
-}
+.nav-item.active { color: var(--text-main); }
+.nav-item.active .icon-box svg { stroke: var(--text-main); }
 
 .nav-indicator {
   position: absolute;

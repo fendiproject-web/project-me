@@ -14,9 +14,10 @@ themeToggleBtn.addEventListener('click', () => {
   body.classList.toggle('dark-mode');
 });
 
-// --- FITUR 2: NAVIGASI GESER & ANIMASI MEMBAL (BOUNCE) ---
+// --- FITUR 2: PERPINDAHAN HALAMAN TAB & INDIKATOR BOTTOM NAV ---
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
+const tabContents = document.querySelectorAll('.tab-content');
 
 function updateIndicator(index) {
   navIndicator.style.transform = `translateX(${index * 100}%)`;
@@ -24,17 +25,30 @@ function updateIndicator(index) {
 
 navItems.forEach((item) => {
   item.addEventListener('click', function(e) {
-    // Reset status active dan animasi bounce dari ikon lain
+    e.preventDefault(); // Mencegah lompatan scroll default browser
+
+    // 1. Reset kelas active di semua tombol nav & tab content
     navItems.forEach(nav => {
       nav.classList.remove('active');
       const icon = nav.querySelector('.icon-box');
       if (icon) icon.classList.remove('bounce');
     });
 
-    // Aktifkan menu yang diklik
+    tabContents.forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    // 2. Aktifkan menu bottom nav yang diklik
     this.classList.add('active');
 
-    // Jalankan animasi bounce pada ikon
+    // 3. Tampilkan halaman tab yang sesuai
+    const targetId = this.getAttribute('data-target');
+    const targetTab = document.getElementById(targetId);
+    if (targetTab) {
+      targetTab.classList.add('active');
+    }
+
+    // 4. Jalankan animasi bounce pada ikon
     const currentIcon = this.querySelector('.icon-box');
     if (currentIcon) {
       currentIcon.classList.add('bounce');
@@ -44,7 +58,7 @@ navItems.forEach((item) => {
       }, { once: true });
     }
 
-    // Geser indikator kapsul cembung
+    // 5. Geser indikator kapsul cembung
     const index = parseInt(this.getAttribute('data-index'));
     updateIndicator(index);
   });

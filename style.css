@@ -12,6 +12,7 @@
   --accent-color: #ffffff;
   --accent-purple: #ffffff;
   --wa-green: #25d366;
+  --danger-red: #ef4444;
 }
 
 /* TEMA TERANG (LIGHT MODE - UNGU MUDA PASTEL) */
@@ -28,6 +29,7 @@ body.light-mode {
   --accent-color: #c084fc;
   --accent-purple: #a855f7;
   --wa-green: #128c7e;
+  --danger-red: #dc2626;
 }
 
 /* RESET UTAMA */
@@ -52,7 +54,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR --- */
+/* TOP BAR */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -159,7 +161,7 @@ body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
 body.light-mode .moon-icon { display: block; stroke: #475569; }
 
-/* --- KONTEN UTAMA & TAB MANAGER --- */
+/* KONTEN UTAMA & TAB MANAGER */
 .main-content {
   flex: 1;
   width: 100%;
@@ -261,7 +263,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* --- SUB TABS DI MENU PRODUK --- */
+/* SUB TABS DI MENU PRODUK */
 .sub-tab-bar {
   display: flex;
   gap: 8px;
@@ -291,7 +293,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* --- PRODUCT ACCOUNT CARDS GRID --- */
+/* PRODUCT ACCOUNT CARDS GRID */
 .product-cards-grid {
   display: flex;
   flex-direction: column;
@@ -367,16 +369,8 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   align-items: center;
 }
 
-.price-label {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-
-.account-price {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text-main);
-}
+.price-label { font-size: 11px; color: var(--text-sub); }
+.account-price { font-size: 16px; font-weight: 800; color: var(--text-main); }
 
 .account-specs-list {
   display: flex;
@@ -414,7 +408,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 .account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
 .account-buy-btn:active { transform: scale(0.98); }
 
-/* --- FORM ADMIN IN TAB AKUN --- */
+/* FORM ADMIN & KELOLA PRODUK DI TAB AKUN */
 .admin-panel-card {
   width: 100%;
   background: var(--card-bg);
@@ -476,7 +470,44 @@ body.light-mode .form-group textarea {
   margin-top: 6px;
 }
 
-/* --- DATAME CONTACT CARDS --- */
+/* LIST KELOLA HAPUS PRODUK */
+.admin-manage-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.manage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.manage-title { font-size: 12px; font-weight: 700; }
+.manage-sub { font-size: 11px; color: var(--text-sub); }
+
+.btn-delete-item {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--danger-red);
+  color: var(--danger-red);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* DATAME CONTACT CARDS */
 .datame-header { text-align: center; margin-bottom: 4px; }
 .datame-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 .datame-header p { font-size: 12px; color: var(--text-sub); }
@@ -531,7 +562,7 @@ body.light-mode .form-group textarea {
 .card-detail { font-size: 11px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-arrow { font-size: 14px; color: var(--text-sub); }
 
-/* --- BOTTOM NAV BAR --- */
+/* BOTTOM NAV BAR */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;
@@ -617,7 +648,7 @@ body.light-mode .form-group textarea {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* ANIMASI MEMBAL (BOUNCE) IKON */
+/* ANIMASI MEMBAL IKON */
 @keyframes iconBounce {
   0% { transform: scale(1); }
   30% { transform: scale(0.82); }

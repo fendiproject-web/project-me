@@ -37,7 +37,7 @@ navItems.forEach((item) => {
       }, { once: true });
     }
 
-    // Geser indikator kapsul
+    // Geser indikator kapsul cembung
     const index = parseInt(this.getAttribute('data-index'));
     updateIndicator(index);
   });

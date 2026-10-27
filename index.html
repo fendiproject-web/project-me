@@ -68,7 +68,7 @@
             <span>Chat Wa Admin</span>
           </a>
 
-          <!-- Tombol Cek Keaslian Admin (Pindah ke Tab DataMe) -->
+          <!-- Tombol Cek Keaslian Admin -->
           <button type="button" class="btn-action btn-verify switch-tab-trigger" data-target-tab="tab-datame" data-nav-index="2">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -91,23 +91,45 @@
       </div>
     </div>
 
-    <!-- HALAMAN 2: PRODUK -->
+    <!-- HALAMAN 2: PRODUK (FREE FIRE & MOBILE LEGENDS) -->
     <div id="tab-produk" class="tab-content">
-      <div class="accent-frame">
-        <div class="corner-line top-left"></div>
-        <div class="corner-line top-right"></div>
-        <div class="corner-line bottom-left"></div>
-        <div class="corner-line bottom-right"></div>
-        
-        <div class="empty-state">
-          <div class="pulse-ring"></div>
-          <h2>Halaman Produk</h2>
-          <p>Daftar produk kamu bakal ditaruh di sini.</p>
-        </div>
+      <div class="section-header">
+        <h2>Kategori Game</h2>
+        <p>Pilih game untuk melakukan transaksi top up</p>
+      </div>
+
+      <div class="product-grid">
+        <!-- Produk 1: Free Fire -->
+        <a href="https://wa.me/6285854325988?text=Halo%20Admin,%20mau%20topup%20Free%20Fire" target="_blank" class="product-card">
+          <div class="product-icon ff-bg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+            </svg>
+          </div>
+          <div class="product-info">
+            <span class="product-title">Free Fire</span>
+            <span class="product-desc">Top Up Diamond & Membership</span>
+          </div>
+          <span class="product-badge">Top Up</span>
+        </a>
+
+        <!-- Produk 2: Mobile Legends -->
+        <a href="https://wa.me/6285854325988?text=Halo%20Admin,%20mau%20topup%20Mobile%20Legends" target="_blank" class="product-card">
+          <div class="product-icon ml-bg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="product-info">
+            <span class="product-title">Mobile Legends</span>
+            <span class="product-desc">Top Up Diamond & Weekly Pass</span>
+          </div>
+          <span class="product-badge">Top Up</span>
+        </a>
       </div>
     </div>
 
-    <!-- HALAMAN 3: DATAME (SOSIAL MEDIA & KONTAK RESMI) -->
+    <!-- HALAMAN 3: DATAME -->
     <div id="tab-datame" class="tab-content">
       <div class="datame-header">
         <h2>Kontak & Sosmed Resmi</h2>

@@ -1,7 +1,7 @@
 /* --- TEMA VARIABLES --- */
 :root {
   --bg-color: #0b0d14;
-  --card-bg: rgba(20, 24, 36, 0.6);
+  --card-bg: rgba(20, 24, 36, 0.65);
   --text-main: #f1f5f9;
   --text-sub: #64748b;
   --border-color: rgba(255, 255, 255, 0.08);
@@ -10,11 +10,13 @@
   --pill-bg: rgba(255, 255, 255, 0.1);
   --pill-border: rgba(255, 255, 255, 0.16);
   --accent-color: #38bdf8;
+  --accent-purple: #8a2be2;
+  --wa-green: #25d366;
 }
 
 body.light-mode {
   --bg-color: #f8fafc;
-  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.8);
   --text-main: #0f172a;
   --text-sub: #94a3b8;
   --border-color: rgba(0, 0, 0, 0.07);
@@ -23,9 +25,11 @@ body.light-mode {
   --pill-bg: rgba(0, 0, 0, 0.07);
   --pill-border: rgba(0, 0, 0, 0.12);
   --accent-color: #0284c7;
+  --accent-purple: #6c5ce7;
+  --wa-green: #128c7e;
 }
 
-/* RESET UTAMA (Hapus kotak-kotak bawaan browser) */
+/* RESET UTAMA */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -47,7 +51,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR (RINGKAS & CEMBUNG) --- */
+/* --- TOP BAR --- */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -118,24 +122,11 @@ body {
 }
 
 @keyframes typeLoop {
-  0% {
-    width: 0;
-    opacity: 0.3;
-  }
-  15% {
-    opacity: 1;
-  }
-  50% {
-    width: 100%;
-  }
-  80% {
-    width: 100%;
-    opacity: 1;
-  }
-  95%, 100% {
-    width: 0;
-    opacity: 0.3;
-  }
+  0% { width: 0; opacity: 0.3; }
+  15% { opacity: 1; }
+  50% { width: 100%; }
+  80% { width: 100%; opacity: 1; }
+  95%, 100% { width: 0; opacity: 0.3; }
 }
 
 @keyframes caretBlink {
@@ -167,7 +158,7 @@ body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
 body.light-mode .moon-icon { display: block; stroke: #475569; }
 
-/* --- KONTEN UTAMA & MANAJEMEN TAB --- */
+/* --- KONTEN UTAMA & TAB MANAGER --- */
 .main-content {
   flex: 1;
   width: 100%;
@@ -179,22 +170,19 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   align-items: center;
 }
 
-/* Sembunyikan semua tab secara default */
 .tab-content {
   display: none;
   width: 100%;
 }
 
-/* Tampilkan hanya tab yang aktif */
 .tab-content.active {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  align-items: center;
   width: 100%;
 }
 
-/* BANNER PALING ATAS (OTOMATIS SESUAI PROPORSI FOTO) */
+/* BANNER CONTAINER */
 .banner-container {
   width: 100%;
   border-radius: 20px;
@@ -213,6 +201,183 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   object-fit: cover;
 }
 
+/* TOMBOL AKSI CEPAT DI HOME */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.action-row .btn-action {
+  flex: 1;
+}
+
+.btn-action svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn-action:active {
+  transform: scale(0.97);
+}
+
+.btn-wa {
+  border-color: rgba(37, 211, 102, 0.3);
+  background: rgba(37, 211, 102, 0.08);
+  color: #25d366;
+}
+
+.btn-wa svg {
+  stroke: #25d366;
+}
+
+.btn-verify {
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--accent-color);
+}
+
+.btn-verify svg {
+  stroke: var(--accent-color);
+}
+
+.btn-group {
+  width: 100%;
+  border-color: rgba(138, 43, 226, 0.3);
+  background: rgba(138, 43, 226, 0.08);
+  color: #a855f7;
+}
+
+.btn-group svg {
+  stroke: #a855f7;
+}
+
+/* --- DATAME CONTACT CARDS --- */
+.datame-header {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.datame-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.datame-header p {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--text-main);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-card:active {
+  transform: scale(0.98);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+.wa-icon svg { stroke: #25d366; }
+
+.group-icon { background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+.group-icon svg { stroke: #a855f7; }
+
+.tiktok-icon { background: rgba(255, 0, 80, 0.12); color: #ff0050; }
+.tiktok-icon svg { stroke: #ff0050; }
+
+.ig-icon { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
+.ig-icon svg { stroke: #e1306c; }
+
+.tele-icon { background: rgba(0, 136, 204, 0.12); color: #0088cc; }
+.tele-icon svg { stroke: #0088cc; }
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.card-detail {
+  font-size: 11px;
+  color: var(--text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-arrow {
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+/* FRAME PLACEHOLDER KOSONG */
 .accent-frame {
   width: 100%;
   min-height: 220px;
@@ -272,7 +437,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-/* --- BOTTOM NAV BAR (CEMBUNG & MEMBULAT SAAT AKTIF) --- */
+/* --- BOTTOM NAV BAR --- */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;

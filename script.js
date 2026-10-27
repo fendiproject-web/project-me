@@ -1,3 +1,10 @@
+// Preload gambar profil dan banner langsung ke memori browser
+const avatarPreload = new Image();
+avatarPreload.src = 'profile.webp';
+
+const bannerPreload = new Image();
+bannerPreload.src = 'banner1.png';
+
 // --- FITUR 1: TOGGLE TEMA TERANG / GELAP ---
 const themeToggleBtn = document.getElementById('themeToggle');
 const body = document.body;

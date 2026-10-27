@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FENDI STORE</title>
   
-  <!-- Preload Gambar Profil & Banner biar langsung muncul tanpa delay -->
+  <!-- Preload Gambar Profil & Banner -->
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
@@ -47,30 +47,51 @@
     </header>
   </div>
 
-  <!-- ================= KONTEN UTAMA (WADAH HALAMAN TAB) ================= -->
+  <!-- ================= KONTEN UTAMA ================= -->
   <main class="main-content">
     
-    <!-- HALAMAN 1: HOME (HANYA DI SINI BANNER DITAMPILKAN) -->
+    <!-- HALAMAN 1: HOME -->
     <div id="tab-home" class="tab-content active">
+      <!-- BANNER HOME -->
       <div class="banner-container">
         <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager">
       </div>
 
-      <div class="accent-frame">
-        <div class="corner-line top-left"></div>
-        <div class="corner-line top-right"></div>
-        <div class="corner-line bottom-left"></div>
-        <div class="corner-line bottom-right"></div>
-        
-        <div class="empty-state">
-          <div class="pulse-ring"></div>
-          <h2>Konten Home Kosong</h2>
-          <p>Isi halaman utama kamu akan muncul di sini.</p>
+      <!-- TOMBOL AKSI CEPAT DI BAWAH BANNER -->
+      <div class="home-actions">
+        <div class="action-row">
+          <!-- Tombol Chat WA Admin Japost -->
+          <a href="https://wa.me/6285854325988" target="_blank" class="btn-action btn-wa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            <span>Chat Wa Admin</span>
+          </a>
+
+          <!-- Tombol Cek Keaslian Admin (Pindah ke Tab DataMe) -->
+          <button type="button" class="btn-action btn-verify switch-tab-trigger" data-target-tab="tab-datame" data-nav-index="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            <span>Cek Keaslian Admin</span>
+          </button>
         </div>
+
+        <!-- Tombol Grup WhatsApp JB -->
+        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="btn-action btn-group">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Grup Whatsapp</span>
+        </a>
       </div>
     </div>
 
-    <!-- HALAMAN 2: PRODUK (TANPA BANNER) -->
+    <!-- HALAMAN 2: PRODUK -->
     <div id="tab-produk" class="tab-content">
       <div class="accent-frame">
         <div class="corner-line top-left"></div>
@@ -86,23 +107,107 @@
       </div>
     </div>
 
-    <!-- HALAMAN 3: DATAME (TANPA BANNER) -->
+    <!-- HALAMAN 3: DATAME (SOSIAL MEDIA & KONTAK RESMI) -->
     <div id="tab-datame" class="tab-content">
-      <div class="accent-frame">
-        <div class="corner-line top-left"></div>
-        <div class="corner-line top-right"></div>
-        <div class="corner-line bottom-left"></div>
-        <div class="corner-line bottom-right"></div>
-        
-        <div class="empty-state">
-          <div class="pulse-ring"></div>
-          <h2>Halaman DataMe</h2>
-          <p>Informasi atau data kamu ditaruh di sini.</p>
-        </div>
+      <div class="datame-header">
+        <h2>Kontak & Sosmed Resmi</h2>
+        <p>Gunakan kontak di bawah untuk memastikan keaslian transaksi.</p>
+      </div>
+
+      <div class="contact-list">
+        <!-- WhatsApp Japost -->
+        <a href="https://wa.me/6285854325988" target="_blank" class="contact-card">
+          <div class="card-icon wa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">WhatsApp Japost</span>
+            <span class="card-detail">085854325988</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- WhatsApp Rekber -->
+        <a href="https://wa.me/6281553801021" target="_blank" class="contact-card">
+          <div class="card-icon wa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">WhatsApp Rekber</span>
+            <span class="card-detail">081553801021</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- Grup Jb -->
+        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="contact-card">
+          <div class="card-icon group-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Grup Jb WhatsApp</span>
+            <span class="card-detail">Gabung Komunitas Jual Beli</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://tiktok.com/@fenditiktok__" target="_blank" class="contact-card">
+          <div class="card-icon tiktok-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">TikTok Resmi</span>
+            <span class="card-detail">@fenditiktok__</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://instagram.com/fendi.store_" target="_blank" class="contact-card">
+          <div class="card-icon ig-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Instagram</span>
+            <span class="card-detail">@fendi.store_</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- Telegram / Testi -->
+        <a href="https://t.me/testifendistore" target="_blank" class="contact-card">
+          <div class="card-icon tele-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Telegram / Testimoni</span>
+            <span class="card-detail">t.me/testifendistore</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- HALAMAN 4: AKUN (TANPA BANNER) -->
+    <!-- HALAMAN 4: AKUN -->
     <div id="tab-akun" class="tab-content">
       <div class="accent-frame">
         <div class="corner-line top-left"></div>

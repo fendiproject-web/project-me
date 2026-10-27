@@ -70,7 +70,7 @@ navItems.forEach((item) => {
   });
 });
 
-// Event listener tombol "Cek Keaslian Admin" di Home
+// Event listener tombol pemicu antar tab (seperti Cek Keaslian Admin)
 const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
 switchTabTriggers.forEach((trigger) => {
   trigger.addEventListener('click', function() {

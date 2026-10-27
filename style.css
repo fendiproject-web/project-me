@@ -193,7 +193,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 
 .banner-img {
   width: 100%;
-  height: auto; /* Otomatis mengikuti tinggi asli foto tanpa terpotong */
+  height: auto;
   display: block;
   border-radius: 20px;
   object-fit: cover;
@@ -258,7 +258,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-/* --- BOTTOM NAV BAR (CEMBUNG & LEBIH MEMBULAT SAAT AKTIF) --- */
+/* --- BOTTOM NAV BAR (CEMBUNG & MEMBULAT SAAT AKTIF) --- */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;

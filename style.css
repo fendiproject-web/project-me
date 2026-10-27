@@ -63,7 +63,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 18px; /* Ukuran top bar diperbesar */
+  padding: 8px 16px;
   width: 100%;
   max-width: 410px;
   background: var(--nav-bg);
@@ -77,30 +77,35 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0; /* Mencegah profil tergepengkan saat animasi teks */
 }
 
-/* Avatar Polos Bersih tanpa Garis/Titik Status */
+/* Container Profil - Dibuat Fleksibel & Tidak Memotong Gambar */
 .profile-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px; /* Melengkung halus agar gambar persegi/lingkaran tetap utuh */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  overflow: hidden;
 }
 
+/* Gambar Profil - Tampil Utuh Tanpa Terpotong (contain) */
 .profile-img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain; /* Menjaga seluruh gambar/logo tampil utuh 100% */
+  border-radius: 10px;
 }
 
 /* Animasi Ketik Smooth "FENDI STORE" (1 per 1 Berulang) */
 .brand-wrapper {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .typing-text {
@@ -124,14 +129,14 @@ body {
     opacity: 1;
   }
   50% {
-    width: 100%; /* Selesai mengetik "FENDI STORE" */
+    width: 100%;
   }
   80% {
-    width: 100%; /* Tahan teks sejenak */
+    width: 100%;
     opacity: 1;
   }
   95%, 100% {
-    width: 0;    /* Reset balik ke awal dengan halus */
+    width: 0;
     opacity: 0.3;
   }
 }
@@ -152,6 +157,7 @@ body {
   align-items: center;
   justify-content: center;
   color: var(--text-main);
+  flex-shrink: 0;
 }
 
 .theme-toggle-btn svg {
@@ -318,7 +324,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   content: '';
   width: 92%;
   height: 100%;
-  border-radius: 26px; /* Dibuat lebih cembung & membulat pas */
+  border-radius: 26px;
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);

@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <!-- HALAMAN 2: PRODUK (SUB TABS MURNI) -->
+    <!-- HALAMAN 2: PRODUK -->
     <div id="tab-produk" class="tab-content">
       <!-- SUB TABS BAR -->
       <div class="sub-tab-bar">
@@ -100,52 +100,9 @@
         <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
       </div>
 
-      <!-- ISI KONTEN SUB TAB: SEMUA -->
-      <div id="sub-all" class="sub-tab-content active">
-        <div class="accent-frame">
-          <div class="corner-line top-left"></div>
-          <div class="corner-line top-right"></div>
-          <div class="corner-line bottom-left"></div>
-          <div class="corner-line bottom-right"></div>
-          
-          <div class="empty-state">
-            <div class="pulse-ring"></div>
-            <h2>Semua Produk</h2>
-            <p>Daftar semua produk akan ditaruh di sini.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ISI KONTEN SUB TAB: FREE FIRE -->
-      <div id="sub-ff" class="sub-tab-content">
-        <div class="accent-frame">
-          <div class="corner-line top-left"></div>
-          <div class="corner-line top-right"></div>
-          <div class="corner-line bottom-left"></div>
-          <div class="corner-line bottom-right"></div>
-          
-          <div class="empty-state">
-            <div class="pulse-ring"></div>
-            <h2>Produk Free Fire</h2>
-            <p>Daftar produk Free Fire akan ditaruh di sini.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ISI KONTEN SUB TAB: MOBILE LEGENDS -->
-      <div id="sub-ml" class="sub-tab-content">
-        <div class="accent-frame">
-          <div class="corner-line top-left"></div>
-          <div class="corner-line top-right"></div>
-          <div class="corner-line bottom-left"></div>
-          <div class="corner-line bottom-right"></div>
-          
-          <div class="empty-state">
-            <div class="pulse-ring"></div>
-            <h2>Produk Mobile Legends</h2>
-            <p>Daftar produk Mobile Legends akan ditaruh di sini.</p>
-          </div>
-        </div>
+      <!-- DAFTAR AKUN PRODUK DITERBITKAN DARI JS -->
+      <div id="product-list-container" class="product-cards-grid">
+        <!-- Kartu produk akan dirender secara otomatis lewat script.js -->
       </div>
     </div>
 
@@ -249,19 +206,43 @@
       </div>
     </div>
 
-    <!-- HALAMAN 4: AKUN -->
+    <!-- HALAMAN 4: AKUN (PANEL INPUT POSTINGAN AKUN BARU) -->
     <div id="tab-akun" class="tab-content">
-      <div class="accent-frame">
-        <div class="corner-line top-left"></div>
-        <div class="corner-line top-right"></div>
-        <div class="corner-line bottom-left"></div>
-        <div class="corner-line bottom-right"></div>
-        
-        <div class="empty-state">
-          <div class="pulse-ring"></div>
-          <h2>Halaman Akun</h2>
-          <p>Pengaturan dan profil akun ada di sini.</p>
-        </div>
+      <div class="admin-panel-card">
+        <h3>Tambah Postingan Akun</h3>
+        <p class="admin-subtext">Isi form ini untuk menambahkan postingan akun baru ke tab Produk.</p>
+
+        <form id="add-product-form" class="admin-form">
+          <div class="form-group">
+            <label for="prod-category">Kategori Game</label>
+            <select id="prod-category" required>
+              <option value="ff">Free Fire</option>
+              <option value="ml">Mobile Legends</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="prod-code">Nomor Urut / Kode Akun</label>
+            <input type="text" id="prod-code" placeholder="Contoh: #FF-01 atau #ML-02" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prod-price">Harga (Rp)</label>
+            <input type="text" id="prod-price" placeholder="Contoh: 150.000" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prod-image">Nama File / URL Foto Akun</label>
+            <input type="text" id="prod-image" placeholder="Contoh: ff1.png atau https://link-gambar" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prod-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
+            <textarea id="prod-specs" rows="3" placeholder="Contoh: Vault Rame, Old Skin, Diamond 150, Single Log VK" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-post">+ Upload Akun Produk</button>
+        </form>
       </div>
     </div>
 

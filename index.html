@@ -47,25 +47,74 @@
     </header>
   </div>
 
-  <!-- ================= KONTEN UTAMA ================= -->
+  <!-- ================= KONTEN UTAMA (WADAH HALAMAN TAB) ================= -->
   <main class="main-content">
     
-    <!-- BANNER PALING ATAS (HOME) -->
-    <div class="banner-container">
-      <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager">
+    <!-- HALAMAN 1: HOME (HANYA DI SINI BANNER DITAMPILKAN) -->
+    <div id="tab-home" class="tab-content active">
+      <div class="banner-container">
+        <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager">
+      </div>
+
+      <div class="accent-frame">
+        <div class="corner-line top-left"></div>
+        <div class="corner-line top-right"></div>
+        <div class="corner-line bottom-left"></div>
+        <div class="corner-line bottom-right"></div>
+        
+        <div class="empty-state">
+          <div class="pulse-ring"></div>
+          <h2>Konten Home Kosong</h2>
+          <p>Isi halaman utama kamu akan muncul di sini.</p>
+        </div>
+      </div>
     </div>
 
-    <!-- AREA KONTEN UTAMA -->
-    <div class="accent-frame">
-      <div class="corner-line top-left"></div>
-      <div class="corner-line top-right"></div>
-      <div class="corner-line bottom-left"></div>
-      <div class="corner-line bottom-right"></div>
-      
-      <div class="empty-state">
-        <div class="pulse-ring"></div>
-        <h2>Area Utama Kosong</h2>
-        <p>Siap diisi dengan konten atau fitur kamu nanti.</p>
+    <!-- HALAMAN 2: PRODUK (TANPA BANNER) -->
+    <div id="tab-produk" class="tab-content">
+      <div class="accent-frame">
+        <div class="corner-line top-left"></div>
+        <div class="corner-line top-right"></div>
+        <div class="corner-line bottom-left"></div>
+        <div class="corner-line bottom-right"></div>
+        
+        <div class="empty-state">
+          <div class="pulse-ring"></div>
+          <h2>Halaman Produk</h2>
+          <p>Daftar produk kamu bakal ditaruh di sini.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HALAMAN 3: DATAME (TANPA BANNER) -->
+    <div id="tab-datame" class="tab-content">
+      <div class="accent-frame">
+        <div class="corner-line top-left"></div>
+        <div class="corner-line top-right"></div>
+        <div class="corner-line bottom-left"></div>
+        <div class="corner-line bottom-right"></div>
+        
+        <div class="empty-state">
+          <div class="pulse-ring"></div>
+          <h2>Halaman DataMe</h2>
+          <p>Informasi atau data kamu ditaruh di sini.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HALAMAN 4: AKUN (TANPA BANNER) -->
+    <div id="tab-akun" class="tab-content">
+      <div class="accent-frame">
+        <div class="corner-line top-left"></div>
+        <div class="corner-line top-right"></div>
+        <div class="corner-line bottom-left"></div>
+        <div class="corner-line bottom-right"></div>
+        
+        <div class="empty-state">
+          <div class="pulse-ring"></div>
+          <h2>Halaman Akun</h2>
+          <p>Pengaturan dan profil akun ada di sini.</p>
+        </div>
       </div>
     </div>
 
@@ -78,7 +127,7 @@
       <div class="nav-indicator"></div>
 
       <!-- Menu 1: Home -->
-      <a href="#home" class="nav-item active" data-index="0">
+      <a href="#home" class="nav-item active" data-index="0" data-target="tab-home">
         <div class="icon-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -89,7 +138,7 @@
       </a>
 
       <!-- Menu 2: Produk -->
-      <a href="#produk" class="nav-item" data-index="1">
+      <a href="#produk" class="nav-item" data-index="1" data-target="tab-produk">
         <div class="icon-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -101,7 +150,7 @@
       </a>
 
       <!-- Menu 3: DataMe -->
-      <a href="#datame" class="nav-item" data-index="2">
+      <a href="#datame" class="nav-item" data-index="2" data-target="tab-datame">
         <div class="icon-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
@@ -113,7 +162,7 @@
       </a>
 
       <!-- Menu 4: Akun -->
-      <a href="#akun" class="nav-item" data-index="3">
+      <a href="#akun" class="nav-item" data-index="3" data-target="tab-akun">
         <div class="icon-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

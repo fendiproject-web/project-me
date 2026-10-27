@@ -167,7 +167,7 @@ body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
 body.light-mode .moon-icon { display: block; stroke: #475569; }
 
-/* --- KONTEN UTAMA --- */
+/* --- KONTEN UTAMA & MANAJEMEN TAB --- */
 .main-content {
   flex: 1;
   width: 100%;
@@ -176,8 +176,22 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   padding: 85px 16px 95px 16px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+/* Sembunyikan semua tab secara default */
+.tab-content {
+  display: none;
+  width: 100%;
+}
+
+/* Tampilkan hanya tab yang aktif */
+.tab-content.active {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   align-items: center;
+  width: 100%;
 }
 
 /* BANNER PALING ATAS (OTOMATIS SESUAI PROPORSI FOTO) */

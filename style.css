@@ -47,7 +47,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR (LEBIH BESAR & CEMBUNG) --- */
+/* --- TOP BAR (RINGKAS & CEMBUNG) --- */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -77,14 +77,13 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-shrink: 0; /* Mencegah profil tergepengkan saat animasi teks */
+  flex-shrink: 0;
 }
 
-/* Container Profil - Dibuat Fleksibel & Tidak Memotong Gambar */
 .profile-avatar {
   width: 40px;
   height: 40px;
-  border-radius: 12px; /* Melengkung halus agar gambar persegi/lingkaran tetap utuh */
+  border-radius: 12px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -93,15 +92,13 @@ body {
   overflow: hidden;
 }
 
-/* Gambar Profil - Tampil Utuh Tanpa Terpotong (contain) */
 .profile-img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Menjaga seluruh gambar/logo tampil utuh 100% */
+  object-fit: contain;
   border-radius: 10px;
 }
 
-/* Animasi Ketik Smooth "FENDI STORE" (1 per 1 Berulang) */
 .brand-wrapper {
   display: flex;
   align-items: center;
@@ -173,16 +170,38 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 /* --- KONTEN UTAMA --- */
 .main-content {
   flex: 1;
-  padding: 100px 20px 95px 20px;
+  width: 100%;
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 85px 16px 95px 16px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
   align-items: center;
+}
+
+/* BANNER PALING ATAS (OTOMATIS SESUAI PROPORSI FOTO) */
+.banner-container {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.banner-img {
+  width: 100%;
+  height: auto; /* Otomatis mengikuti tinggi asli foto tanpa terpotong */
+  display: block;
+  border-radius: 20px;
+  object-fit: cover;
 }
 
 .accent-frame {
   width: 100%;
-  max-width: 480px;
-  height: 280px;
+  min-height: 220px;
   border: 1px dashed var(--border-color);
   border-radius: 20px;
   position: relative;
@@ -211,6 +230,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  padding: 20px;
 }
 
 .pulse-ring {
@@ -238,7 +258,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-/* --- BOTTOM NAV BAR (LEBIH CEMBUNG SAAT AKTIF) --- */
+/* --- BOTTOM NAV BAR (CEMBUNG & LEBIH MEMBULAT SAAT AKTIF) --- */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;
@@ -305,7 +325,6 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   stroke: var(--text-main);
 }
 
-/* INDIKATOR KAPSUL LEBIH CEMBUNG & MEMBULAT SAAT DIKLIK */
 .nav-indicator {
   position: absolute;
   top: 4px;

@@ -23,44 +23,60 @@ function updateIndicator(index) {
   navIndicator.style.transform = `translateX(${index * 100}%)`;
 }
 
-navItems.forEach((item) => {
-  item.addEventListener('click', function(e) {
-    e.preventDefault(); // Mencegah lompatan scroll default browser
+function switchTab(targetTabId, navIndex) {
+  // 1. Reset status active di semua tombol & tab content
+  navItems.forEach(nav => {
+    nav.classList.remove('active');
+    const icon = nav.querySelector('.icon-box');
+    if (icon) icon.classList.remove('bounce');
+  });
 
-    // 1. Reset kelas active di semua tombol nav & tab content
-    navItems.forEach(nav => {
-      nav.classList.remove('active');
-      const icon = nav.querySelector('.icon-box');
-      if (icon) icon.classList.remove('bounce');
-    });
+  tabContents.forEach(tab => {
+    tab.classList.remove('active');
+  });
 
-    tabContents.forEach(tab => {
-      tab.classList.remove('active');
-    });
+  // 2. Aktifkan nav item yang sesuai
+  const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
+  if (targetNavItem) {
+    targetNavItem.classList.add('active');
 
-    // 2. Aktifkan menu bottom nav yang diklik
-    this.classList.add('active');
-
-    // 3. Tampilkan halaman tab yang sesuai
-    const targetId = this.getAttribute('data-target');
-    const targetTab = document.getElementById(targetId);
-    if (targetTab) {
-      targetTab.classList.add('active');
-    }
-
-    // 4. Jalankan animasi bounce pada ikon
-    const currentIcon = this.querySelector('.icon-box');
+    // Animasi bounce
+    const currentIcon = targetNavItem.querySelector('.icon-box');
     if (currentIcon) {
       currentIcon.classList.add('bounce');
-      
       currentIcon.addEventListener('animationend', () => {
         currentIcon.classList.remove('bounce');
       }, { once: true });
     }
+  }
 
-    // 5. Geser indikator kapsul cembung
-    const index = parseInt(this.getAttribute('data-index'));
-    updateIndicator(index);
+  // 3. Tampilkan tab content yang dipilih
+  const targetTab = document.getElementById(targetTabId);
+  if (targetTab) {
+    targetTab.classList.add('active');
+  }
+
+  // 4. Geser indikator kapsul
+  updateIndicator(navIndex);
+}
+
+// Event listener klik tombol navigasi bawah
+navItems.forEach((item) => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetTabId = this.getAttribute('data-target');
+    const navIndex = parseInt(this.getAttribute('data-index'));
+    switchTab(targetTabId, navIndex);
+  });
+});
+
+// Event listener tombol "Cek Keaslian Admin" di Home
+const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
+switchTabTriggers.forEach((trigger) => {
+  trigger.addEventListener('click', function() {
+    const targetTabId = this.getAttribute('data-target-tab');
+    const navIndex = parseInt(this.getAttribute('data-nav-index'));
+    switchTab(targetTabId, navIndex);
   });
 });
 

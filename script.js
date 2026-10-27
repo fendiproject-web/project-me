@@ -1,76 +1,54 @@
-// Preload gambar profil dan banner
+// Preload Gambar Profil & Banner
 const avatarPreload = new Image();
 avatarPreload.src = 'profile.webp';
 
 const bannerPreload = new Image();
 bannerPreload.src = 'banner1.png';
 
-// --- DATA INITIAL PRODUK AKUN (SOLUSI DATA ARRAY) ---
-const defaultProducts = [
-  {
-    id: 1,
-    code: "#FF-01",
-    category: "ff",
-    price: "150.000",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
-    specs: ["Vault Melimpah", "Old Season Pass", "Diamond 200", "Single Log VK"]
-  },
-  {
-    id: 2,
-    code: "#ML-01",
-    category: "ml",
-    price: "280.000",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80",
-    specs: ["Rank Mythic", "Skin Collector 2", "Skin Epic 8", "All Unbind All Login"]
-  }
-];
-
-// Mengambil data produk dari LocalStorage jika ada, atau gunakan default
-function getStoredProducts() {
-  const localData = localStorage.getItem('fendi_store_products');
-  return localData ? JSON.parse(localData) : defaultProducts;
+// AMBIL & SIMPAN PRODUK DARI LOCALSTORAGE
+function getProducts() {
+  const data = localStorage.getItem('fendi_store_accounts');
+  return data ? JSON.parse(data) : [];
 }
 
 function saveProducts(products) {
-  localStorage.setItem('fendi_store_products', JSON.stringify(products));
+  localStorage.setItem('fendi_store_accounts', JSON.stringify(products));
 }
 
-// --- FITUR 1: TOGGLE TEMA TERANG / GELAP ---
+// TOGGLE TEMA
 const themeToggleBtn = document.getElementById('themeToggle');
-const body = document.body;
-
 themeToggleBtn.addEventListener('click', () => {
-  body.classList.toggle('light-mode');
-  body.classList.toggle('dark-mode');
+  document.body.classList.toggle('light-mode');
+  document.body.classList.toggle('dark-mode');
 });
 
-// --- FITUR 2: RENDER DAFTAR PRODUK AKUN KE Halaman PRODUK ---
+// RENDER PRODUK DI TAB PRODUK
 const productListContainer = document.getElementById('product-list-container');
-let currentSubCategory = 'all';
+let currentCategory = 'all';
 
-function renderProducts(categoryFilter = 'all') {
-  const products = getStoredProducts();
-  const filteredProducts = categoryFilter === 'all' 
+function renderProducts(filterCat = 'all') {
+  const products = getProducts();
+  const filtered = filterCat === 'all' 
     ? products 
-    : products.filter(item => item.category === categoryFilter);
+    : products.filter(p => p.category === filterCat);
 
   if (!productListContainer) return;
 
-  if (filteredProducts.length === 0) {
+  if (filtered.length === 0) {
     productListContainer.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: var(--text-sub);">
-        <p style="font-weight: 600;">Belum ada akun produk untuk kategori ini.</p>
+      <div style="text-align: center; padding: 40px 10px; color: var(--text-sub);">
+        <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan.</p>
+        <p style="font-size: 11px; margin-top: 4px;">Buka tab <b>Akun</b> untuk memposting produk baru.</p>
       </div>
     `;
     return;
   }
 
-  productListContainer.innerHTML = filteredProducts.map(item => {
-    // Format pesan order WhatsApp otomatis
+  productListContainer.innerHTML = filtered.map(item => {
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya berminat beli Akun ${item.code} (${item.category.toUpperCase()}) seharga Rp ${item.price}. Apakah masih ada?`);
     const waUrl = `https://wa.me/6285854325988?text=${waText}`;
 
-    const specsMarkup = item.specs.map(spec => `<li class="spec-item">${spec}</li>`).join('');
+    const specsList = item.specs.map(s => `<li class="spec-item">${s}</li>`).join('');
 
     return `
       <div class="account-card">
@@ -87,7 +65,7 @@ function renderProducts(categoryFilter = 'all') {
             <span class="account-price">Rp ${item.price}</span>
           </div>
           <ul class="account-specs-list">
-            ${specsMarkup}
+            ${specsList}
           </ul>
           <a href="${waUrl}" target="_blank" class="account-buy-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -101,13 +79,45 @@ function renderProducts(categoryFilter = 'all') {
   }).join('');
 }
 
-// --- FITUR 3: SUB TABS PRODUK (Semua, Free Fire, Mobile Legends) ---
-const subTabItems = document.querySelectorAll('.sub-tab-item');
+// RENDER DAFTAR KELOLA / HAPUS PRODUK DI TAB AKUN
+const adminManageList = document.getElementById('admin-manage-list');
 
+function renderAdminManageList() {
+  const products = getProducts();
+  if (!adminManageList) return;
+
+  if (products.length === 0) {
+    adminManageList.innerHTML = `<p style="font-size: 11px; color: var(--text-sub);">Belum ada produk tersimpan.</p>`;
+    return;
+  }
+
+  adminManageList.innerHTML = products.map(item => `
+    <div class="manage-item">
+      <div class="manage-info">
+        <span class="manage-title">${item.code} (${item.category.toUpperCase()})</span>
+        <span class="manage-sub">Rp ${item.price}</span>
+      </div>
+      <button type="button" class="btn-delete-item" onclick="deleteAccount(${item.id})">Hapus</button>
+    </div>
+  `).join('');
+}
+
+// FITUR HAPUS AKUN
+window.deleteAccount = function(id) {
+  if (confirm("Yakin mau hapus postingan akun ini?")) {
+    const products = getProducts().filter(p => p.id !== id);
+    saveProducts(products);
+    renderProducts(currentCategory);
+    renderAdminManageList();
+  }
+};
+
+// SUB TABS PRODUK (Semua, FF, ML)
+const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
     const targetSub = this.getAttribute('data-sub');
-    currentSubCategory = targetSub;
+    currentCategory = targetSub;
 
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
@@ -116,7 +126,7 @@ subTabItems.forEach((btn) => {
   });
 });
 
-// --- FITUR 4: PERPINDAHAN HALAMAN UTAMA (BOTTOM NAV) ---
+// BOTTOM NAV MANAGER
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -132,27 +142,19 @@ function switchTab(targetTabId, navIndex) {
     if (icon) icon.classList.remove('bounce');
   });
 
-  tabContents.forEach(tab => {
-    tab.classList.remove('active');
-  });
+  tabContents.forEach(tab => tab.classList.remove('active'));
 
   const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
   if (targetNavItem) {
     targetNavItem.classList.add('active');
-
     const currentIcon = targetNavItem.querySelector('.icon-box');
     if (currentIcon) {
       currentIcon.classList.add('bounce');
-      currentIcon.addEventListener('animationend', () => {
-        currentIcon.classList.remove('bounce');
-      }, { once: true });
     }
   }
 
   const targetTab = document.getElementById(targetTabId);
-  if (targetTab) {
-    targetTab.classList.add('active');
-  }
+  if (targetTab) targetTab.classList.add('active');
 
   updateIndicator(navIndex);
 }
@@ -166,7 +168,6 @@ navItems.forEach((item) => {
   });
 });
 
-// Event trigger tombol pemicu antar tab (misalnya tombol Cek Keaslian Admin)
 const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
 switchTabTriggers.forEach((trigger) => {
   trigger.addEventListener('click', function() {
@@ -176,7 +177,7 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// --- FITUR 5: FORM INPUT TAMBAH POSTINGAN AKUN BARU (DI TAB AKUN) ---
+// PROSES SUBMIT FORM INPUT TAMBAH AKUN (SOLUSI 2)
 const addProductForm = document.getElementById('add-product-form');
 
 if (addProductForm) {
@@ -186,35 +187,50 @@ if (addProductForm) {
     const category = document.getElementById('prod-category').value;
     const code = document.getElementById('prod-code').value.trim();
     const price = document.getElementById('prod-price').value.trim();
-    const image = document.getElementById('prod-image').value.trim();
+    const fileInput = document.getElementById('prod-file');
+    const urlInput = document.getElementById('prod-url').value.trim();
     const specsRaw = document.getElementById('prod-specs').value.trim();
 
     const specsArray = specsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
-    const newProduct = {
-      id: Date.now(),
-      code: code,
-      category: category,
-      price: price,
-      image: image,
-      specs: specsArray
+    // Fungsi menyimpan produk
+    const saveNewAccount = (imageSrc) => {
+      const newAcc = {
+        id: Date.now(),
+        code: code,
+        category: category,
+        price: price,
+        image: imageSrc || 'banner1.png',
+        specs: specsArray
+      };
+
+      const products = getProducts();
+      products.unshift(newAcc);
+      saveProducts(products);
+
+      addProductForm.reset();
+      renderProducts(currentCategory);
+      renderAdminManageList();
+
+      // Otomatis pindah ke Tab Produk (Index 1)
+      switchTab('tab-produk', 1);
     };
 
-    const currentProducts = getStoredProducts();
-    currentProducts.unshift(newProduct);
-    saveProducts(currentProducts);
-
-    // Reset Form
-    addProductForm.reset();
-
-    // Render ulang produk & pindah langsung ke tab Produk (index 1)
-    renderProducts(currentSubCategory);
-    switchTab('tab-produk', 1);
-
-    alert(`Akun ${code} berhasil diposting ke Tab Produk!`);
+    // Jika upload dari galeri file HP
+    if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        saveNewAccount(e.target.result);
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      // Jika pakai link URL atau default
+      saveNewAccount(urlInput);
+    }
   });
 }
 
-// Render produk awal & atur posisi indikator navigasi ke Home (index 0)
+// INISIALISASI
 renderProducts('all');
+renderAdminManageList();
 updateIndicator(0);

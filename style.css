@@ -7,8 +7,8 @@
   --border-color: rgba(255, 255, 255, 0.08);
   --nav-bg: rgba(18, 22, 34, 0.85);
   
-  --pill-bg: rgba(255, 255, 255, 0.08);
-  --pill-border: rgba(255, 255, 255, 0.12);
+  --pill-bg: rgba(255, 255, 255, 0.1);
+  --pill-border: rgba(255, 255, 255, 0.16);
   --accent-color: #38bdf8;
 }
 
@@ -20,12 +20,12 @@ body.light-mode {
   --border-color: rgba(0, 0, 0, 0.07);
   --nav-bg: rgba(255, 255, 255, 0.9);
   
-  --pill-bg: rgba(0, 0, 0, 0.06);
-  --pill-border: rgba(0, 0, 0, 0.08);
+  --pill-bg: rgba(0, 0, 0, 0.07);
+  --pill-border: rgba(0, 0, 0, 0.12);
   --accent-color: #0284c7;
 }
 
-/* RESET UTAMA (Menghilangkan kotak-kotak saat ditap/diklik) */
+/* RESET UTAMA (Hapus kotak-kotak bawaan browser) */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -47,7 +47,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR (RINGKAS & CEMBUNG) --- */
+/* --- TOP BAR (LEBIH BESAR & CEMBUNG) --- */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -63,30 +63,33 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 14px;
+  padding: 10px 18px; /* Ukuran top bar diperbesar */
   width: 100%;
-  max-width: 380px;
+  max-width: 410px;
   background: var(--nav-bg);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
-  border-radius: 24px;
+  border-radius: 28px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar Polos Bersih tanpa Garis/Titik Status */
 .profile-avatar {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: visible;
 }
 
-/* Tampilan Gambar Profil Webp */
 .profile-img {
   width: 100%;
   height: 100%;
@@ -94,23 +97,55 @@ body {
   object-fit: cover;
 }
 
-.status-indicator {
-  width: 8px;
-  height: 8px;
-  background-color: #10b981;
-  border-radius: 50%;
-  position: absolute;
-  bottom: -1px;
-  right: -1px;
-  border: 1.5px solid var(--bg-color);
-  z-index: 2;
+/* Animasi Ketik Smooth "FENDI STORE" (1 per 1 Berulang) */
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.typing-text {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--accent-color);
+  width: 0;
+  animation: typeLoop 4s steps(11, end) infinite, caretBlink 0.75s infinite;
+}
+
+@keyframes typeLoop {
+  0% {
+    width: 0;
+    opacity: 0.3;
+  }
+  15% {
+    opacity: 1;
+  }
+  50% {
+    width: 100%; /* Selesai mengetik "FENDI STORE" */
+  }
+  80% {
+    width: 100%; /* Tahan teks sejenak */
+    opacity: 1;
+  }
+  95%, 100% {
+    width: 0;    /* Reset balik ke awal dengan halus */
+    opacity: 0.3;
+  }
+}
+
+@keyframes caretBlink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: var(--accent-color); }
 }
 
 .theme-toggle-btn {
   background: transparent;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -120,8 +155,8 @@ body {
 }
 
 .theme-toggle-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 body.dark-mode .sun-icon { display: block; stroke: #f59e0b; }
@@ -132,7 +167,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 /* --- KONTEN UTAMA --- */
 .main-content {
   flex: 1;
-  padding: 90px 20px 90px 20px;
+  padding: 100px 20px 95px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -197,7 +232,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-/* --- BOTTOM NAV BAR (CEMBUNG & KAPSUL HIGHLIGHT MATCHING) --- */
+/* --- BOTTOM NAV BAR (LEBIH CEMBUNG SAAT AKTIF) --- */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;
@@ -219,10 +254,10 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   border: 1px solid var(--border-color);
   width: 100%;
   max-width: 380px;
-  height: 60px;
-  border-radius: 30px;
+  height: 62px;
+  border-radius: 32px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  padding: 4px;
+  padding: 5px;
 }
 
 .nav-item {
@@ -264,7 +299,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   stroke: var(--text-main);
 }
 
-/* INDIKATOR HIGHLIGHT KAPSUL */
+/* INDIKATOR KAPSUL LEBIH CEMBUNG & MEMBULAT SAAT DIKLIK */
 .nav-indicator {
   position: absolute;
   top: 4px;
@@ -281,15 +316,15 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 
 .nav-indicator::after {
   content: '';
-  width: 90%;
+  width: 92%;
   height: 100%;
-  border-radius: 22px;
+  border-radius: 26px; /* Dibuat lebih cembung & membulat pas */
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* --- ANIMASI MEMBAL (BOUNCE) IKON --- */
+/* ANIMASI MEMBAL (BOUNCE) IKON */
 @keyframes iconBounce {
   0% { transform: scale(1); }
   30% { transform: scale(0.82); }

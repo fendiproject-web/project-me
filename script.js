@@ -48,7 +48,7 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER KARTU KATALOG PRODUK
+// RENDER KARTU KATALOG PRODUK (SISTEM KLIK AMAN)
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -69,7 +69,7 @@ function renderProducts(filterCat = 'all') {
     const specsList = item.specs.map(s => `<li class="spec-item">${s}</li>`).join('');
 
     return `
-      <div class="account-card" onclick="openProductDetail('${item.id}')">
+      <div class="account-card" data-id="${item.id}">
         <div class="account-media">
           <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
           <div class="account-badge-group">
@@ -89,10 +89,18 @@ function renderProducts(filterCat = 'all') {
       </div>
     `;
   }).join('');
+
+  // MASUKKAN EVENT LISTENER KLIK KE SETIAP KARTU PRODUK
+  document.querySelectorAll('.account-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const prodId = this.getAttribute('data-id');
+      openProductDetail(prodId);
+    });
+  });
 }
 
-// BUKA VIEW DETAIL PRODUK PERSIS SEPERTI TAMPILAN GAMBAR 1 & 2
-window.openProductDetail = function(productId) {
+// BUKA DETAIL PRODUK
+function openProductDetail(productId) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
 
@@ -115,12 +123,12 @@ window.openProductDetail = function(productId) {
     // Jumlah total produk toko
     document.getElementById('seller-total-products').textContent = fetchedProducts.length;
 
-    // Render Produk Lainnya di bagian bawah
+    // Render Produk Lainnya
     renderRecommendations(productId);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-};
+}
 
 // KEMBALI KE KATALOG
 document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
@@ -145,7 +153,7 @@ function renderRecommendations(currentId) {
   }
 
   recContainer.innerHTML = recs.map(item => `
-    <div class="account-card" onclick="openProductDetail('${item.id}')">
+    <div class="account-card rec-card" data-id="${item.id}">
       <div class="account-media">
         <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
         <div class="account-badge-group">
@@ -159,6 +167,13 @@ function renderRecommendations(currentId) {
       </div>
     </div>
   `).join('');
+
+  document.querySelectorAll('.rec-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const prodId = this.getAttribute('data-id');
+      openProductDetail(prodId);
+    });
+  });
 }
 
 // SUB TABS PRODUK
@@ -205,7 +220,6 @@ function switchTab(targetTabId, navIndex) {
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) targetTab.classList.add('active');
 
-  // Jika kembali ke tab produk, reset ke tampilan katalog
   if (targetTabId === 'tab-produk') {
     const catalogView = document.getElementById('product-catalog-view');
     const detailView = document.getElementById('product-detail-view');
@@ -359,7 +373,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU ADMIN (TANPA ISIAN KODE MANUAL)
+// UPLOAD PRODUK BARU ADMIN
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -375,7 +389,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Uploading & Deteksi Kode...";
+  btn.textContent = "Uploading Foto & Deteksi Kode...";
   btn.disabled = true;
 
   const sendPayload = async (imageBase64 = null) => {
@@ -462,7 +476,7 @@ window.deleteProductFromSheets = async function(productId) {
   }
 };
 
-// INISIALISASI
+// INISIALISASI awal
 loadProductsFromSheets();
 updateAccountView();
 updateIndicator(0);

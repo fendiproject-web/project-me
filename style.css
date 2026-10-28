@@ -253,12 +253,13 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* PEMBUNGKUS KATALOG PRODUK (DENGAN JARAK LONGGAR TERPISAH) */
+/* AREA KATALOG PRODUK */
 #product-catalog-view {
   display: flex;
   flex-direction: column;
-  gap: 18px; /* Jarak antara tombol menu 'Semua/FF/ML' & kartu produk */
+  gap: 20px; /* Jarak renggang antara tombol menu kategori & produk di bawahnya */
   width: 100%;
+  margin-top: 4px;
 }
 
 /* SUB TABS MENU */
@@ -267,11 +268,12 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   gap: 8px;
   width: 100%;
   justify-content: center;
+  margin-bottom: 2px;
 }
 
 .sub-tab-item {
   flex: 1;
-  padding: 9px 8px;
+  padding: 10px 8px;
   border-radius: 16px;
   font-size: 12px;
   font-weight: 600;
@@ -290,11 +292,11 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* KATALOG PRODUK (2 KOLOM, RASIO 9:16) */
+/* KATALOG PRODUK (2 KOLOM GRID, RASIO 9:16) */
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -330,8 +332,8 @@ body.light-mode .account-media {
 
 .account-badge-group {
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: 8px;
+  left: 8px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -339,11 +341,11 @@ body.light-mode .account-media {
 }
 
 .badge-code {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   color: #ffffff;
   font-size: 9px;
   font-weight: 700;
-  padding: 3px 6px;
+  padding: 3px 7px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
@@ -354,7 +356,7 @@ body.light-mode .account-media {
   color: var(--text-main);
   font-size: 8px;
   font-weight: 600;
-  padding: 2px 5px;
+  padding: 2px 6px;
   border-radius: 6px;
   border: 1px solid var(--pill-border);
   backdrop-filter: blur(4px);
@@ -362,10 +364,10 @@ body.light-mode .account-media {
 }
 
 .account-body {
-  padding: 8px 10px 10px 10px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .account-price-row {
@@ -406,7 +408,7 @@ body.light-mode .spec-item {
   width: 100%;
   text-align: center;
   padding: 6px 0;
-  margin-top: 2px;
+  margin-top: 4px;
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
   border-radius: 8px;
@@ -420,7 +422,7 @@ body.light-mode .spec-item {
 .detail-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 

@@ -17,6 +17,19 @@ if (themeToggleBtn) {
   });
 }
 
+// FORMAT OTOMATIS PEMISAH RIBUAN HARGA (CONTOH: 100000 -> 100.000)
+const postPriceInput = document.getElementById('post-price');
+if (postPriceInput) {
+  postPriceInput.addEventListener('input', function () {
+    let rawValue = this.value.replace(/\D/g, '');
+    if (rawValue) {
+      this.value = new Intl.NumberFormat('id-ID').format(rawValue);
+    } else {
+      this.value = '';
+    }
+  });
+}
+
 // FETCH DAFTAR PRODUK DARI GOOGLE SHEETS
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';

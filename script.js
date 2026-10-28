@@ -116,7 +116,7 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// BUKA DETAIL PRODUK
+// BUKA DETAIL PRODUK (MENGHILANGKAN KATALOG & MENAMPILKAN DETAIL DI ATAS)
 function openProductDetail(productId) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
@@ -143,7 +143,7 @@ function openProductDetail(productId) {
     const specsFormatted = item.specs.join(" || ");
     document.getElementById('detail-specs-content').textContent = specsFormatted;
 
-    // Direct WhatsApp Link untuk "Beli Sekarang"
+    // Direct WhatsApp Link
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
     const buyNowBtn = document.getElementById('btn-buy-now');
     if (buyNowBtn) {
@@ -190,7 +190,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   const catalogView = document.getElementById('product-catalog-view');
   const detailView = document.getElementById('product-detail-view');
   if (catalogView && detailView) {
-    catalogView.style.display = 'flex'; // Menggunakan flex agar gap/margin berjalan normal
+    catalogView.style.display = 'flex';
     detailView.style.display = 'none';
   }
 });
@@ -280,7 +280,7 @@ function switchTab(targetTabId, navIndex) {
     const catalogView = document.getElementById('product-catalog-view');
     const detailView = document.getElementById('product-detail-view');
     if (catalogView && detailView) {
-      catalogView.style.display = 'flex'; // Menggunakan flex agar gap/margin berjalan normal
+      catalogView.style.display = 'flex';
       detailView.style.display = 'none';
     }
   }

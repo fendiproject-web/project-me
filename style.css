@@ -12,6 +12,7 @@
   --accent-color: #ffffff;
   --accent-purple: #ffffff;
   --wa-green: #25d366;
+  --danger-red: #ef4444;
 }
 
 /* TEMA TERANG (LIGHT MODE - UNGU MUDA PASTEL) */
@@ -28,6 +29,7 @@ body.light-mode {
   --accent-color: #c084fc;
   --accent-purple: #a855f7;
   --wa-green: #128c7e;
+  --danger-red: #dc2626;
 }
 
 /* RESET UTAMA */
@@ -403,7 +405,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 .account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
 .account-buy-btn:active { transform: scale(0.98); }
 
-/* LOGIN / DAFTAR CARD DI TAB AKUN */
+/* AUTH CARD & ADMIN PANEL */
 .auth-card {
   width: 100%;
   background: var(--card-bg);
@@ -468,7 +470,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-.form-group input {
+.form-group input, .form-group select, .form-group textarea {
   width: 100%;
   padding: 11px 14px;
   border-radius: 14px;
@@ -478,7 +480,9 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   font-size: 12px;
 }
 
-body.light-mode .form-group input { background: #ffffff; }
+body.light-mode .form-group input,
+body.light-mode .form-group select,
+body.light-mode .form-group textarea { background: #ffffff; }
 
 .btn-auth-submit {
   padding: 12px;
@@ -494,6 +498,76 @@ body.light-mode .form-group input { background: #ffffff; }
 }
 
 .btn-auth-submit:active { transform: scale(0.98); }
+
+/* USER LOGGED PROFILE BOX */
+.user-profile-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge-role {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.btn-logout {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid var(--danger-red);
+  color: var(--danger-red);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  margin: 10px 0;
+}
+
+.admin-manage-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.manage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.btn-delete-prod {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--danger-red);
+  color: var(--danger-red);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
 /* DATAME CONTACT CARDS */
 .datame-header { text-align: center; margin-bottom: 4px; }

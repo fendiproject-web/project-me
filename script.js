@@ -1,21 +1,12 @@
-// LINK GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
 
-// Preload
-const avatarPreload = new Image();
-avatarPreload.src = 'profile.webp';
-
-const bannerPreload = new Image();
-bannerPreload.src = 'banner1.png';
-
-// HELPER FORMAT RUPIAH
 function formatRupiah(val) {
   if (!val) return '0';
   const cleanNum = String(val).replace(/\D/g, '');
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// TOGGLE TEMA TERANG / GELAP
+// TOGGLE TEMA
 const themeToggleBtn = document.getElementById('themeToggle');
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
@@ -24,16 +15,7 @@ if (themeToggleBtn) {
   });
 }
 
-// FORMAT INPUT HARGA REALTIME
-const postPriceInput = document.getElementById('post-price');
-if (postPriceInput) {
-  postPriceInput.addEventListener('input', function () {
-    let rawValue = this.value.replace(/\D/g, '');
-    this.value = rawValue ? new Intl.NumberFormat('id-ID').format(rawValue) : '';
-  });
-}
-
-// FETCH PRODUK DARI SERVER
+// DATA PRODUK
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
@@ -55,7 +37,6 @@ async function loadProductsFromSheets() {
       fetchedProducts = data.products;
       renderProducts(currentCategory);
       renderHomeRecommendations();
-      renderAdminManageList();
     } else {
       renderProducts(currentCategory);
       renderHomeRecommendations();
@@ -67,49 +48,36 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER REKOMENDASI PRODUK DI HALAMAN HOME
+// RENDER REKOMENDASI HOME
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
 
   if (fetchedProducts.length === 0) {
-    homeRecContainer.innerHTML = `
-      <div style="grid-column: span 2; text-align: center; padding: 20px 10px; color: var(--text-sub);">
-        <p style="font-size: 12px; font-weight: 600;">Belum ada produk jualan.</p>
-      </div>
-    `;
+    homeRecContainer.innerHTML = `<p style="grid-column: span 2; font-size: 12px; text-align:center; color: var(--text-sub);">Belum ada produk jualan.</p>`;
     return;
   }
 
-  // Ambil maksimal 4 produk terbaru
   const homeProducts = fetchedProducts.slice(0, 4);
 
-  homeRecContainer.innerHTML = homeProducts.map(item => {
-    const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
-    const formattedPrice = formatRupiah(item.price);
-
-    return `
-      <div class="account-card home-card" data-id="${item.id}">
-        <div class="account-media">
-          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
-          <div class="account-badge-group">
-            <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
-          </div>
-        </div>
-        <div class="account-body">
-          <div class="account-price-row">
-            <span class="price-label">Harga Akun</span>
-            <span class="account-price">Rp ${formattedPrice}</span>
-          </div>
-          <ul class="account-specs-list">
-            ${displaySpecs}
-          </ul>
-          <button type="button" class="btn-see-now">Lihat Sekarang</button>
+  homeRecContainer.innerHTML = homeProducts.map(item => `
+    <div class="account-card home-card" data-id="${item.id}">
+      <div class="account-media">
+        <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
+        <div class="account-badge-group">
+          <span class="badge-code">${item.code}</span>
+          <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
         </div>
       </div>
-    `;
-  }).join('');
+      <div class="account-body">
+        <div class="account-price-row">
+          <span class="price-label">Harga Akun</span>
+          <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+        </div>
+        <button type="button" class="btn-see-now">Lihat Sekarang</button>
+      </div>
+    </div>
+  `).join('');
 
   document.querySelectorAll('.home-card').forEach(card => {
     card.addEventListener('click', function() {
@@ -120,7 +88,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// RENDER KATALOG DI TAB PRODUK
+// RENDER KATALOG PRODUK
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -129,18 +97,12 @@ function renderProducts(filterCat = 'all') {
   if (!productListContainer) return;
 
   if (filtered.length === 0) {
-    productListContainer.innerHTML = `
-      <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
-        <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan di kategori ini.</p>
-      </div>
-    `;
+    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub);">Belum ada akun jualan di kategori ini.</p>`;
     return;
   }
 
   productListContainer.innerHTML = filtered.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
-    const formattedPrice = formatRupiah(item.price);
-
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
         <div class="account-media">
@@ -153,11 +115,9 @@ function renderProducts(filterCat = 'all') {
         <div class="account-body">
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
-            <span class="account-price">Rp ${formattedPrice}</span>
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
           </div>
-          <ul class="account-specs-list">
-            ${displaySpecs}
-          </ul>
+          <ul class="account-specs-list">${displaySpecs}</ul>
           <button type="button" class="btn-see-now">Lihat Sekarang</button>
         </div>
       </div>
@@ -172,7 +132,7 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// BUKA DETAIL PRODUK
+// FUNGSI BUKA DETAIL PRODUK
 function openProductDetail(productId) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
@@ -181,8 +141,8 @@ function openProductDetail(productId) {
   const detailView = document.getElementById('product-detail-view');
 
   if (catalogView && detailView) {
-    catalogView.style.display = 'none';
-    detailView.style.display = 'flex';
+    catalogView.style.display = 'none'; // Sembunyikan katalog
+    detailView.style.display = 'flex'; // Tampilkan view detail
 
     const detailImg = document.getElementById('detail-img');
     detailImg.src = item.image;
@@ -194,12 +154,8 @@ function openProductDetail(productId) {
     document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
-    
-    // Spesifikasi
-    const specsFormatted = item.specs.join(" || ");
-    document.getElementById('detail-specs-content').textContent = specsFormatted;
+    document.getElementById('detail-specs-content').textContent = item.specs.join(" || ");
 
-    // Direct WhatsApp Link
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
     const buyNowBtn = document.getElementById('btn-buy-now');
     if (buyNowBtn) {
@@ -209,36 +165,6 @@ function openProductDetail(productId) {
     renderRecommendations(productId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-}
-
-// MODAL FULL ZOOM FOTO PRODUK
-const zoomImgBox = document.getElementById('detail-img-box');
-const zoomModal = document.getElementById('image-zoom-modal');
-const modalImg = document.getElementById('img-full-zoom');
-const closeModalBtn = document.getElementById('modal-close-btn');
-
-if (zoomImgBox && zoomModal && modalImg) {
-  zoomImgBox.addEventListener('click', () => {
-    const detailImg = document.getElementById('detail-img');
-    if (detailImg && detailImg.src) {
-      modalImg.src = detailImg.src;
-      zoomModal.style.display = 'block';
-    }
-  });
-}
-
-if (closeModalBtn) {
-  closeModalBtn.addEventListener('click', () => {
-    zoomModal.style.display = 'none';
-  });
-}
-
-if (zoomModal) {
-  zoomModal.addEventListener('click', (e) => {
-    if (e.target === zoomModal) {
-      zoomModal.style.display = 'none';
-    }
-  });
 }
 
 // KEMBALI KE KATALOG
@@ -251,7 +177,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAINNYA DI DETAIL PRODUK
+// REKOMENDASI PRODUK LAIN DI DETAIL
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -288,7 +214,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TABS FILTER KATALOG
+// SUB TABS FILTER
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
@@ -314,20 +240,11 @@ function updateIndicator(index) {
 }
 
 function switchTab(targetTabId, navIndex) {
-  navItems.forEach(nav => {
-    nav.classList.remove('active');
-    const icon = nav.querySelector('.icon-box');
-    if (icon) icon.classList.remove('bounce');
-  });
-
+  navItems.forEach(nav => nav.classList.remove('active'));
   tabContents.forEach(tab => tab.classList.remove('active'));
 
   const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
-  if (targetNavItem) {
-    targetNavItem.classList.add('active');
-    const currentIcon = targetNavItem.querySelector('.icon-box');
-    if (currentIcon) currentIcon.classList.add('bounce');
-  }
+  if (targetNavItem) targetNavItem.classList.add('active');
 
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) targetTab.classList.add('active');
@@ -353,243 +270,6 @@ navItems.forEach((item) => {
   });
 });
 
-const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
-switchTabTriggers.forEach((trigger) => {
-  trigger.addEventListener('click', function() {
-    const targetTabId = this.getAttribute('data-target-tab');
-    const navIndex = parseInt(this.getAttribute('data-nav-index'));
-    switchTab(targetTabId, navIndex);
-  });
-});
-
-// FORM LOGIN & DAFTAR
-const authTabBtns = document.querySelectorAll('.auth-tab-btn');
-const authForms = document.querySelectorAll('.auth-form');
-
-authTabBtns.forEach(btn => {
-  btn.addEventListener('click', function() {
-    const targetAuth = this.getAttribute('data-auth');
-
-    authTabBtns.forEach(b => b.classList.remove('active'));
-    authForms.forEach(f => f.classList.remove('active'));
-
-    this.classList.add('active');
-    const targetForm = document.getElementById(`${targetAuth}-form`);
-    if (targetForm) targetForm.classList.add('active');
-  });
-});
-
-// SESSION USER
-function getCurrentUser() {
-  const data = localStorage.getItem('fendi_session_user');
-  return data ? JSON.parse(data) : null;
-}
-
-function updateAccountView() {
-  const user = getCurrentUser();
-  const guestView = document.getElementById('auth-guest-view');
-  const loggedView = document.getElementById('auth-logged-view');
-  const adminPanel = document.getElementById('admin-panel-section');
-
-  if (!guestView || !loggedView) return;
-
-  if (user) {
-    guestView.style.display = 'none';
-    loggedView.style.display = 'flex';
-
-    document.getElementById('display-user-name').textContent = user.name;
-    document.getElementById('display-user-wa').textContent = user.wa;
-    document.getElementById('display-user-role').textContent = user.role.toUpperCase();
-
-    if (user.role === 'admin') {
-      adminPanel.style.display = 'block';
-      renderAdminManageList();
-    } else {
-      adminPanel.style.display = 'none';
-    }
-  } else {
-    guestView.style.display = 'flex';
-    loggedView.style.display = 'none';
-    adminPanel.style.display = 'none';
-  }
-}
-
-// LOGOUT
-document.getElementById('btn-logout')?.addEventListener('click', () => {
-  localStorage.removeItem('fendi_session_user');
-  updateAccountView();
-  alert("Kamu telah keluar.");
-});
-
-// DAFTAR AKUN
-document.getElementById('register-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('reg-name').value.trim();
-  const wa = document.getElementById('reg-wa').value.trim();
-  const password = document.getElementById('reg-password').value.trim();
-  const btn = document.getElementById('btn-register');
-
-  btn.textContent = "Proses Mendaftar...";
-  btn.disabled = true;
-
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'register', name: name, wa: wa, password: password })
-    });
-    const result = await response.json();
-
-    alert(result.message);
-    if (result.success) {
-      document.getElementById('register-form').reset();
-      document.querySelector('.auth-tab-btn[data-auth="login"]').click();
-    }
-  } catch (err) {
-    alert("Gagal mendaftar: " + err.toString());
-  } finally {
-    btn.textContent = "Daftar Akun";
-    btn.disabled = false;
-  }
-});
-
-// LOGIN AKUN
-document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value.trim();
-  const btn = document.getElementById('btn-login');
-
-  btn.textContent = "Proses Login...";
-  btn.disabled = true;
-
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'login', username: username, password: password })
-    });
-    const result = await response.json();
-
-    if (result.success) {
-      localStorage.setItem('fendi_session_user', JSON.stringify(result.user));
-      updateAccountView();
-      document.getElementById('login-form').reset();
-      alert(`Selamat datang kembali, ${result.user.name}!`);
-    } else {
-      alert(result.message);
-    }
-  } catch (err) {
-    alert("Gagal login: " + err.toString());
-  } finally {
-    btn.textContent = "Masuk Sekarang";
-    btn.disabled = false;
-  }
-});
-
-// UPLOAD PRODUK BARU ADMIN
-document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const user = getCurrentUser();
-  if (!user || user.role !== 'admin') {
-    alert("Hanya admin yang dapat memposting!");
-    return;
-  }
-
-  const category = document.getElementById('post-category').value;
-  const rawPrice = document.getElementById('post-price').value.trim();
-  const cleanPrice = rawPrice.replace(/\D/g, '');
-  const urlInput = document.getElementById('post-url').value.trim();
-  const specsRaw = document.getElementById('post-specs').value.trim();
-  const fileInput = document.getElementById('post-file');
-  const btn = document.getElementById('btn-submit-product');
-
-  btn.textContent = "Uploading Foto & Simpan Data...";
-  btn.disabled = true;
-
-  const sendPayload = async (imageBase64 = null) => {
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'addProduct',
-          role: user.role,
-          category: category,
-          price: cleanPrice,
-          imageUrl: urlInput,
-          imageBase64: imageBase64,
-          specs: specsRaw
-        })
-      });
-      const result = await response.json();
-
-      alert(result.message);
-      if (result.success) {
-        document.getElementById('admin-upload-form').reset();
-        await loadProductsFromSheets();
-        switchTab('tab-produk', 1);
-      }
-    } catch (err) {
-      alert("Gagal upload: " + err.toString());
-    } finally {
-      btn.textContent = "+ Upload Akun Ke Produk";
-      btn.disabled = false;
-    }
-  };
-
-  if (fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      sendPayload(evt.target.result);
-    };
-    reader.readAsDataURL(fileInput.files[0]);
-  } else {
-    sendPayload(null);
-  }
-});
-
-// KELOLA HAPUS PRODUK
-function renderAdminManageList() {
-  const adminManageList = document.getElementById('admin-manage-list');
-  if (!adminManageList) return;
-
-  if (fetchedProducts.length === 0) {
-    adminManageList.innerHTML = `<p style="font-size: 11px; color: var(--text-sub);">Belum ada akun jualan.</p>`;
-    return;
-  }
-
-  adminManageList.innerHTML = fetchedProducts.map(item => `
-    <div class="manage-item">
-      <div>
-        <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category.toUpperCase()})</span>
-        <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
-      </div>
-      <button type="button" class="btn-delete-prod" onclick="deleteProductFromSheets('${item.id}')">Hapus</button>
-    </div>
-  `).join('');
-}
-
-// HAPUS PRODUK
-window.deleteProductFromSheets = async function(productId) {
-  const user = getCurrentUser();
-  if (!user || user.role !== 'admin') return;
-
-  if (confirm("Yakin mau menghapus produk akun ini?")) {
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'deleteProduct', role: user.role, productId: productId })
-      });
-      const result = await response.json();
-      alert(result.message);
-      if (result.success) {
-        await loadProductsFromSheets();
-      }
-    } catch (err) {
-      alert("Gagal menghapus: " + err.toString());
-    }
-  }
-};
-
 // INISIALISASI
 loadProductsFromSheets();
-updateAccountView();
 updateIndicator(0);

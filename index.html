@@ -8,7 +8,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body class="dark-mode">
 
@@ -80,6 +80,15 @@
           <span>Grup Whatsapp</span>
         </a>
       </div>
+
+      <!-- REKOMENDASI PRODUK DI HOME -->
+      <div class="home-recommendations-section">
+        <div class="section-title-box">
+          <span class="badge-pink-light">REKOMENDASI</span>
+          <h3 class="section-title">Produk Pilihan Fendi Store</h3>
+        </div>
+        <div id="home-recommendation-grid" class="product-cards-grid"></div>
+      </div>
     </div>
 
     <!-- TAB 2: PRODUK -->
@@ -92,22 +101,18 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
-        <div id="product-list-container" class="product-cards-grid">
-          <!-- Render kartu produk -->
-        </div>
+        <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
       <!-- VIEW DETAIL PRODUK -->
       <div id="product-detail-view" style="display: none;" class="detail-container">
         <button type="button" id="btn-back-catalog" class="btn-back-nav">&larr; Kembali ke Katalog</button>
 
-        <!-- FOTO PRODUK (KLIK UNTUK ZOOM FULL) -->
         <div class="zoom-image-wrapper" id="detail-img-box">
           <span class="zoom-tag">Klik foto untuk lihat full</span>
           <img id="detail-img" src="" alt="Foto Produk" class="detail-img-full">
         </div>
 
-        <!-- HARGA PRODUK -->
         <div class="detail-card">
           <div class="badge-row">
             <span id="detail-cat-badge" class="badge-pink">FREE FIRE</span>
@@ -121,13 +126,11 @@
           </div>
         </div>
 
-        <!-- SPESIFIKASI PRODUK -->
         <div class="detail-card">
           <h3 class="section-title">Spesifikasi Akun</h3>
           <div id="detail-specs-content" class="detail-specs-text"></div>
         </div>
 
-        <!-- PROFIL PENJUAL + STATUS ONLINE + TOMBOL BELI SEKARANG -->
         <div class="detail-card seller-card">
           <div class="seller-profile-row">
             <div class="seller-left">
@@ -141,17 +144,14 @@
               </div>
             </div>
 
-            <!-- TOMBOL BELI SEKARANG DI SEBELAH PROFIL -->
             <a href="#" id="btn-buy-now" target="_blank" class="btn-buy-now">Beli Sekarang</a>
           </div>
 
-          <!-- TULISAN REGION MADURA DI BAWAHNYA -->
           <div class="seller-region-badge">
             Real Admin Fendi Store Region Madura
           </div>
         </div>
 
-        <!-- REKOMENDASI PRODUK -->
         <div class="detail-card">
           <span class="badge-pink-light" style="font-size: 10px;">REKOMENDASI</span>
           <h3 class="section-title" style="margin-top: 4px;">Produk lainnya</h3>
@@ -257,8 +257,6 @@
 
     <!-- TAB 4: AKUN -->
     <div id="tab-akun" class="tab-content">
-      
-      <!-- AUTH GUEST VIEW -->
       <div id="auth-guest-view" class="auth-card">
         <div class="auth-toggle-bar">
           <button type="button" class="auth-tab-btn active" data-auth="login">Masuk</button>
@@ -309,7 +307,6 @@
         </form>
       </div>
 
-      <!-- AUTH LOGGED VIEW -->
       <div id="auth-logged-view" class="auth-card" style="display: none;">
         <div class="user-profile-box">
           <div class="user-info-row">
@@ -322,7 +319,6 @@
           <button type="button" id="btn-logout" class="btn-logout">Keluar / Logout</button>
         </div>
 
-        <!-- PANEL ADMIN -->
         <div id="admin-panel-section" style="display: none;" class="admin-section">
           <hr class="divider">
           

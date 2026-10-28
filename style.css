@@ -161,7 +161,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   width: 100%;
   max-width: 410px;
   margin: 0 auto;
-  padding: 85px 16px 95px 16px;
+  padding: 85px 12px 95px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -285,11 +285,11 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* KATALOG PRODUK */
+/* --- KATALOG PRODUK (GRID 2 KOLOM PER BARIS) --- */
 .product-cards-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   width: 100%;
 }
 
@@ -298,18 +298,20 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   flex-direction: column;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12px);
   cursor: pointer;
 }
 
+/* --- FOTO PRODUK RASIO 9:16 --- */
 .account-media {
   position: relative;
   width: 100%;
-  height: 190px;
+  aspect-ratio: 9 / 16;
   background: #121214;
+  overflow: hidden;
 }
 
 .account-img {
@@ -320,19 +322,21 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 
 .account-badge-group {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 6px;
+  left: 6px;
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .badge-code {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.8);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 10px;
+  padding: 3px 6px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
 }
@@ -340,48 +344,52 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 .badge-cat {
   background: var(--pill-bg);
   color: var(--text-main);
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 10px;
+  padding: 2px 5px;
+  border-radius: 6px;
   border: 1px solid var(--pill-border);
   backdrop-filter: blur(4px);
   text-transform: uppercase;
 }
 
 .account-body {
-  padding: 14px 16px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .account-price-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1px;
 }
 
-.price-label { font-size: 11px; color: var(--text-sub); }
-.account-price { font-size: 16px; font-weight: 800; color: var(--text-main); }
+.price-label { font-size: 9px; color: var(--text-sub); }
+.account-price { font-size: 13px; font-weight: 800; color: var(--text-main); }
 
 .account-specs-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
   list-style: none;
 }
 
 .spec-item {
-  font-size: 11px;
+  font-size: 9px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
-  padding: 4px 8px;
-  border-radius: 8px;
+  padding: 2px 6px;
+  border-radius: 6px;
   color: var(--text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-/* STYLE VIEW DETAIL PRODUK (DESAIN SESUAI GAMBAR 1 & 2) */
+/* VIEW DETAIL PRODUK */
 .detail-container {
   display: flex;
   flex-direction: column;
@@ -400,9 +408,11 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   padding: 4px 0;
 }
 
+/* GAMBAR DETAIL DENGAN RASIO 9:16 JUGA */
 .zoom-image-wrapper {
   position: relative;
   width: 100%;
+  aspect-ratio: 9 / 16;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--border-color);
@@ -422,11 +432,12 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   pointer-events: none;
+  z-index: 2;
 }
 
 .detail-img-full {
   width: 100%;
-  height: 240px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
@@ -506,7 +517,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   white-space: pre-line;
 }
 
-/* TAMPILAN KARTU PENJUAL PERSIS GAMBAR 2 */
+/* KARTU PENJUAL */
 .seller-card {
   position: relative;
 }
@@ -540,7 +551,6 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   border: 2px solid var(--border-color);
 }
 
-/* INDIKATOR HIJAU ONLINE PADA PROFILE.WEBP */
 .online-indicator-dot {
   position: absolute;
   bottom: 2px;
@@ -597,15 +607,8 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   gap: 2px;
 }
 
-.stat-num {
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.stat-label {
-  font-size: 10px;
-  color: var(--text-sub);
-}
+.stat-num { font-size: 13px; font-weight: 800; }
+.stat-label { font-size: 10px; color: var(--text-sub); }
 
 .text-green { color: #25d366; }
 .text-wa { color: var(--text-main); }
@@ -921,7 +924,6 @@ body.light-mode .form-group textarea { background: #ffffff; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* ANIMASI MEMBAL IKON */
 @keyframes iconBounce {
   0% { transform: scale(1); }
   30% { transform: scale(0.82); }

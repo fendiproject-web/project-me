@@ -14,7 +14,7 @@
   --danger-red: #ef4444;
 }
 
-/* TEMA TERANG (LIGHT MODE - PUTIH KEBIRUAN SEGAR, TANPA ABU-ABU) */
+/* TEMA TERANG (LIGHT MODE - PUTIH KEBIRUAN SEGAR) */
 body.light-mode {
   --bg-color: #f0f6ff;
   --card-bg: rgba(255, 255, 255, 0.92);
@@ -50,7 +50,7 @@ body {
   overflow-x: hidden;
 }
 
-/* TOP BAR */
+/* TOP BAR FIXED */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -153,7 +153,7 @@ body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
 body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 
-/* MAIN CONTENT */
+/* MAIN CONTENT CONTAINER */
 .main-content {
   flex: 1;
   width: 100%;
@@ -253,21 +253,20 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* AREA KATALOG PRODUK */
+/* --- AREA HALAMAN KATALOG PRODUK --- */
 #product-catalog-view {
   display: flex;
   flex-direction: column;
-  gap: 20px;
   width: 100%;
 }
 
-/* SUB TABS MENU FILTER KATALOG */
+/* MENU SUB-TABS (MENDORONG DAFTAR PRODUK AGAR TIDAK NEMPEL) */
 .sub-tab-bar {
   display: flex;
   gap: 8px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 18px; /* Memberi jarak aman ke produk di bawahnya */
 }
 
 .sub-tab-item {
@@ -291,7 +290,7 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* KATALOG PRODUK (2 KOLOM GRID, RASIO 9:16) */
+/* KATALOG PRODUK (2 KOLOM GRID, RASIO FOTO 9:16) */
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -417,12 +416,13 @@ body.light-mode .spec-item {
   cursor: pointer;
 }
 
-/* VIEW DETAIL PRODUK */
+/* --- AREA HALAMAN VIEW DETAIL PRODUK --- */
 .detail-container {
   display: flex;
   flex-direction: column;
   gap: 14px;
   width: 100%;
+  margin-top: 4px;
 }
 
 .btn-back-nav {
@@ -433,7 +433,7 @@ body.light-mode .spec-item {
   font-weight: 600;
   cursor: pointer;
   align-self: flex-start;
-  padding: 2px 0 4px 0;
+  padding: 2px 0;
 }
 
 .zoom-image-wrapper {
@@ -562,7 +562,7 @@ body.light-mode .price-box {
   position: absolute;
   bottom: 1px;
   right: 1px;
-  width: 100px;
+  width: 10px;
   height: 10px;
   background-color: #25d366;
   border: 2px solid #000000;

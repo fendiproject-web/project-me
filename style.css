@@ -52,7 +52,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR --- */
+/* TOP BAR */
 .top-bar-wrapper {
   position: fixed;
   top: 14px;
@@ -149,17 +149,14 @@ body {
   flex-shrink: 0;
 }
 
-.theme-toggle-btn svg {
-  width: 20px;
-  height: 20px;
-}
+.theme-toggle-btn svg { width: 20px; height: 20px; }
 
 body.dark-mode .sun-icon { display: block; stroke: #ffffff; }
 body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
 body.light-mode .moon-icon { display: block; stroke: #475569; }
 
-/* --- KONTEN UTAMA & TAB MANAGER --- */
+/* KONTEN UTAMA & TAB MANAGER */
 .main-content {
   flex: 1;
   width: 100%;
@@ -261,7 +258,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* --- SUB TABS DI MENU PRODUK --- */
+/* SUB TABS DI MENU PRODUK */
 .sub-tab-bar {
   display: flex;
   gap: 8px;
@@ -291,7 +288,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* --- PRODUCT ACCOUNT CARDS GRID --- */
+/* PRODUCT ACCOUNT CARDS GRID */
 .product-cards-grid {
   display: flex;
   flex-direction: column;
@@ -406,7 +403,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
 .account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
 .account-buy-btn:active { transform: scale(0.98); }
 
-/* --- LOGIN / DAFTAR CARD DI TAB AKUN --- */
+/* LOGIN / DAFTAR CARD DI TAB AKUN */
 .auth-card {
   width: 100%;
   background: var(--card-bg);
@@ -454,20 +451,10 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   gap: 14px;
 }
 
-.auth-form.active {
-  display: flex;
-}
+.auth-form.active { display: flex; }
 
-.form-header h3 {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.form-header p {
-  font-size: 11px;
-  color: var(--text-sub);
-  margin-top: 2px;
-}
+.form-header h3 { font-size: 16px; font-weight: 700; }
+.form-header p { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
 
 .form-group {
   display: flex;
@@ -491,9 +478,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   font-size: 12px;
 }
 
-body.light-mode .form-group input {
-  background: #ffffff;
-}
+body.light-mode .form-group input { background: #ffffff; }
 
 .btn-auth-submit {
   padding: 12px;
@@ -508,11 +493,9 @@ body.light-mode .form-group input {
   transition: transform 0.2s ease;
 }
 
-.btn-auth-submit:active {
-  transform: scale(0.98);
-}
+.btn-auth-submit:active { transform: scale(0.98); }
 
-/* --- DATAME CONTACT CARDS --- */
+/* DATAME CONTACT CARDS */
 .datame-header { text-align: center; margin-bottom: 4px; }
 .datame-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 .datame-header p { font-size: 12px; color: var(--text-sub); }
@@ -567,7 +550,7 @@ body.light-mode .form-group input {
 .card-detail { font-size: 11px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-arrow { font-size: 14px; color: var(--text-sub); }
 
-/* --- BOTTOM NAV BAR --- */
+/* BOTTOM NAV BAR */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 18px;

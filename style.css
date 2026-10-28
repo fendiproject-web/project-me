@@ -253,11 +253,10 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* AREA KATALOG PRODUK (HALAMAN DEPAN KATALOG) */
+/* AREA KATALOG PRODUK */
 #product-catalog-view {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
-  gap: 22px; /* Jarak terpisah antara tombol menu 'Semua/FF/ML' & gambar produk di bawahnya */
   width: 100%;
 }
 
@@ -267,6 +266,7 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   gap: 8px;
   width: 100%;
   justify-content: center;
+  margin-bottom: 24px !important; /* MENDORONG GAMBAR PRODUK KE BAWAH SEJAUH 24PX */
 }
 
 .sub-tab-item {
@@ -416,13 +416,13 @@ body.light-mode .spec-item {
   cursor: pointer;
 }
 
-/* VIEW DETAIL PRODUK (TAMPILAN YANG ADA DI FOTO KAMU) */
+/* VIEW DETAIL PRODUK */
 .detail-container {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Jarak antar kotak informasi rapi & berjarak pas */
+  gap: 16px;
   width: 100%;
-  margin-top: 10px; /* Diberi margin supaya foto atas TIDAK ketutupan Top Bar */
+  margin-top: 10px;
 }
 
 .btn-back-nav {

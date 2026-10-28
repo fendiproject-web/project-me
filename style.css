@@ -255,8 +255,9 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 
 /* AREA KATALOG PRODUK */
 #product-catalog-view {
-  display: flex !important;
+  display: flex;
   flex-direction: column;
+  gap: 20px;
   width: 100%;
 }
 
@@ -266,7 +267,7 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   gap: 8px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 24px !important; /* MENDORONG GAMBAR PRODUK KE BAWAH SEJAUH 24PX */
+  margin-bottom: 8px;
 }
 
 .sub-tab-item {
@@ -420,9 +421,8 @@ body.light-mode .spec-item {
 .detail-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   width: 100%;
-  margin-top: 10px;
 }
 
 .btn-back-nav {
@@ -562,7 +562,7 @@ body.light-mode .price-box {
   position: absolute;
   bottom: 1px;
   right: 1px;
-  width: 10px;
+  width: 100px;
   height: 10px;
   background-color: #25d366;
   border: 2px solid #000000;

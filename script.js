@@ -190,7 +190,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   const catalogView = document.getElementById('product-catalog-view');
   const detailView = document.getElementById('product-detail-view');
   if (catalogView && detailView) {
-    catalogView.style.display = 'block';
+    catalogView.style.display = 'flex'; // Menggunakan flex agar gap/margin berjalan normal
     detailView.style.display = 'none';
   }
 });
@@ -280,7 +280,7 @@ function switchTab(targetTabId, navIndex) {
     const catalogView = document.getElementById('product-catalog-view');
     const detailView = document.getElementById('product-detail-view');
     if (catalogView && detailView) {
-      catalogView.style.display = 'block';
+      catalogView.style.display = 'flex'; // Menggunakan flex agar gap/margin berjalan normal
       detailView.style.display = 'none';
     }
   }

@@ -1,187 +1,650 @@
-// Preload Gambar Profil & Banner
-const avatarPreload = new Image();
-avatarPreload.src = 'profile.webp';
-
-const bannerPreload = new Image();
-bannerPreload.src = 'banner1.png';
-
-// --- DATA PRODUK CONTOH (SIAP DIHUBUNGKAN KE GOOGLE SHEETS) ---
-const productsList = [
-  {
-    id: 1,
-    code: "#FF-01",
-    category: "ff",
-    price: "150.000",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
-    specs: ["Vault Melimpah", "Old Season Pass", "Diamond 200", "Single Log VK"]
-  },
-  {
-    id: 2,
-    code: "#ML-01",
-    category: "ml",
-    price: "280.000",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80",
-    specs: ["Rank Mythic", "Skin Collector 2", "Skin Epic 8", "All Unbind All Login"]
-  }
-];
-
-// --- FITUR 1: TOGGLE TEMA TERANG / GELAP ---
-const themeToggleBtn = document.getElementById('themeToggle');
-themeToggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('light-mode');
-  document.body.classList.toggle('dark-mode');
-});
-
-// --- FITUR 2: RENDER PRODUK DI TAB PRODUK ---
-const productListContainer = document.getElementById('product-list-container');
-let currentCategory = 'all';
-
-function renderProducts(filterCat = 'all') {
-  const filtered = filterCat === 'all' 
-    ? productsList 
-    : productsList.filter(p => p.category === filterCat);
-
-  if (!productListContainer) return;
-
-  if (filtered.length === 0) {
-    productListContainer.innerHTML = `
-      <div style="text-align: center; padding: 40px 10px; color: var(--text-sub);">
-        <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan di kategori ini.</p>
-      </div>
-    `;
-    return;
-  }
-
-  productListContainer.innerHTML = filtered.map(item => {
-    const waText = encodeURIComponent(`Halo Admin Fendi Store, saya berminat beli Akun ${item.code} (${item.category.toUpperCase()}) seharga Rp ${item.price}. Apakah masih ada?`);
-    const waUrl = `https://wa.me/6285854325988?text=${waText}`;
-
-    const specsList = item.specs.map(s => `<li class="spec-item">${s}</li>`).join('');
-
-    return `
-      <div class="account-card">
-        <div class="account-media">
-          <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
-          <div class="account-badge-group">
-            <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
-          </div>
-        </div>
-        <div class="account-body">
-          <div class="account-price-row">
-            <span class="price-label">Harga Akun</span>
-            <span class="account-price">Rp ${item.price}</span>
-          </div>
-          <ul class="account-specs-list">
-            ${specsList}
-          </ul>
-          <a href="${waUrl}" target="_blank" class="account-buy-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
-            <span>Beli Akun via WA</span>
-          </a>
-        </div>
-      </div>
-    `;
-  }).join('');
+/* --- TEMA VARIABLES (MODE GELAP MONOKROM HITAM-PUTIH) --- */
+:root {
+  --bg-color: #000000;
+  --card-bg: rgba(24, 24, 27, 0.75);
+  --text-main: #ffffff;
+  --text-sub: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.14);
+  --nav-bg: rgba(18, 18, 18, 0.88);
+  
+  --pill-bg: rgba(255, 255, 255, 0.12);
+  --pill-border: rgba(255, 255, 255, 0.25);
+  --accent-color: #ffffff;
+  --accent-purple: #ffffff;
+  --wa-green: #25d366;
 }
 
-// --- FITUR 3: SUB TABS PRODUK (Semua, FF, ML) ---
-const subTabItems = document.querySelectorAll('.sub-tab-item');
-subTabItems.forEach((btn) => {
-  btn.addEventListener('click', function() {
-    const targetSub = this.getAttribute('data-sub');
-    currentCategory = targetSub;
-
-    subTabItems.forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-
-    renderProducts(targetSub);
-  });
-});
-
-// --- FITUR 4: BOTTOM NAV MANAGER ---
-const navItems = document.querySelectorAll('.nav-item');
-const navIndicator = document.querySelector('.nav-indicator');
-const tabContents = document.querySelectorAll('.tab-content');
-
-function updateIndicator(index) {
-  navIndicator.style.transform = `translateX(${index * 100}%)`;
+/* TEMA TERANG (LIGHT MODE - UNGU MUDA PASTEL) */
+body.light-mode {
+  --bg-color: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --text-main: #0f172a;
+  --text-sub: #94a3b8;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  
+  --pill-bg: rgba(192, 132, 252, 0.15);
+  --pill-border: rgba(192, 132, 252, 0.35);
+  --accent-color: #c084fc;
+  --accent-purple: #a855f7;
+  --wa-green: #128c7e;
 }
 
-function switchTab(targetTabId, navIndex) {
-  navItems.forEach(nav => {
-    nav.classList.remove('active');
-    const icon = nav.querySelector('.icon-box');
-    if (icon) icon.classList.remove('bounce');
-  });
-
-  tabContents.forEach(tab => tab.classList.remove('active'));
-
-  const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
-  if (targetNavItem) {
-    targetNavItem.classList.add('active');
-    const currentIcon = targetNavItem.querySelector('.icon-box');
-    if (currentIcon) {
-      currentIcon.classList.add('bounce');
-    }
-  }
-
-  const targetTab = document.getElementById(targetTabId);
-  if (targetTab) targetTab.classList.add('active');
-
-  updateIndicator(navIndex);
+/* RESET UTAMA */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
 }
 
-navItems.forEach((item) => {
-  item.addEventListener('click', function(e) {
-    e.preventDefault();
-    const targetTabId = this.getAttribute('data-target');
-    const navIndex = parseInt(this.getAttribute('data-index'));
-    switchTab(targetTabId, navIndex);
-  });
-});
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
 
-const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
-switchTabTriggers.forEach((trigger) => {
-  trigger.addEventListener('click', function() {
-    const targetTabId = this.getAttribute('data-target-tab');
-    const navIndex = parseInt(this.getAttribute('data-nav-index'));
-    switchTab(targetTabId, navIndex);
-  });
-});
+/* TOP BAR */
+.top-bar-wrapper {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  z-index: 100;
+}
 
-// --- FITUR 5: TOGGLE FORM LOGIN & DAFTAR DI TAB AKUN ---
-const authTabBtns = document.querySelectorAll('.auth-tab-btn');
-const authForms = document.querySelectorAll('.auth-form');
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 410px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
 
-authTabBtns.forEach(btn => {
-  btn.addEventListener('click', function() {
-    const targetAuth = this.getAttribute('data-auth');
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
 
-    authTabBtns.forEach(b => b.classList.remove('active'));
-    authForms.forEach(f => f.classList.remove('active'));
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  overflow: hidden;
+}
 
-    this.classList.add('active');
-    const targetForm = document.getElementById(`${targetAuth}-form`);
-    if (targetForm) {
-      targetForm.classList.add('active');
-    }
-  });
-});
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
 
-// SUBMIT FORM LOGIN & DAFTAR
-document.getElementById('login-form')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Proses Login...');
-});
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
 
-document.getElementById('register-form')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Proses Pendaftaran Akun...');
-});
+.typing-text {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--accent-color);
+  width: 0;
+  animation: typeLoop 4s steps(11, end) infinite, caretBlink 0.75s infinite;
+}
 
-// INISIALISASI
-renderProducts('all');
-updateIndicator(0);
+@keyframes typeLoop {
+  0% { width: 0; opacity: 0.3; }
+  15% { opacity: 1; }
+  50% { width: 100%; }
+  80% { width: 100%; opacity: 1; }
+  95%, 100% { width: 0; opacity: 0.3; }
+}
+
+@keyframes caretBlink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: var(--accent-color); }
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  flex-shrink: 0;
+}
+
+.theme-toggle-btn svg { width: 20px; height: 20px; }
+
+body.dark-mode .sun-icon { display: block; stroke: #ffffff; }
+body.dark-mode .moon-icon { display: none; }
+body.light-mode .sun-icon { display: none; }
+body.light-mode .moon-icon { display: block; stroke: #475569; }
+
+/* KONTEN UTAMA & TAB MANAGER */
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 85px 16px 95px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tab-content {
+  display: none;
+  width: 100%;
+}
+
+.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* BANNER CONTAINER */
+.banner-container {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+}
+
+.banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+/* TOMBOL AKSI CEPAT DI HOME */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.action-row .btn-action { flex: 1; }
+.btn-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+.btn-action:active { transform: scale(0.97); }
+
+.btn-wa {
+  border-color: rgba(37, 211, 102, 0.3);
+  background: rgba(37, 211, 102, 0.08);
+  color: #25d366;
+}
+.btn-wa svg { stroke: #25d366; }
+
+.btn-verify {
+  border-color: var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+}
+.btn-verify svg { stroke: var(--text-main); }
+
+.btn-group {
+  width: 100%;
+  border-color: var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+}
+.btn-group svg { stroke: var(--text-main); }
+
+/* SUB TABS DI MENU PRODUK */
+.sub-tab-bar {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.sub-tab-item {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+}
+
+.sub-tab-item.active {
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+  color: var(--text-main);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* PRODUCT ACCOUNT CARDS GRID */
+.product-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.account-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.account-media {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  background: #121214;
+}
+
+.account-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-badge-group {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge-code {
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.badge-cat {
+  background: var(--pill-bg);
+  color: var(--text-main);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--pill-border);
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+}
+
+.account-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-label { font-size: 11px; color: var(--text-sub); }
+.account-price { font-size: 16px; font-weight: 800; color: var(--text-main); }
+
+.account-specs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.spec-item {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: var(--text-sub);
+}
+
+.account-buy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  color: #25d366;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
+.account-buy-btn:active { transform: scale(0.98); }
+
+/* LOGIN / DAFTAR CARD DI TAB AKUN */
+.auth-card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.auth-toggle-bar {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-sub);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-tab-btn.active {
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-main);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form.active { display: flex; }
+
+.form-header h3 { font-size: 16px; font-weight: 700; }
+.form-header p { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+body.light-mode .form-group input { background: #ffffff; }
+
+.btn-auth-submit {
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform 0.2s ease;
+}
+
+.btn-auth-submit:active { transform: scale(0.98); }
+
+/* DATAME CONTACT CARDS */
+.datame-header { text-align: center; margin-bottom: 4px; }
+.datame-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.datame-header p { font-size: 12px; color: var(--text-sub); }
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--text-main);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.contact-card:active { transform: scale(0.98); }
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+}
+
+.card-icon svg { width: 22px; height: 22px; stroke: var(--text-main); }
+.wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+.wa-icon svg { stroke: #25d366; }
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title { font-size: 13px; font-weight: 600; }
+.card-detail { font-size: 11px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-arrow { font-size: 14px; color: var(--text-sub); }
+
+/* BOTTOM NAV BAR */
+.bottom-nav-wrapper {
+  position: fixed;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  z-index: 999;
+}
+
+.bottom-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 380px;
+  height: 62px;
+  border-radius: 32px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  padding: 5px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-sub);
+  width: 25%;
+  height: 100%;
+  font-size: 10px;
+  font-weight: 500;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.icon-box {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--text-sub);
+  transition: stroke 0.3s ease;
+}
+
+.nav-item.active { color: var(--text-main); }
+.nav-item.active .icon-box svg { stroke: var(--text-main); }
+
+.nav-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 4);
+  height: calc(100% - 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.nav-indicator::after {
+  content: '';
+  width: 92%;
+  height: 100%;
+  border-radius: 26px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ANIMASI MEMBAL IKON */
+@keyframes iconBounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.82); }
+  60% { transform: scale(1.22); }
+  80% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.icon-box.bounce {
+  animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

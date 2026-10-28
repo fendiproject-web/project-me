@@ -56,6 +56,9 @@ async function loadProductsFromSheets() {
       renderProducts(currentCategory);
       renderHomeRecommendations();
       renderAdminManageList();
+      
+      // Cek apakah ada parameter ID produk di URL pas halaman pertama kali dibuka
+      checkUrlForProductDetail();
     } else {
       renderProducts(currentCategory);
       renderHomeRecommendations();
@@ -101,7 +104,7 @@ function renderHomeRecommendations() {
   document.querySelectorAll('.home-card').forEach(card => {
     card.addEventListener('click', function() {
       const prodId = this.getAttribute('data-id');
-      switchTab('tab-produk', 1);
+      switchTab('tab-produk', 1, false);
       openProductDetail(prodId);
     });
   });
@@ -151,8 +154,8 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// BUKA DETAIL PRODUK
-function openProductDetail(productId) {
+// BUKA DETAIL PRODUK DAN PERBAARUI URL
+function openProductDetail(productId, updateHistory = true) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
 
@@ -183,6 +186,26 @@ function openProductDetail(productId) {
 
     renderRecommendations(productId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // UBAH URL DENGAN QUERY ID PRODUK TANPA RELOAD
+    if (updateHistory) {
+      const cleanCode = item.code.replace('#', '').toLowerCase();
+      window.history.pushState({ tabId: 'tab-produk', productId: productId }, '', `/produk?id=${cleanCode}`);
+    }
+  }
+}
+
+// CEK QUERY URL UNTUK BUKA DETAIL PRODUK
+function checkUrlForProductDetail() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const prodCode = urlParams.get('id');
+
+  if (prodCode && fetchedProducts.length > 0) {
+    const matchedProduct = fetchedProducts.find(p => p.code.replace('#', '').toLowerCase() === prodCode.toLowerCase() || String(p.id) === prodCode);
+    if (matchedProduct) {
+      switchTab('tab-produk', 1, false);
+      openProductDetail(matchedProduct.id, false);
+    }
   }
 }
 
@@ -223,6 +246,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   if (catalogView && detailView) {
     catalogView.style.display = 'flex';
     detailView.style.display = 'none';
+    window.history.pushState({ tabId: 'tab-produk' }, '', '/produk');
   }
 });
 
@@ -343,6 +367,7 @@ function handleRouting() {
 
   const currentRoute = routeMap[path] || routeMap['/'];
   switchTab(currentRoute.tab, currentRoute.index, false);
+  checkUrlForProductDetail();
 }
 
 window.addEventListener('popstate', handleRouting);

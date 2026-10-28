@@ -68,7 +68,7 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER KATALOG PRODUK (2 KOLOM PER BARIS)
+// RENDER KATALOG PRODUK
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -132,7 +132,13 @@ function openProductDetail(productId) {
     catalogView.style.display = 'none';
     detailView.style.display = 'flex';
 
-    document.getElementById('detail-img').src = item.image;
+    const detailImg = document.getElementById('detail-img');
+    detailImg.src = item.image;
+    detailImg.onerror = function() {
+      this.onerror = null;
+      this.src = 'banner1.png';
+    };
+
     document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
@@ -403,7 +409,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   const category = document.getElementById('post-category').value;
   const rawPrice = document.getElementById('post-price').value.trim();
-  const cleanPrice = rawPrice.replace(/\D/g, ''); // Ambil angka murni saja (213000)
+  const cleanPrice = rawPrice.replace(/\D/g, '');
   const urlInput = document.getElementById('post-url').value.trim();
   const specsRaw = document.getElementById('post-specs').value.trim();
   const fileInput = document.getElementById('post-file');

@@ -54,39 +54,42 @@ async function loadProductsFromSheets() {
     if (data.success) {
       fetchedProducts = data.products;
       renderProducts(currentCategory);
+      renderHomeRecommendations();
       renderAdminManageList();
     } else {
       renderProducts(currentCategory);
+      renderHomeRecommendations();
     }
   } catch (err) {
     console.error("Gagal mengambil produk:", err);
     renderProducts(currentCategory);
+    renderHomeRecommendations();
   }
 }
 
-// RENDER KATALOG DENGAN TOMBOL "LIHAT SEKARANG"
-function renderProducts(filterCat = 'all') {
-  const filtered = filterCat === 'all' 
-    ? fetchedProducts 
-    : fetchedProducts.filter(p => p.category === filterCat);
+// RENDER REKOMENDASI PRODUK DI HALAMAN HOME
+function renderHomeRecommendations() {
+  const homeRecContainer = document.getElementById('home-recommendation-grid');
+  if (!homeRecContainer) return;
 
-  if (!productListContainer) return;
-
-  if (filtered.length === 0) {
-    productListContainer.innerHTML = `
-      <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
-        <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan di kategori ini.</p>
+  if (fetchedProducts.length === 0) {
+    homeRecContainer.innerHTML = `
+      <div style="grid-column: span 2; text-align: center; padding: 20px 10px; color: var(--text-sub);">
+        <p style="font-size: 12px; font-weight: 600;">Belum ada produk jualan.</p>
       </div>
     `;
     return;
   }
 
-  productListContainer.innerHTML = filtered.map(item => {
+  // Ambil maksimal 4 produk terbaru
+  const homeProducts = fetchedProducts.slice(0, 4);
+
+  homeRecContainer.innerHTML = homeProducts.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const formattedPrice = formatRupiah(item.price);
 
     return `
-      <div class="account-card" data-id="${item.id}">
+      <div class="account-card home-card" data-id="${item.id}">
         <div class="account-media">
           <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
           <div class="account-badge-group">
@@ -108,7 +111,60 @@ function renderProducts(filterCat = 'all') {
     `;
   }).join('');
 
-  document.querySelectorAll('.account-card').forEach(card => {
+  document.querySelectorAll('.home-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const prodId = this.getAttribute('data-id');
+      switchTab('tab-produk', 1);
+      openProductDetail(prodId);
+    });
+  });
+}
+
+// RENDER KATALOG DI TAB PRODUK
+function renderProducts(filterCat = 'all') {
+  const filtered = filterCat === 'all' 
+    ? fetchedProducts 
+    : fetchedProducts.filter(p => p.category === filterCat);
+
+  if (!productListContainer) return;
+
+  if (filtered.length === 0) {
+    productListContainer.innerHTML = `
+      <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
+        <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan di kategori ini.</p>
+      </div>
+    `;
+    return;
+  }
+
+  productListContainer.innerHTML = filtered.map(item => {
+    const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
+    const formattedPrice = formatRupiah(item.price);
+
+    return `
+      <div class="account-card catalog-card" data-id="${item.id}">
+        <div class="account-media">
+          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <div class="account-price-row">
+            <span class="price-label">Harga Akun</span>
+            <span class="account-price">Rp ${formattedPrice}</span>
+          </div>
+          <ul class="account-specs-list">
+            ${displaySpecs}
+          </ul>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.catalog-card').forEach(card => {
     card.addEventListener('click', function() {
       const prodId = this.getAttribute('data-id');
       openProductDetail(prodId);
@@ -195,7 +251,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK
+// REKOMENDASI PRODUK LAINNYA DI DETAIL PRODUK
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -232,7 +288,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TABS FILTER
+// SUB TABS FILTER KATALOG
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {

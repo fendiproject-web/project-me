@@ -1,4 +1,4 @@
-/* --- TEMA VARIABLES (MODE GELAP MONOKROM HITAM-PUTIH) --- */
+/* --- TEMA VARIABLES (MODE GELAP MONOKROM HITAM-PUTIH MURNI) --- */
 :root {
   --bg-color: #000000;
   --card-bg: rgba(24, 24, 27, 0.75);
@@ -10,7 +10,6 @@
   --pill-bg: rgba(255, 255, 255, 0.12);
   --pill-border: rgba(255, 255, 255, 0.25);
   --accent-color: #ffffff;
-  --accent-purple: #ffffff;
   --wa-green: #25d366;
   --danger-red: #ef4444;
 }
@@ -27,7 +26,6 @@ body.light-mode {
   --pill-bg: rgba(192, 132, 252, 0.15);
   --pill-border: rgba(192, 132, 252, 0.35);
   --accent-color: #c084fc;
-  --accent-purple: #a855f7;
   --wa-green: #128c7e;
   --danger-red: #dc2626;
 }
@@ -39,7 +37,6 @@ body.light-mode {
   padding: 0;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
-  
   -webkit-tap-highlight-color: transparent;
   outline: none;
   user-select: none;
@@ -231,7 +228,6 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   backdrop-filter: blur(12px);
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .action-row .btn-action { flex: 1; }
@@ -279,7 +275,6 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
   cursor: pointer;
   text-align: center;
-  transition: all 0.25s ease;
   backdrop-filter: blur(12px);
 }
 
@@ -290,7 +285,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* PRODUCT ACCOUNT CARDS GRID */
+/* KATALOG PRODUK */
 .product-cards-grid {
   display: flex;
   flex-direction: column;
@@ -307,6 +302,7 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12px);
+  cursor: pointer;
 }
 
 .account-media {
@@ -385,25 +381,234 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
-.account-buy-btn {
+/* STYLE VIEW DETAIL PRODUK (DESAIN SESUAI GAMBAR 1 & 2) */
+.detail-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 14px;
   width: 100%;
-  padding: 10px;
-  border-radius: 14px;
-  background: rgba(37, 211, 102, 0.12);
-  border: 1px solid rgba(37, 211, 102, 0.3);
-  color: #25d366;
+}
+
+.btn-back-nav {
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
   font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 4px 0;
+}
+
+.zoom-image-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: #121214;
+}
+
+.zoom-tag {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 10px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.detail-img-full {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  backdrop-filter: blur(12px);
+}
+
+.badge-row {
+  display: flex;
+  gap: 6px;
+}
+
+.badge-pink {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  font-size: 10px;
   font-weight: 700;
-  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--pill-border);
+}
+
+.badge-pink-light {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-sub);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.detail-product-title {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.price-box {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 14px;
   margin-top: 4px;
 }
 
-.account-buy-btn svg { width: 16px; height: 16px; stroke: #25d366; }
-.account-buy-btn:active { transform: scale(0.98); }
+.price-label-sm {
+  font-size: 10px;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+.detail-price-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.detail-specs-text {
+  font-size: 12px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* TAMPILAN KARTU PENJUAL PERSIS GAMBAR 2 */
+.seller-card {
+  position: relative;
+}
+
+.seller-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-sub);
+  letter-spacing: 0.8px;
+}
+
+.seller-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.seller-avatar-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.seller-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+/* INDIKATOR HIJAU ONLINE PADA PROFILE.WEBP */
+.online-indicator-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background-color: #25d366;
+  border: 2px solid #000000;
+  border-radius: 50%;
+}
+
+.seller-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.seller-name {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.seller-role-badge {
+  font-size: 9px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-main);
+  padding: 2px 6px;
+  border-radius: 6px;
+  width: fit-content;
+  font-weight: 600;
+}
+
+.seller-sub {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.seller-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-num {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-sub);
+}
+
+.text-green { color: #25d366; }
+.text-wa { color: var(--text-main); }
 
 /* AUTH CARD & ADMIN PANEL */
 .auth-card {
@@ -437,7 +642,6 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
 }
 
 .auth-tab-btn.active {
@@ -470,6 +674,16 @@ body.light-mode .moon-icon { display: block; stroke: #475569; }
   color: var(--text-sub);
 }
 
+.auto-code-badge {
+  font-size: 11px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
   padding: 11px 14px;
@@ -494,7 +708,6 @@ body.light-mode .form-group textarea { background: #ffffff; }
   font-size: 13px;
   cursor: pointer;
   margin-top: 4px;
-  transition: transform 0.2s ease;
 }
 
 .btn-auth-submit:active { transform: scale(0.98); }
@@ -664,7 +877,6 @@ body.light-mode .form-group textarea { background: #ffffff; }
   font-size: 10px;
   font-weight: 500;
   z-index: 2;
-  transition: color 0.3s ease;
 }
 
 .icon-box {
@@ -680,7 +892,6 @@ body.light-mode .form-group textarea { background: #ffffff; }
   width: 100%;
   height: 100%;
   stroke: var(--text-sub);
-  transition: stroke 0.3s ease;
 }
 
 .nav-item.active { color: var(--text-main); }

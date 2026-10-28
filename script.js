@@ -48,6 +48,7 @@ async function loadProductsFromSheets() {
   }
 }
 
+// RENDER KARTU KATALOG PRODUK
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -65,12 +66,10 @@ function renderProducts(filterCat = 'all') {
   }
 
   productListContainer.innerHTML = filtered.map(item => {
-    const waText = encodeURIComponent(`Halo Admin Fendi Store, saya berminat beli Akun ${item.code} (${item.category.toUpperCase()}) seharga Rp ${item.price}. Apakah masih ada?`);
-    const waUrl = `https://wa.me/6285854325988?text=${waText}`;
     const specsList = item.specs.map(s => `<li class="spec-item">${s}</li>`).join('');
 
     return `
-      <div class="account-card">
+      <div class="account-card" onclick="openProductDetail('${item.id}')">
         <div class="account-media">
           <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
           <div class="account-badge-group">
@@ -86,16 +85,80 @@ function renderProducts(filterCat = 'all') {
           <ul class="account-specs-list">
             ${specsList}
           </ul>
-          <a href="${waUrl}" target="_blank" class="account-buy-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
-            <span>Beli Akun via WA</span>
-          </a>
         </div>
       </div>
     `;
   }).join('');
+}
+
+// BUKA VIEW DETAIL PRODUK PERSIS SEPERTI TAMPILAN GAMBAR 1 & 2
+window.openProductDetail = function(productId) {
+  const item = fetchedProducts.find(p => String(p.id) === String(productId));
+  if (!item) return;
+
+  const catalogView = document.getElementById('product-catalog-view');
+  const detailView = document.getElementById('product-detail-view');
+
+  if (catalogView && detailView) {
+    catalogView.style.display = 'none';
+    detailView.style.display = 'flex';
+
+    document.getElementById('detail-img').src = item.image;
+    document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
+    document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
+    document.getElementById('detail-price').textContent = `Rp ${item.price}`;
+    
+    // Spesifikasi
+    const specsFormatted = item.specs.join(" || ");
+    document.getElementById('detail-specs-content').textContent = specsFormatted;
+
+    // Jumlah total produk toko
+    document.getElementById('seller-total-products').textContent = fetchedProducts.length;
+
+    // Render Produk Lainnya di bagian bawah
+    renderRecommendations(productId);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+// KEMBALI KE KATALOG
+document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
+  const catalogView = document.getElementById('product-catalog-view');
+  const detailView = document.getElementById('product-detail-view');
+  if (catalogView && detailView) {
+    catalogView.style.display = 'block';
+    detailView.style.display = 'none';
+  }
+});
+
+// RENDER REKOMENDASI PRODUK LAINNYA
+function renderRecommendations(currentId) {
+  const recContainer = document.getElementById('recommendation-grid');
+  if (!recContainer) return;
+
+  const recs = fetchedProducts.filter(p => String(p.id) !== String(currentId)).slice(0, 4);
+
+  if (recs.length === 0) {
+    recContainer.innerHTML = `<p style="font-size: 11px; color: var(--text-sub);">Tidak ada produk lain.</p>`;
+    return;
+  }
+
+  recContainer.innerHTML = recs.map(item => `
+    <div class="account-card" onclick="openProductDetail('${item.id}')">
+      <div class="account-media">
+        <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
+        <div class="account-badge-group">
+          <span class="badge-code">${item.code}</span>
+        </div>
+      </div>
+      <div class="account-body">
+        <div class="account-price-row">
+          <span class="account-price">Rp ${item.price}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // SUB TABS PRODUK
@@ -136,13 +199,21 @@ function switchTab(targetTabId, navIndex) {
   if (targetNavItem) {
     targetNavItem.classList.add('active');
     const currentIcon = targetNavItem.querySelector('.icon-box');
-    if (currentIcon) {
-      currentIcon.classList.add('bounce');
-    }
+    if (currentIcon) currentIcon.classList.add('bounce');
   }
 
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) targetTab.classList.add('active');
+
+  // Jika kembali ke tab produk, reset ke tampilan katalog
+  if (targetTabId === 'tab-produk') {
+    const catalogView = document.getElementById('product-catalog-view');
+    const detailView = document.getElementById('product-detail-view');
+    if (catalogView && detailView) {
+      catalogView.style.display = 'block';
+      detailView.style.display = 'none';
+    }
+  }
 
   updateIndicator(navIndex);
 }
@@ -178,13 +249,11 @@ authTabBtns.forEach(btn => {
 
     this.classList.add('active');
     const targetForm = document.getElementById(`${targetAuth}-form`);
-    if (targetForm) {
-      targetForm.classList.add('active');
-    }
+    if (targetForm) targetForm.classList.add('active');
   });
 });
 
-// KELOLA SESSION USER (LOCALSTORAGE)
+// SESSION USER
 function getCurrentUser() {
   const data = localStorage.getItem('fendi_session_user');
   return data ? JSON.parse(data) : null;
@@ -206,7 +275,6 @@ function updateAccountView() {
     document.getElementById('display-user-wa').textContent = user.wa;
     document.getElementById('display-user-role').textContent = user.role.toUpperCase();
 
-    // HANYA MUNCULKAN PANEL ADMIN JIKA ROLE ADALAH 'ADMIN'
     if (user.role === 'admin') {
       adminPanel.style.display = 'block';
       renderAdminManageList();
@@ -224,7 +292,7 @@ function updateAccountView() {
 document.getElementById('btn-logout')?.addEventListener('click', () => {
   localStorage.removeItem('fendi_session_user');
   updateAccountView();
-  alert("Kamu telah keluar/logout.");
+  alert("Kamu telah keluar.");
 });
 
 // DAFTAR AKUN
@@ -291,24 +359,23 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU (KHUSUS ADMIN)
+// UPLOAD PRODUK BARU ADMIN (TANPA ISIAN KODE MANUAL)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
   if (!user || user.role !== 'admin') {
-    alert("Hanya admin yang dapat memposting produk!");
+    alert("Hanya admin yang dapat memposting!");
     return;
   }
 
   const category = document.getElementById('post-category').value;
-  const code = document.getElementById('post-code').value.trim();
   const price = document.getElementById('post-price').value.trim();
   const urlInput = document.getElementById('post-url').value.trim();
   const specsRaw = document.getElementById('post-specs').value.trim();
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Uploading Foto & Data...";
+  btn.textContent = "Uploading & Deteksi Kode...";
   btn.disabled = true;
 
   const sendPayload = async (imageBase64 = null) => {
@@ -319,7 +386,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
           action: 'addProduct',
           role: user.role,
           category: category,
-          code: code,
           price: price,
           imageUrl: urlInput,
           imageBase64: imageBase64,
@@ -353,7 +419,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 });
 
-// RENDER DAFTAR HAPUS PRODUK UNTUK ADMIN
+// RENDER LIST KELOLA HAPUS PRODUK
 function renderAdminManageList() {
   const adminManageList = document.getElementById('admin-manage-list');
   if (!adminManageList) return;
@@ -396,7 +462,7 @@ window.deleteProductFromSheets = async function(productId) {
   }
 };
 
-// INISIALISASI awal
+// INISIALISASI
 loadProductsFromSheets();
 updateAccountView();
 updateIndicator(0);

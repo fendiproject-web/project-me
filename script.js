@@ -8,6 +8,13 @@ avatarPreload.src = 'profile.webp';
 const bannerPreload = new Image();
 bannerPreload.src = 'banner1.png';
 
+// FUNGSI HELPER FORMAT RUPIAH
+function formatRupiah(val) {
+  if (!val) return '0';
+  const cleanNum = String(val).replace(/\D/g, '');
+  return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
+}
+
 // TOGGLE TEMA TERANG / GELAP
 const themeToggleBtn = document.getElementById('themeToggle');
 if (themeToggleBtn) {
@@ -17,7 +24,7 @@ if (themeToggleBtn) {
   });
 }
 
-// FORMAT OTOMATIS PEMISAH RIBUAN HARGA (CONTOH: 100000 -> 100.000)
+// INPUT HARGA DENGAN PEMISAH RIBUAN
 const postPriceInput = document.getElementById('post-price');
 if (postPriceInput) {
   postPriceInput.addEventListener('input', function () {
@@ -80,11 +87,12 @@ function renderProducts(filterCat = 'all') {
 
   productListContainer.innerHTML = filtered.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
+    const formattedPrice = formatRupiah(item.price);
 
     return `
       <div class="account-card" data-id="${item.id}">
         <div class="account-media">
-          <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
+          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
             <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
@@ -93,7 +101,7 @@ function renderProducts(filterCat = 'all') {
         <div class="account-body">
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
-            <span class="account-price">Rp ${item.price}</span>
+            <span class="account-price">Rp ${formattedPrice}</span>
           </div>
           <ul class="account-specs-list">
             ${displaySpecs}
@@ -127,7 +135,7 @@ function openProductDetail(productId) {
     document.getElementById('detail-img').src = item.image;
     document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
-    document.getElementById('detail-price').textContent = `Rp ${item.price}`;
+    document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
     
     // Spesifikasi
     const specsFormatted = item.specs.join(" || ");
@@ -166,14 +174,14 @@ function renderRecommendations(currentId) {
   recContainer.innerHTML = recs.map(item => `
     <div class="account-card rec-card" data-id="${item.id}">
       <div class="account-media">
-        <img src="${item.image}" alt="${item.code}" class="account-img" onerror="this.src='banner1.png'">
+        <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
         <div class="account-badge-group">
           <span class="badge-code">${item.code}</span>
         </div>
       </div>
       <div class="account-body">
         <div class="account-price-row">
-          <span class="account-price">Rp ${item.price}</span>
+          <span class="account-price">Rp ${formatRupiah(item.price)}</span>
         </div>
       </div>
     </div>
@@ -394,13 +402,14 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 
   const category = document.getElementById('post-category').value;
-  const price = document.getElementById('post-price').value.trim();
+  const rawPrice = document.getElementById('post-price').value.trim();
+  const cleanPrice = rawPrice.replace(/\D/g, ''); // Ambil angka murni saja (213000)
   const urlInput = document.getElementById('post-url').value.trim();
   const specsRaw = document.getElementById('post-specs').value.trim();
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Uploading Foto & Deteksi Kode...";
+  btn.textContent = "Uploading Foto & Simpan Data...";
   btn.disabled = true;
 
   const sendPayload = async (imageBase64 = null) => {
@@ -411,7 +420,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
           action: 'addProduct',
           role: user.role,
           category: category,
-          price: price,
+          price: cleanPrice,
           imageUrl: urlInput,
           imageBase64: imageBase64,
           specs: specsRaw
@@ -458,7 +467,7 @@ function renderAdminManageList() {
     <div class="manage-item">
       <div>
         <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category.toUpperCase()})</span>
-        <p style="font-size: 11px; color: var(--text-sub);">Rp ${item.price}</p>
+        <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
       </div>
       <button type="button" class="btn-delete-prod" onclick="deleteProductFromSheets('${item.id}')">Hapus</button>
     </div>

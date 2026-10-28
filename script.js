@@ -26,7 +26,7 @@ async function loadProductsFromSheets() {
   if (!productListContainer) return;
 
   productListContainer.innerHTML = `
-    <div style="text-align: center; padding: 40px 10px; color: var(--text-sub);">
+    <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
       <p style="font-size: 12px; font-weight: 600;">Mengambil produk dari server...</p>
     </div>
   `;
@@ -48,7 +48,7 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER KARTU KATALOG PRODUK (SISTEM KLIK AMAN)
+// RENDER KATALOG PRODUK (2 KOLOM PER BARIS)
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -58,7 +58,7 @@ function renderProducts(filterCat = 'all') {
 
   if (filtered.length === 0) {
     productListContainer.innerHTML = `
-      <div style="text-align: center; padding: 40px 10px; color: var(--text-sub);">
+      <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
         <p style="font-size: 13px; font-weight: 600;">Belum ada akun jualan di kategori ini.</p>
       </div>
     `;
@@ -66,7 +66,7 @@ function renderProducts(filterCat = 'all') {
   }
 
   productListContainer.innerHTML = filtered.map(item => {
-    const specsList = item.specs.map(s => `<li class="spec-item">${s}</li>`).join('');
+    const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
 
     return `
       <div class="account-card" data-id="${item.id}">
@@ -83,14 +83,14 @@ function renderProducts(filterCat = 'all') {
             <span class="account-price">Rp ${item.price}</span>
           </div>
           <ul class="account-specs-list">
-            ${specsList}
+            ${displaySpecs}
           </ul>
         </div>
       </div>
     `;
   }).join('');
 
-  // MASUKKAN EVENT LISTENER KLIK KE SETIAP KARTU PRODUK
+  // EVENT LISTENER KLIK KARTU
   document.querySelectorAll('.account-card').forEach(card => {
     card.addEventListener('click', function() {
       const prodId = this.getAttribute('data-id');
@@ -120,12 +120,10 @@ function openProductDetail(productId) {
     const specsFormatted = item.specs.join(" || ");
     document.getElementById('detail-specs-content').textContent = specsFormatted;
 
-    // Jumlah total produk toko
+    // Total Produk Toko
     document.getElementById('seller-total-products').textContent = fetchedProducts.length;
 
-    // Render Produk Lainnya
     renderRecommendations(productId);
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
@@ -148,7 +146,7 @@ function renderRecommendations(currentId) {
   const recs = fetchedProducts.filter(p => String(p.id) !== String(currentId)).slice(0, 4);
 
   if (recs.length === 0) {
-    recContainer.innerHTML = `<p style="font-size: 11px; color: var(--text-sub);">Tidak ada produk lain.</p>`;
+    recContainer.innerHTML = `<p style="grid-column: span 2; font-size: 11px; color: var(--text-sub);">Tidak ada produk lain.</p>`;
     return;
   }
 
@@ -476,7 +474,7 @@ window.deleteProductFromSheets = async function(productId) {
   }
 };
 
-// INISIALISASI awal
+// INISIALISASI
 loadProductsFromSheets();
 updateAccountView();
 updateIndicator(0);

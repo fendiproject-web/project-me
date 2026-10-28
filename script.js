@@ -1,21 +1,21 @@
 // LINK GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
 
-// Preload Profil & Banner
+// Preload
 const avatarPreload = new Image();
 avatarPreload.src = 'profile.webp';
 
 const bannerPreload = new Image();
 bannerPreload.src = 'banner1.png';
 
-// FUNGSI HELPER FORMAT RUPIAH
+// HELPER FORMAT RUPIAH
 function formatRupiah(val) {
   if (!val) return '0';
   const cleanNum = String(val).replace(/\D/g, '');
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// TOGGLE TEMA TERANG / GELAP
+// TOGGLE TEMA
 const themeToggleBtn = document.getElementById('themeToggle');
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
@@ -24,20 +24,16 @@ if (themeToggleBtn) {
   });
 }
 
-// INPUT HARGA DENGAN PEMISAH RIBUAN
+// FORMAT HARGA REALTIME
 const postPriceInput = document.getElementById('post-price');
 if (postPriceInput) {
   postPriceInput.addEventListener('input', function () {
     let rawValue = this.value.replace(/\D/g, '');
-    if (rawValue) {
-      this.value = new Intl.NumberFormat('id-ID').format(rawValue);
-    } else {
-      this.value = '';
-    }
+    this.value = rawValue ? new Intl.NumberFormat('id-ID').format(rawValue) : '';
   });
 }
 
-// FETCH DAFTAR PRODUK DARI GOOGLE SHEETS
+// FETCH PRODUK
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
@@ -68,7 +64,7 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER KATALOG PRODUK
+// RENDER KATALOG DENGAN TOMBOL "LIHAT SEKARANG"
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -106,12 +102,12 @@ function renderProducts(filterCat = 'all') {
           <ul class="account-specs-list">
             ${displaySpecs}
           </ul>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
         </div>
       </div>
     `;
   }).join('');
 
-  // EVENT LISTENER KLIK KARTU
   document.querySelectorAll('.account-card').forEach(card => {
     card.addEventListener('click', function() {
       const prodId = this.getAttribute('data-id');
@@ -147,12 +143,46 @@ function openProductDetail(productId) {
     const specsFormatted = item.specs.join(" || ");
     document.getElementById('detail-specs-content').textContent = specsFormatted;
 
-    // Total Produk Toko
-    document.getElementById('seller-total-products').textContent = fetchedProducts.length;
+    // Direct WhatsApp Link untuk "Beli Sekarang"
+    const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
+    const buyNowBtn = document.getElementById('btn-buy-now');
+    if (buyNowBtn) {
+      buyNowBtn.href = `https://wa.me/6285854325988?text=${waText}`;
+    }
 
     renderRecommendations(productId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+}
+
+// MODAL FULL ZOOM FOTO PRODUK
+const zoomImgBox = document.getElementById('detail-img-box');
+const zoomModal = document.getElementById('image-zoom-modal');
+const modalImg = document.getElementById('img-full-zoom');
+const closeModalBtn = document.getElementById('modal-close-btn');
+
+if (zoomImgBox && zoomModal && modalImg) {
+  zoomImgBox.addEventListener('click', () => {
+    const detailImg = document.getElementById('detail-img');
+    if (detailImg && detailImg.src) {
+      modalImg.src = detailImg.src;
+      zoomModal.style.display = 'block';
+    }
+  });
+}
+
+if (closeModalBtn) {
+  closeModalBtn.addEventListener('click', () => {
+    zoomModal.style.display = 'none';
+  });
+}
+
+if (zoomModal) {
+  zoomModal.addEventListener('click', (e) => {
+    if (e.target === zoomModal) {
+      zoomModal.style.display = 'none';
+    }
+  });
 }
 
 // KEMBALI KE KATALOG
@@ -165,7 +195,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// RENDER REKOMENDASI PRODUK LAINNYA
+// REKOMENDASI PRODUK
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -189,6 +219,7 @@ function renderRecommendations(currentId) {
         <div class="account-price-row">
           <span class="account-price">Rp ${formatRupiah(item.price)}</span>
         </div>
+        <button type="button" class="btn-see-now">Lihat Sekarang</button>
       </div>
     </div>
   `).join('');
@@ -201,7 +232,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TABS PRODUK
+// SUB TABS
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
@@ -275,7 +306,7 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// TOGGLE FORM LOGIN & DAFTAR
+// FORM LOGIN & DAFTAR
 const authTabBtns = document.querySelectorAll('.auth-tab-btn');
 const authForms = document.querySelectorAll('.auth-form');
 
@@ -459,7 +490,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 });
 
-// RENDER LIST KELOLA HAPUS PRODUK
+// KELOLA HAPUS PRODUK
 function renderAdminManageList() {
   const adminManageList = document.getElementById('admin-manage-list');
   if (!adminManageList) return;

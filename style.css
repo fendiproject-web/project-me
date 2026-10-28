@@ -14,13 +14,13 @@
   --danger-red: #ef4444;
 }
 
-/* TEMA TERANG (LIGHT MODE - WARNA PUTIH KEBIRUAN SEGAR, TANPA ABU-ABU) */
+/* TEMA TERANG (LIGHT MODE - PUTIH KEBIRUAN SEGAR, TANPA ABU-ABU) */
 body.light-mode {
-  --bg-color: #f0f6ff; /* Putih kebiruan cerah */
+  --bg-color: #f0f6ff;
   --card-bg: rgba(255, 255, 255, 0.92);
   --text-main: #0f172a;
-  --text-sub: #536e88; /* Biru slate lembut pengganti abu-abu */
-  --border-color: rgba(186, 212, 245, 0.5); /* Lis garis biru muda transparan */
+  --text-sub: #536e88;
+  --border-color: rgba(186, 212, 245, 0.5);
   --nav-bg: rgba(240, 246, 255, 0.92);
   
   --pill-bg: rgba(192, 132, 252, 0.15);
@@ -253,7 +253,15 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* SUB TABS */
+/* PEMBUNGKUS KATALOG PRODUK (DENGAN JARAK LONGGAR TERPISAH) */
+#product-catalog-view {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* Jarak antara tombol menu 'Semua/FF/ML' & kartu produk */
+  width: 100%;
+}
+
+/* SUB TABS MENU */
 .sub-tab-bar {
   display: flex;
   gap: 8px;
@@ -286,7 +294,7 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -408,11 +416,11 @@ body.light-mode .spec-item {
   cursor: pointer;
 }
 
-/* VIEW DETAIL PRODUK (JARAK LEBIH DEKAT & LEBIH DIRAPATKAN) */
+/* VIEW DETAIL PRODUK */
 .detail-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 

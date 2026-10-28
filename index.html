@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode">
+      <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -82,7 +82,7 @@
       </div>
     </div>
 
-    <!-- TAB 2: PRODUK (KOSONG SIAP TARIK DATA DARI GOOGLE SHEETS) -->
+    <!-- TAB 2: PRODUK -->
     <div id="tab-produk" class="tab-content">
       <div class="sub-tab-bar">
         <button type="button" class="sub-tab-item active" data-sub="all">Semua</button>
@@ -91,7 +91,7 @@
       </div>
 
       <div id="product-list-container" class="product-cards-grid">
-        <!-- Konten produk kosong murni (akan dirender otomatis jika ada data di Google Sheets) -->
+        <!-- Render otomatis via JS -->
       </div>
     </div>
 
@@ -189,36 +189,35 @@
       </div>
     </div>
 
-    <!-- TAB 4: AKUN (LOGIN / DAFTAR TERHUBUNG KE GOOGLE SHEETS) -->
+    <!-- TAB 4: AKUN (DYNAMIC LOGIN / USER PROFILE / ADMIN PANEL) -->
     <div id="tab-akun" class="tab-content">
-      <div class="auth-card">
-        
+      
+      <!-- STATUS 1: FORM LOGIN / DAFTAR (TAMPIL KETIKA BELUM LOGIN) -->
+      <div id="auth-guest-view" class="auth-card">
         <div class="auth-toggle-bar">
           <button type="button" class="auth-tab-btn active" data-auth="login">Masuk</button>
           <button type="button" class="auth-tab-btn" data-auth="register">Daftar</button>
         </div>
 
-        <!-- FORM LOGIN -->
         <form id="login-form" class="auth-form active">
           <div class="form-header">
             <h3>Login Akun</h3>
-            <p>Masuk untuk mengelola transaksi di FENDI STORE.</p>
+            <p>Masuk untuk transaksi & kelola akun di FENDI STORE.</p>
           </div>
 
           <div class="form-group">
             <label for="login-username">No. WhatsApp</label>
-            <input type="tel" id="login-username" placeholder="08xxxxxxxxxx" required autocomplete="tel">
+            <input type="tel" id="login-username" placeholder="08xxxxxxxxxx" required>
           </div>
 
           <div class="form-group">
             <label for="login-password">Kata Sandi</label>
-            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+            <input type="password" id="login-password" placeholder="••••••••" required>
           </div>
 
           <button type="submit" id="btn-login" class="btn-auth-submit">Masuk Sekarang</button>
         </form>
 
-        <!-- FORM DAFTAR -->
         <form id="register-form" class="auth-form">
           <div class="form-header">
             <h3>Daftar Akun Baru</h3>
@@ -227,23 +226,92 @@
 
           <div class="form-group">
             <label for="reg-name">Nama Lengkap</label>
-            <input type="text" id="reg-name" placeholder="Nama kamu" required autocomplete="name">
+            <input type="text" id="reg-name" placeholder="Nama kamu" required>
           </div>
 
           <div class="form-group">
             <label for="reg-wa">Nomor WhatsApp</label>
-            <input type="tel" id="reg-wa" placeholder="08xxxxxxxxxx" required autocomplete="tel">
+            <input type="tel" id="reg-wa" placeholder="08xxxxxxxxxx" required>
           </div>
 
           <div class="form-group">
             <label for="reg-password">Kata Sandi</label>
-            <input type="password" id="reg-password" placeholder="Buat kata sandi" required autocomplete="new-password">
+            <input type="password" id="reg-password" placeholder="Buat kata sandi" required>
           </div>
 
           <button type="submit" id="btn-register" class="btn-auth-submit">Daftar Akun</button>
         </form>
+      </div>
+
+      <!-- STATUS 2: DASHBOARD USER & PANEL ADMIN (TAMPIL SETELAH LOGIN) -->
+      <div id="auth-logged-view" class="auth-card" style="display: none;">
+        <div class="user-profile-box">
+          <div class="user-info-row">
+            <div>
+              <h3 id="display-user-name">Nama User</h3>
+              <p id="display-user-wa" style="font-size: 11px; color: var(--text-sub);">08xxx</p>
+            </div>
+            <span id="display-user-role" class="badge-role">USER</span>
+          </div>
+          <button type="button" id="btn-logout" class="btn-logout">Keluar / Logout</button>
+        </div>
+
+        <!-- PANEL ADMIN KHUSUS (HANYA MUNCUL JIKA ROLE === 'ADMIN') -->
+        <div id="admin-panel-section" style="display: none;" class="admin-section">
+          <hr class="divider">
+          
+          <div class="admin-header">
+            <h3>Panel Admin Fendi Store</h3>
+            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive.</p>
+          </div>
+
+          <form id="admin-upload-form" class="auth-form active">
+            <div class="form-group">
+              <label for="post-category">Kategori Game</label>
+              <select id="post-category" required>
+                <option value="ff">Free Fire</option>
+                <option value="ml">Mobile Legends</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="post-code">Nomor Urut / Kode Akun</label>
+              <input type="text" id="post-code" placeholder="Contoh: #FF-01" required>
+            </div>
+
+            <div class="form-group">
+              <label for="post-price">Harga (Rp)</label>
+              <input type="text" id="post-price" placeholder="Contoh: 150.000" required>
+            </div>
+
+            <div class="form-group">
+              <label for="post-file">Upload Foto Akun (Dari HP/Galeri)</label>
+              <input type="file" id="post-file" accept="image/*">
+            </div>
+
+            <div class="form-group">
+              <label for="post-url">Atau Link Foto (Opsional jika tanpa file)</label>
+              <input type="text" id="post-url" placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+              <label for="post-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
+              <textarea id="post-specs" rows="3" placeholder="Contoh: Vault Rame, Old Season, Diamond 200, Log VK" required></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Produk</button>
+          </form>
+
+          <div style="margin-top: 10px;">
+            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola / Hapus Akun</h4>
+            <div id="admin-manage-list" class="admin-manage-grid">
+              <!-- Render daftar hapus -->
+            </div>
+          </div>
+        </div>
 
       </div>
+
     </div>
 
   </main>

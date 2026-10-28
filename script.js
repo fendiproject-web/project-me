@@ -15,7 +15,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// TOGGLE TEMA
+// TOGGLE TEMA TERANG / GELAP
 const themeToggleBtn = document.getElementById('themeToggle');
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
@@ -24,7 +24,7 @@ if (themeToggleBtn) {
   });
 }
 
-// FORMAT HARGA REALTIME
+// FORMAT INPUT HARGA REALTIME
 const postPriceInput = document.getElementById('post-price');
 if (postPriceInput) {
   postPriceInput.addEventListener('input', function () {
@@ -33,7 +33,7 @@ if (postPriceInput) {
   });
 }
 
-// FETCH PRODUK
+// FETCH PRODUK DARI SERVER
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
@@ -116,7 +116,7 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// BUKA DETAIL PRODUK (MENGHILANGKAN KATALOG & MENAMPILKAN DETAIL DI ATAS)
+// BUKA DETAIL PRODUK
 function openProductDetail(productId) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
@@ -232,7 +232,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TABS
+// SUB TABS FILTER
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {

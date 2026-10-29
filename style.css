@@ -625,6 +625,104 @@ body.light-mode .seller-region-badge {
   background: #e6f0fa;
 }
 
+/* FOOTER & SINYAL TRUST DI HOME */
+.home-footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.footer-divider {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.footer-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-block-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.footer-link-list,
+.footer-trust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.footer-link-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-sub);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link-item:hover,
+.footer-link-item:active {
+  color: var(--text-main);
+}
+
+.footer-link-item svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--text-sub);
+  flex-shrink: 0;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.trust-item svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--accent-color);
+  flex-shrink: 0;
+}
+
+body.dark-mode .trust-item svg {
+  stroke: #c084fc;
+}
+
+body.light-mode .trust-item svg {
+  stroke: #3b82f6;
+}
+
+.footer-bottom-credits {
+  text-align: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  font-size: 10px;
+  color: var(--text-sub);
+}
+
+.credit-sub {
+  font-size: 9px;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
 /* MODAL FULL ZOOM FOTO */
 .image-modal {
   display: none;

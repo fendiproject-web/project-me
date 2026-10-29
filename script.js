@@ -15,14 +15,50 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// TOGGLE TEMA TERANG / GELAP
+// ==========================================
+// SISTEM TEMA (DETEKSI HP & SIMPAN PERMANEN)
+// ==========================================
 const themeToggleBtn = document.getElementById('themeToggle');
+
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.body.classList.add('light-mode');
+    document.body.classList.remove('dark-mode');
+  } else {
+    document.body.classList.add('dark-mode');
+    document.body.classList.remove('light-mode');
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('fendi_theme');
+  
+  if (savedTheme) {
+    // Gunakan pilihan manual pengguna dari localStorage
+    applyTheme(savedTheme);
+  } else {
+    // Ikuti mode bawaan sistem HP pengguna
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    applyTheme(systemPrefersLight ? 'light' : 'dark');
+  }
+}
+
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('light-mode');
-    document.body.classList.toggle('dark-mode');
+    const isCurrentlyLight = document.body.classList.contains('light-mode');
+    const newTheme = isCurrentlyLight ? 'dark' : 'light';
+    
+    applyTheme(newTheme);
+    localStorage.setItem('fendi_theme', newTheme); // Simpan permanen pilihan user
   });
 }
+
+// Update otomatis jika tema HP berubah (hanya jika pengguna belum pernah set manual)
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('fendi_theme')) {
+    applyTheme(e.matches ? 'light' : 'dark');
+  }
+});
 
 // FORMAT HARGA REALTIME (INPUT ADMIN)
 const postPriceInput = document.getElementById('post-price');
@@ -187,7 +223,6 @@ function openProductDetail(productId, updateHistory = true) {
     renderRecommendations(productId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // UBAH URL DENGAN QUERY ID PRODUK TANPA RELOAD
     if (updateHistory) {
       const cleanCode = item.code.replace('#', '').toLowerCase();
       window.history.pushState({ tabId: 'tab-produk', productId: productId }, '', `/produk?id=${cleanCode}`);
@@ -342,7 +377,6 @@ function switchTab(targetTabId, navIndex, updateHistory = true) {
 
   updateIndicator(navIndex);
 
-  // MENGUBAH URL BROWSER TANPA RELOAD
   if (updateHistory) {
     const pathMap = {
       'tab-home': '/home',
@@ -618,6 +652,7 @@ window.deleteProductFromSheets = async function(productId) {
 };
 
 // INISIALISASI
+initTheme(); // Inisialisasi tema HP / Simpanan
 loadProductsFromSheets();
 updateAccountView();
 handleRouting();

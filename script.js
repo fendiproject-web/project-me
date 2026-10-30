@@ -1,12 +1,20 @@
 // LINK GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
 
-// Preload Foto
-const avatarPreload = new Image();
-avatarPreload.src = 'profile.webp';
+// PLACEHOLDER NETRAL JIKA GAMBAR EROR (BUKAN BANNER TOKO)
+const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-const bannerPreload = new Image();
-bannerPreload.src = 'banner1.png';
+// KONVERSI LINK GOOGLE DRIVE AGAR BISA DITAMPILKAN DIRECT
+function fixImageUrl(url) {
+  if (!url) return FALLBACK_SVG;
+  if (url.includes('drive.google.com') && url.includes('/d/')) {
+    const match = url.match(/\/d\/([^\/]+)/);
+    if (match && match[1]) {
+      return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    }
+  }
+  return url;
+}
 
 // FORMAT RUPIAH
 function formatRupiah(val) {
@@ -15,9 +23,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// ==========================================
-// SISTEM TEMA (DETEKSI HP & SIMPAN PERMANEN)
-// ==========================================
+// SISTEM TEMA
 const themeToggleBtn = document.getElementById('themeToggle');
 
 function applyTheme(theme) {
@@ -32,12 +38,9 @@ function applyTheme(theme) {
 
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme');
-  
   if (savedTheme) {
-    // Gunakan pilihan manual pengguna dari localStorage
     applyTheme(savedTheme);
   } else {
-    // Ikuti mode bawaan sistem HP pengguna
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
     applyTheme(systemPrefersLight ? 'light' : 'dark');
   }
@@ -47,20 +50,12 @@ if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
     const isCurrentlyLight = document.body.classList.contains('light-mode');
     const newTheme = isCurrentlyLight ? 'dark' : 'light';
-    
     applyTheme(newTheme);
-    localStorage.setItem('fendi_theme', newTheme); // Simpan permanen pilihan user
+    localStorage.setItem('fendi_theme', newTheme);
   });
 }
 
-// Update otomatis jika tema HP berubah (hanya jika pengguna belum pernah set manual)
-window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-  if (!localStorage.getItem('fendi_theme')) {
-    applyTheme(e.matches ? 'light' : 'dark');
-  }
-});
-
-// FORMAT HARGA REALTIME (INPUT ADMIN)
+// FORMAT HARGA REALTIME ADMIN
 const postPriceInput = document.getElementById('post-price');
 if (postPriceInput) {
   postPriceInput.addEventListener('input', function () {
@@ -92,8 +87,6 @@ async function loadProductsFromSheets() {
       renderProducts(currentCategory);
       renderHomeRecommendations();
       renderAdminManageList();
-      
-      // Cek apakah ada parameter ID produk di URL pas halaman pertama kali dibuka
       checkUrlForProductDetail();
     } else {
       renderProducts(currentCategory);
@@ -106,7 +99,7 @@ async function loadProductsFromSheets() {
   }
 }
 
-// RENDER REKOMENDASI PRODUK DI HOME
+// RENDER REKOMENDASI HOME
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -118,24 +111,27 @@ function renderHomeRecommendations() {
 
   const homeProducts = fetchedProducts.slice(0, 4);
 
-  homeRecContainer.innerHTML = homeProducts.map(item => `
-    <div class="account-card home-card" data-id="${item.id}">
-      <div class="account-media">
-        <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
-        <div class="account-badge-group">
-          <span class="badge-code">${item.code}</span>
-          <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
+  homeRecContainer.innerHTML = homeProducts.map(item => {
+    const validImg = fixImageUrl(item.image);
+    return `
+      <div class="account-card home-card" data-id="${item.id}">
+        <div class="account-media">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <div class="account-price-row">
+            <span class="price-label">Harga Akun</span>
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+          </div>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
         </div>
       </div>
-      <div class="account-body">
-        <div class="account-price-row">
-          <span class="price-label">Harga Akun</span>
-          <span class="account-price">Rp ${formatRupiah(item.price)}</span>
-        </div>
-        <button type="button" class="btn-see-now">Lihat Sekarang</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   document.querySelectorAll('.home-card').forEach(card => {
     card.addEventListener('click', function() {
@@ -161,10 +157,11 @@ function renderProducts(filterCat = 'all') {
 
   productListContainer.innerHTML = filtered.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
+    const validImg = fixImageUrl(item.image);
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
         <div class="account-media">
-          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
             <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
@@ -190,24 +187,31 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// BUKA DETAIL PRODUK DAN PERBAARUI URL
+// BUKA DETAIL PRODUK
 function openProductDetail(productId, updateHistory = true) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
 
   const catalogView = document.getElementById('product-catalog-view');
   const detailView = document.getElementById('product-detail-view');
+  const detailImgBox = document.getElementById('detail-img-box');
+  const detailImg = document.getElementById('detail-img');
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
     detailView.style.display = 'flex';
 
-    const detailImg = document.getElementById('detail-img');
-    detailImg.src = item.image;
-    detailImg.onerror = function() {
-      this.onerror = null;
-      this.src = 'banner1.png';
+    if (detailImgBox) detailImgBox.classList.remove('loaded');
+
+    detailImg.onload = function() {
+      if (detailImgBox) detailImgBox.classList.add('loaded');
     };
+    detailImg.onerror = function() {
+      this.src = FALLBACK_SVG;
+      if (detailImgBox) detailImgBox.classList.add('loaded');
+    };
+
+    detailImg.src = fixImageUrl(item.image);
 
     document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
@@ -230,7 +234,7 @@ function openProductDetail(productId, updateHistory = true) {
   }
 }
 
-// CEK QUERY URL UNTUK BUKA DETAIL PRODUK
+// CEK QUERY URL
 function checkUrlForProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodCode = urlParams.get('id');
@@ -244,7 +248,7 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL FULL ZOOM FOTO PRODUK
+// MODAL FULL ZOOM
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -285,7 +289,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAIN DI DETAIL PRODUK
+// REKOMENDASI PRODUK LAIN DI DETAIL
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -297,22 +301,25 @@ function renderRecommendations(currentId) {
     return;
   }
 
-  recContainer.innerHTML = recs.map(item => `
-    <div class="account-card rec-card" data-id="${item.id}">
-      <div class="account-media">
-        <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.onerror=null;this.src='banner1.png';">
-        <div class="account-badge-group">
-          <span class="badge-code">${item.code}</span>
+  recContainer.innerHTML = recs.map(item => {
+    const validImg = fixImageUrl(item.image);
+    return `
+      <div class="account-card rec-card" data-id="${item.id}">
+        <div class="account-media">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <div class="account-price-row">
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+          </div>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
         </div>
       </div>
-      <div class="account-body">
-        <div class="account-price-row">
-          <span class="account-price">Rp ${formatRupiah(item.price)}</span>
-        </div>
-        <button type="button" class="btn-see-now">Lihat Sekarang</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   document.querySelectorAll('.rec-card').forEach(card => {
     card.addEventListener('click', function() {
@@ -652,7 +659,7 @@ window.deleteProductFromSheets = async function(productId) {
 };
 
 // INISIALISASI
-initTheme(); // Inisialisasi tema HP / Simpanan
+initTheme();
 loadProductsFromSheets();
 updateAccountView();
 handleRouting();

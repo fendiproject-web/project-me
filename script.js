@@ -4,6 +4,26 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER NETRAL JIKA GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
+// FUNGSI TAMPILKAN SKELETON PLACEHOLDER SEBELUM DATA MASUK
+function renderSkeletons() {
+  const skeletonHTML = Array(4).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div class="skeleton-media"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line" style="width: 40%;"></div>
+        <div class="skeleton-line" style="width: 75%;"></div>
+        <div class="skeleton-line" style="width: 100%; height: 26px; border-radius: 8px; margin-top: 4px;"></div>
+      </div>
+    </div>
+  `).join('');
+
+  const productContainer = document.getElementById('product-list-container');
+  const homeRecContainer = document.getElementById('home-recommendation-grid');
+
+  if (productContainer) productContainer.innerHTML = skeletonHTML;
+  if (homeRecContainer) homeRecContainer.innerHTML = skeletonHTML;
+}
+
 // KONVERSI LINK GOOGLE DRIVE AGAR BISA DITAMPILKAN DIRECT
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
@@ -54,9 +74,7 @@ function compressImage(file, maxWidth = 800, quality = 0.75) {
   });
 }
 
-// ==========================================
-// SISTEM TEMA (DETEKSI HP & SIMPAN PERMANEN)
-// ==========================================
+// SISTEM TEMA
 const themeToggleBtn = document.getElementById('themeToggle');
 
 function applyTheme(theme) {
@@ -97,9 +115,7 @@ if (postPriceInput) {
   });
 }
 
-// ==========================================
-// FETCH & RENDER PRODUK (DENGAN LOCAL CACHING)
-// ==========================================
+// FETCH & RENDER PRODUK
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
@@ -111,7 +127,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
   const cacheTime = localStorage.getItem('fendi_products_cache_time');
   const now = new Date().getTime();
 
-  // Gunakan cache jika data belum berumur lebih dari 5 menit (300.000 ms)
+  // Jika ada cache valid, langsung tampilkan
   if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
     fetchedProducts = JSON.parse(cachedData);
     renderProducts(currentCategory);
@@ -121,11 +137,8 @@ async function loadProductsFromSheets(forceRefresh = false) {
     return;
   }
 
-  productListContainer.innerHTML = `
-    <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
-      <p style="font-size: 12px; font-weight: 600;">Mengambil produk dari server...</p>
-    </div>
-  `;
+  // Jika tidak ada cache/refresh, tampilkan animasi skeleton lebih dulu
+  renderSkeletons();
 
   try {
     const response = await fetch(`${SCRIPT_URL}?action=getProducts`);
@@ -606,7 +619,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU ADMIN (DENGAN KOMPRESI OTOMATIS + HAPUS CACHE)
+// UPLOAD PRODUK BARU ADMIN
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -645,7 +658,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
       alert(result.message);
       if (result.success) {
         document.getElementById('admin-upload-form').reset();
-        // Paksa ambil data terbaru dari server & perbarui cache
         await loadProductsFromSheets(true);
         switchTab('tab-produk', 1);
       }
@@ -658,7 +670,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   };
 
   if (fileInput.files && fileInput.files[0]) {
-    // Kompres foto secara lokal di HP sebelum diunggah
     const compressedBase64 = await compressImage(fileInput.files[0]);
     sendPayload(compressedBase64);
   } else {
@@ -687,7 +698,7 @@ function renderAdminManageList() {
   `).join('');
 }
 
-// HAPUS PRODUK DARI SHEETS (DENGAN REFRESH CACHE)
+// HAPUS PRODUK DARI SHEETS
 window.deleteProductFromSheets = async function(productId) {
   const user = getCurrentUser();
   if (!user || user.role !== 'admin') return;
@@ -701,7 +712,6 @@ window.deleteProductFromSheets = async function(productId) {
       const result = await response.json();
       alert(result.message);
       if (result.success) {
-        // Paksa ambil data terbaru dari server & perbarui cache
         await loadProductsFromSheets(true);
       }
     } catch (err) {
@@ -712,6 +722,7 @@ window.deleteProductFromSheets = async function(productId) {
 
 // INISIALISASI
 initTheme();
+renderSkeletons(); // Tampilkan skeleton langsung
 loadProductsFromSheets();
 updateAccountView();
 handleRouting();

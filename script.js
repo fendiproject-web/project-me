@@ -4,7 +4,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER NETRAL JIKA GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// FUNGSI TAMPILKAN SKELETON PLACEHOLDER SEBELUM DATA MASUK
+// TAMPILKAN SKELETON PLACEHOLDER DI GRID SEBELUM DATA Selesai DI-FETCH
 function renderSkeletons() {
   const skeletonHTML = Array(4).fill(0).map(() => `
     <div class="skeleton-card">
@@ -74,7 +74,9 @@ function compressImage(file, maxWidth = 800, quality = 0.75) {
   });
 }
 
+// ==========================================
 // SISTEM TEMA
+// ==========================================
 const themeToggleBtn = document.getElementById('themeToggle');
 
 function applyTheme(theme) {
@@ -115,7 +117,9 @@ if (postPriceInput) {
   });
 }
 
+// ==========================================
 // FETCH & RENDER PRODUK
+// ==========================================
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
@@ -127,7 +131,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
   const cacheTime = localStorage.getItem('fendi_products_cache_time');
   const now = new Date().getTime();
 
-  // Jika ada cache valid, langsung tampilkan
+  // Jika ada cache valid (kurang dari 5 menit), gunakan cache
   if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
     fetchedProducts = JSON.parse(cachedData);
     renderProducts(currentCategory);
@@ -137,7 +141,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
     return;
   }
 
-  // Jika tidak ada cache/refresh, tampilkan animasi skeleton lebih dulu
+  // Jika tidak ada cache / panggil ulang, tampilkan skeleton placeholder dulu
   renderSkeletons();
 
   try {
@@ -164,7 +168,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
   }
 }
 
-// RENDER REKOMENDASI HOME
+// RENDER REKOMENDASI HOME (KARTU LANGSUNG TAMPIL LENGKAP)
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -207,7 +211,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// RENDER KATALOG PRODUK
+// RENDER KATALOG PRODUK (KARTU LANGSUNG TAMPIL LENGKAP)
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -722,7 +726,7 @@ window.deleteProductFromSheets = async function(productId) {
 
 // INISIALISASI
 initTheme();
-renderSkeletons(); // Tampilkan skeleton langsung
+renderSkeletons();
 loadProductsFromSheets();
 updateAccountView();
 handleRouting();

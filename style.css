@@ -105,7 +105,7 @@ body.light-mode .zoom-image-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  padding: 8px 12px 8px 16px;
   width: 100%;
   max-width: 410px;
   background: var(--nav-bg);
@@ -171,11 +171,12 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
+/* TOMBOL MODE TERANG & GELAP (DIPERBAIKI) */
 .theme-toggle-btn {
-  background: transparent;
-  border: none;
-  width: 34px;
-  height: 34px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -183,14 +184,24 @@ body.light-mode .zoom-image-wrapper {
   justify-content: center;
   color: var(--text-main);
   flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.theme-toggle-btn svg { width: 20px; height: 20px; }
+.theme-toggle-btn:active {
+  transform: scale(0.92);
+}
+
+.theme-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
 
 body.dark-mode .sun-icon { display: block; stroke: #ffffff; }
 body.dark-mode .moon-icon { display: none; }
 body.light-mode .sun-icon { display: none; }
-body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
+body.light-mode .moon-icon { display: block; stroke: #c084fc; }
 
 /* MAIN CONTENT CONTAINER */
 .main-content {

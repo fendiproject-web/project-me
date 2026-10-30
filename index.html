@@ -8,7 +8,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body class="dark-mode">
 
@@ -17,7 +17,7 @@
     <header class="top-bar">
       <div class="profile-section">
         <div class="profile-avatar">
-          <img src="profile.webp" alt="Foto Profil" class="profile-img" fetchpriority="high" loading="eager">
+          <img src="profile.webp" alt="Foto Profil" class="profile-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
         </div>
         <div class="brand-wrapper">
           <span class="typing-text">FENDI STORE</span>
@@ -49,7 +49,7 @@
     <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
       <div class="banner-container">
-        <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager">
+        <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
       </div>
 
       <div class="home-actions">
@@ -90,7 +90,7 @@
         <div id="home-recommendation-grid" class="product-cards-grid"></div>
       </div>
 
-      <!-- FOOTER & SINYAL TRUST (TAMBAHAN SESUAI CONTOH FOTO) -->
+      <!-- FOOTER & SINYAL TRUST -->
       <footer class="home-footer-section">
         <hr class="footer-divider">
         
@@ -210,7 +210,7 @@
           <div class="seller-profile-row">
             <div class="seller-left">
               <div class="seller-avatar-wrapper">
-                <img src="profile.webp" alt="Foto Penjual" class="seller-avatar-img">
+                <img src="profile.webp" alt="Foto Penjual" class="seller-avatar-img" onload="this.parentElement.classList.add('loaded')">
                 <span class="online-indicator-dot"></span>
               </div>
               <div class="seller-info">

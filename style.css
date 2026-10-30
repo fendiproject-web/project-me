@@ -50,6 +50,50 @@ body {
   overflow-x: hidden;
 }
 
+/* ==========================================
+   ANIMASI SKELETON / SHIMMER PLACEHOLDER FOTO
+   ========================================== */
+@keyframes shimmerPulse {
+  0% {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+  50% {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+}
+
+@keyframes shimmerPulseLight {
+  0% {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Penerapan animasi pada wadah tempat foto berada */
+.profile-avatar,
+.seller-avatar-wrapper,
+.banner-container,
+.account-media,
+.zoom-image-wrapper {
+  animation: shimmerPulse 1.6s infinite ease-in-out;
+}
+
+body.light-mode .profile-avatar,
+body.light-mode .seller-avatar-wrapper,
+body.light-mode .banner-container,
+body.light-mode .account-media,
+body.light-mode .zoom-image-wrapper {
+  animation: shimmerPulseLight 1.6s infinite ease-in-out;
+}
+
 /* TOP BAR FIXED */
 .top-bar-wrapper {
   position: fixed;
@@ -177,20 +221,20 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   width: 100%;
 }
 
-/* HOME BANNER & ACTIONS */
+/* HOME BANNER (DIKUNCI DENGAN ASPECT RATIO MEMANJANG) */
 .banner-container {
   width: 100%;
+  aspect-ratio: 2 / 1;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--border-color);
-  background: var(--card-bg);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   display: flex;
 }
 
 .banner-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   border-radius: 20px;
   object-fit: cover;
@@ -329,12 +373,7 @@ body.light-mode .moon-icon { display: block; stroke: #3b82f6; }
   position: relative;
   width: 100%;
   aspect-ratio: 9 / 16;
-  background: #0f172a;
   overflow: hidden;
-}
-
-body.light-mode .account-media {
-  background: #e2eafc;
 }
 
 .account-img {
@@ -458,12 +497,7 @@ body.light-mode .spec-item {
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--border-color);
-  background: #0f172a;
   cursor: pointer;
-}
-
-body.light-mode .zoom-image-wrapper {
-  background: #e2eafc;
 }
 
 .zoom-tag {
@@ -562,6 +596,7 @@ body.light-mode .price-box {
   position: relative;
   width: 42px;
   height: 42px;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 

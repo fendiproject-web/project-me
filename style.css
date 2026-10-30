@@ -50,25 +50,29 @@ body {
   overflow-x: hidden;
 }
 
-/* ANIMASI SKELETON / SHIMMER PLACEHOLDER FOTO */
+/* --- ANIMASI SHIMMER PLACEHOLDER --- */
 @keyframes shimmerPulse {
-  0% { background-color: rgba(255, 255, 255, 0.04); }
-  50% { background-color: rgba(255, 255, 255, 0.12); }
-  100% { background-color: rgba(255, 255, 255, 0.04); }
+  0% { background-color: rgba(255, 255, 255, 0.05); }
+  50% { background-color: rgba(255, 255, 255, 0.15); }
+  100% { background-color: rgba(255, 255, 255, 0.05); }
 }
 
 @keyframes shimmerPulseLight {
-  0% { background-color: rgba(0, 0, 0, 0.05); }
-  50% { background-color: rgba(0, 0, 0, 0.12); }
-  100% { background-color: rgba(0, 0, 0, 0.05); }
+  0% { background-color: rgba(0, 0, 0, 0.06); }
+  50% { background-color: rgba(0, 0, 0, 0.15); }
+  100% { background-color: rgba(0, 0, 0, 0.06); }
 }
 
+/* WADAH FOTO: LANGSUNG MUNCUL DENGAN BACKGROUND SKELETON */
 .profile-avatar,
 .seller-avatar-wrapper,
 .banner-container,
 .account-media,
 .zoom-image-wrapper {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.08);
   animation: shimmerPulse 1.6s infinite ease-in-out;
+  overflow: hidden;
 }
 
 body.light-mode .profile-avatar,
@@ -76,17 +80,30 @@ body.light-mode .seller-avatar-wrapper,
 body.light-mode .banner-container,
 body.light-mode .account-media,
 body.light-mode .zoom-image-wrapper {
+  background-color: rgba(0, 0, 0, 0.08);
   animation: shimmerPulseLight 1.6s infinite ease-in-out;
 }
 
-/* MATIKAN ANIMASI JIKA FOTO SUDAH SELESAI DI-LOAD (.loaded) */
+/* MATIKAN ANIMASI SHIMMER SETELAH FOTO SELESAI DIMUAT (.loaded) */
 .profile-avatar.loaded,
 .seller-avatar-wrapper.loaded,
 .banner-container.loaded,
 .account-media.loaded,
 .zoom-image-wrapper.loaded {
   animation: none !important;
-  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* GAMBAR LANGSUNG TAMPIL (TANPA OPACITY 0) */
+.account-img, 
+.detail-img-full, 
+.profile-img, 
+.banner-img, 
+.seller-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* TOP BAR FIXED */
@@ -171,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* TOMBOL MODE TERANG & GELAP (DIPERBAIKI) */
+/* TOMBOL MODE TERANG & GELAP (DESAIN TERPISAH / STANDALONE PILL) */
 .theme-toggle-btn {
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
@@ -382,12 +399,6 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   overflow: hidden;
 }
 
-.account-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .account-badge-group {
   position: absolute;
   top: 8px;
@@ -396,6 +407,7 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  z-index: 2;
 }
 
 .badge-code {
@@ -476,6 +488,41 @@ body.light-mode .spec-item {
   cursor: pointer;
 }
 
+/* SKELETON PLACEHOLDER CARDS (SAAT AWAL LOAD/FETCHING) */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.skeleton-media {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  animation: shimmerPulse 1.6s infinite ease-in-out;
+}
+
+.skeleton-body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  animation: shimmerPulse 1.6s infinite ease-in-out;
+}
+
+body.light-mode .skeleton-media,
+body.light-mode .skeleton-line {
+  animation: shimmerPulseLight 1.6s infinite ease-in-out;
+}
+
 /* VIEW DETAIL PRODUK */
 .detail-container {
   display: flex;
@@ -520,13 +567,6 @@ body.light-mode .spec-item {
   border: 1px solid rgba(255, 255, 255, 0.15);
   pointer-events: none;
   z-index: 2;
-}
-
-.detail-img-full {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 .detail-card {

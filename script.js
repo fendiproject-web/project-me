@@ -1,7 +1,7 @@
 // LINK GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
 
-// PLACEHOLDER NETRAL JIKA GAMBAR EROR (BUKAN BANNER TOKO)
+// PLACEHOLDER NETRAL JIKA GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 // KONVERSI LINK GOOGLE DRIVE AGAR BISA DITAMPILKAN DIRECT
@@ -23,7 +23,40 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// SISTEM TEMA
+// FUNGSI KOMPRESI GAMBAR OTOMATIS SEBELUM UPLOAD
+function compressImage(file, maxWidth = 800, quality = 0.75) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/webp', quality);
+        resolve(compressedBase64);
+      };
+    };
+  });
+}
+
+// ==========================================
+// SISTEM TEMA (DETEKSI HP & SIMPAN PERMANEN)
+// ==========================================
 const themeToggleBtn = document.getElementById('themeToggle');
 
 function applyTheme(theme) {
@@ -64,13 +97,29 @@ if (postPriceInput) {
   });
 }
 
-// FETCH & RENDER PRODUK
+// ==========================================
+// FETCH & RENDER PRODUK (DENGAN LOCAL CACHING)
+// ==========================================
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
 let fetchedProducts = [];
 
-async function loadProductsFromSheets() {
+async function loadProductsFromSheets(forceRefresh = false) {
   if (!productListContainer) return;
+
+  const cachedData = localStorage.getItem('fendi_products_cache');
+  const cacheTime = localStorage.getItem('fendi_products_cache_time');
+  const now = new Date().getTime();
+
+  // Gunakan cache jika data belum berumur lebih dari 5 menit (300.000 ms)
+  if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
+    fetchedProducts = JSON.parse(cachedData);
+    renderProducts(currentCategory);
+    renderHomeRecommendations();
+    renderAdminManageList();
+    checkUrlForProductDetail();
+    return;
+  }
 
   productListContainer.innerHTML = `
     <div style="grid-column: span 2; text-align: center; padding: 40px 10px; color: var(--text-sub);">
@@ -84,6 +133,9 @@ async function loadProductsFromSheets() {
 
     if (data.success) {
       fetchedProducts = data.products;
+      localStorage.setItem('fendi_products_cache', JSON.stringify(data.products));
+      localStorage.setItem('fendi_products_cache_time', now.toString());
+
       renderProducts(currentCategory);
       renderHomeRecommendations();
       renderAdminManageList();
@@ -248,7 +300,7 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL FULL ZOOM
+// MODAL FULL ZOOM FOTO PRODUK
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -289,7 +341,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAIN DI DETAIL
+// REKOMENDASI PRODUK LAIN DI DETAIL PRODUK
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -554,7 +606,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU ADMIN
+// UPLOAD PRODUK BARU ADMIN (DENGAN KOMPRESI OTOMATIS + HAPUS CACHE)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -571,7 +623,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Uploading Foto & Simpan Data...";
+  btn.textContent = "Mengompres & Mengunggah Foto...";
   btn.disabled = true;
 
   const sendPayload = async (imageBase64 = null) => {
@@ -593,7 +645,8 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
       alert(result.message);
       if (result.success) {
         document.getElementById('admin-upload-form').reset();
-        await loadProductsFromSheets();
+        // Paksa ambil data terbaru dari server & perbarui cache
+        await loadProductsFromSheets(true);
         switchTab('tab-produk', 1);
       }
     } catch (err) {
@@ -605,11 +658,9 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   };
 
   if (fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      sendPayload(evt.target.result);
-    };
-    reader.readAsDataURL(fileInput.files[0]);
+    // Kompres foto secara lokal di HP sebelum diunggah
+    const compressedBase64 = await compressImage(fileInput.files[0]);
+    sendPayload(compressedBase64);
   } else {
     sendPayload(null);
   }
@@ -636,7 +687,7 @@ function renderAdminManageList() {
   `).join('');
 }
 
-// HAPUS PRODUK DARI SHEETS
+// HAPUS PRODUK DARI SHEETS (DENGAN REFRESH CACHE)
 window.deleteProductFromSheets = async function(productId) {
   const user = getCurrentUser();
   if (!user || user.role !== 'admin') return;
@@ -650,7 +701,8 @@ window.deleteProductFromSheets = async function(productId) {
       const result = await response.json();
       alert(result.message);
       if (result.success) {
-        await loadProductsFromSheets();
+        // Paksa ambil data terbaru dari server & perbarui cache
+        await loadProductsFromSheets(true);
       }
     } catch (err) {
       alert("Gagal menghapus: " + err.toString());

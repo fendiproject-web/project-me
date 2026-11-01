@@ -4,7 +4,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER NETRAL JIKA GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// TAMPILKAN SKELETON PLACEHOLDER DI GRID SEBELUM DATA Selesai DI-FETCH
+// TAMPILKAN SKELETON PLACEHOLDER DI GRID SEBELUM DATA SELESAI DI-FETCH
 function renderSkeletons() {
   const skeletonHTML = Array(4).fill(0).map(() => `
     <div class="skeleton-card">
@@ -131,7 +131,6 @@ async function loadProductsFromSheets(forceRefresh = false) {
   const cacheTime = localStorage.getItem('fendi_products_cache_time');
   const now = new Date().getTime();
 
-  // Jika ada cache valid (kurang dari 5 menit), gunakan cache
   if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
     fetchedProducts = JSON.parse(cachedData);
     renderProducts(currentCategory);
@@ -141,7 +140,6 @@ async function loadProductsFromSheets(forceRefresh = false) {
     return;
   }
 
-  // Jika tidak ada cache / panggil ulang, tampilkan skeleton placeholder dulu
   renderSkeletons();
 
   try {
@@ -168,7 +166,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
   }
 }
 
-// RENDER REKOMENDASI HOME (KARTU LANGSUNG TAMPIL LENGKAP)
+// RENDER REKOMENDASI HOME
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -211,7 +209,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// RENDER KATALOG PRODUK (KARTU LANGSUNG TAMPIL LENGKAP)
+// RENDER KATALOG PRODUK
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -724,7 +722,25 @@ window.deleteProductFromSheets = async function(productId) {
   }
 };
 
-// INISIALISASI
+// ==========================================
+// REGISTRASI PWA (DISATUKAN DI PALING BAWAH)
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('PWA Service Worker Aktif!', reg))
+      .catch(err => console.error('PWA Gagal:', err));
+  });
+}
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log("Aplikasi Fendi Store siap diinstall!");
+});
+
+// INISIALISASI UTAMA
 initTheme();
 renderSkeletons();
 loadProductsFromSheets();

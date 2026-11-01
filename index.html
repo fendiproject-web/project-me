@@ -2,29 +2,33 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FENDI STORE</title>
-  
-  <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
-  <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FENDI STORE OFFICIAL</title>
 
-  <link rel="stylesheet" href="style.css?v=6">
+  <!-- PWA MANIFEST & ICON (PASTIKAN PWA DIPASANG DI SINI) -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+
+  <!-- LINK KE STYLE.CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-mode">
+<body>
 
-  <!-- TOP BAR -->
+  <!-- TOP BAR FIXED -->
   <div class="top-bar-wrapper">
-    <header class="top-bar">
+    <div class="top-bar">
       <div class="profile-section">
         <div class="profile-avatar">
-          <img src="profile.webp" alt="Foto Profil" class="profile-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
+          <img src="https://lh3.googleusercontent.com/d/1X_EXAMPLE" alt="Logo Fendi" class="profile-img">
         </div>
         <div class="brand-wrapper">
           <span class="typing-text">FENDI STORE</span>
         </div>
       </div>
-
-      <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
+      
+      <!-- TOMBOL MODE TERANG & GELAP -->
+      <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -40,298 +44,188 @@
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
-    </header>
+    </div>
   </div>
 
-  <!-- KONTEN UTAMA -->
+  <!-- MAIN CONTENT CONTAINER -->
   <main class="main-content">
-    
+
     <!-- TAB 1: HOME -->
-    <div id="tab-home" class="tab-content active">
+    <section id="tab-home" class="tab-content active">
       <div class="banner-container">
-        <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
+        <img src="https://lh3.googleusercontent.com/d/1X_BANNER" alt="Banner Fendi Store" class="banner-img" loading="lazy">
       </div>
 
       <div class="home-actions">
         <div class="action-row">
           <a href="https://wa.me/6285854325988" target="_blank" class="btn-action btn-wa">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
-            <span>Chat Wa Admin</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>WhatsApp Admin</span>
           </a>
-
-          <button type="button" class="btn-action btn-verify switch-tab-trigger" data-target-tab="tab-datame" data-nav-index="2">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              <polyline points="9 12 11 14 15 10"></polyline>
-            </svg>
-            <span>Cek Keaslian Admin</span>
-          </button>
+          <a href="https://t.me/testifendistore" target="_blank" class="btn-action btn-verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>Testimoni</span>
+          </a>
         </div>
-
-        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="btn-action btn-group">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <span>Grup Whatsapp</span>
-        </a>
+        <button type="button" class="btn-action btn-group switch-tab-trigger" data-target-tab="tab-datame" data-nav-index="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Kontak & Sosial Media</span>
+        </button>
       </div>
 
-      <!-- REKOMENDASI PRODUK DI HOME -->
+      <!-- SEKSI REKOMENDASI PRODUK DI HOME -->
       <div class="home-recommendations-section">
         <div class="section-title-box">
-          <span class="badge-pink-light">REKOMENDASI</span>
-          <h3 class="section-title">Produk Pilihan Fendi Store</h3>
+          <h2 class="section-title">Stok Terbaru</h2>
+          <p style="font-size: 11px; color: var(--text-sub);">Pilihan akun terlaris minggu ini</p>
         </div>
-        <div id="home-recommendation-grid" class="product-cards-grid"></div>
+        <div id="home-recommendation-grid" class="product-cards-grid">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
       </div>
 
-      <!-- FOOTER & SINYAL TRUST -->
-      <footer class="home-footer-section">
+      <!-- FOOTER TRUST -->
+      <div class="home-footer-section">
         <hr class="footer-divider">
-        
         <div class="footer-block">
-          <h4 class="footer-block-title">Sosial Media</h4>
-          <ul class="footer-link-list">
-            <li>
-              <a href="https://tiktok.com/@fenditiktok__" target="_blank" class="footer-link-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
-                </svg>
-                <span>TikTok Resmi</span>
-              </a>
-            </li>
-            <li>
-              <a href="https://instagram.com/fendi.store_" target="_blank" class="footer-link-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-                <span>Instagram Fendi Store</span>
-              </a>
-            </li>
-            <li>
-              <a href="https://t.me/testifendistore" target="_blank" class="footer-link-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-                <span>Telegram Testimoni</span>
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="footer-link-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                </svg>
-                <span>Grup WhatsApp Official</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="footer-block">
-          <h4 class="footer-block-title">Sinyal Trust</h4>
+          <span class="footer-block-title">Keunggulan Fendi Store</span>
           <ul class="footer-trust-list">
             <li class="trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <polyline points="9 12 11 14 15 10"></polyline>
-              </svg>
-              <span>Transaksi aman dan data jelas</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Transaksi Aman & Bergaransi</span>
             </li>
             <li class="trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-              <span>Proses cepat setelah pembayaran</span>
-            </li>
-            <li class="trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
-              </svg>
-              <span>Layanan admin setiap hari</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Proses Pengiriman Cepat (5-10 Menit)</span>
             </li>
           </ul>
         </div>
-
         <div class="footer-bottom-credits">
-          <p>© 2026 FENDI STORE. All rights reserved.</p>
-          <p class="credit-sub">Real Admin Region Madura</p>
+          <p>© 2026 FENDI STORE. All Rights Reserved.</p>
+          <p class="credit-sub">Platform Transaksi Game Terpercaya</p>
         </div>
-      </footer>
-    </div>
+      </div>
+    </section>
 
-    <!-- TAB 2: PRODUK -->
-    <div id="tab-produk" class="tab-content">
+    <!-- TAB 2: PRODUK KATALOG & DETAIL -->
+    <section id="tab-produk" class="tab-content">
+      <!-- KATALOG VIEW -->
       <div id="product-catalog-view">
         <div class="sub-tab-bar">
           <button type="button" class="sub-tab-item active" data-sub="all">Semua</button>
-          <button type="button" class="sub-tab-item" data-sub="ff">Free Fire</button>
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
+          <button type="button" class="sub-tab-item" data-sub="ff">Free Fire</button>
         </div>
-
-        <div id="product-list-container" class="product-cards-grid"></div>
+        <div id="product-list-container" class="product-cards-grid">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
       </div>
 
-      <div id="product-detail-view" style="display: none;" class="detail-container">
-        <button type="button" id="btn-back-catalog" class="btn-back-nav">&larr; Kembali ke Katalog</button>
-
-        <div class="zoom-image-wrapper" id="detail-img-box">
-          <span class="zoom-tag">Klik foto untuk lihat full</span>
-          <img id="detail-img" src="" alt="Foto Produk" class="detail-img-full">
+      <!-- DETAIL VIEW -->
+      <div id="product-detail-view" class="detail-container" style="display: none;">
+        <button type="button" id="btn-back-catalog" class="btn-back-nav">← Kembali ke Katalog</button>
+        
+        <div id="detail-img-box" class="zoom-image-wrapper">
+          <span class="zoom-tag">🔍 Klik untuk Zoom</span>
+          <img id="detail-img" src="" alt="Detail Akun" class="detail-img-full">
         </div>
 
         <div class="detail-card">
           <div class="badge-row">
             <span id="detail-cat-badge" class="badge-pink">FREE FIRE</span>
-            <span class="badge-pink-light">Ready</span>
+            <span class="badge-pink-light">STOCK TERSEDIA</span>
           </div>
           <h2 id="detail-title" class="detail-product-title">STOCK PRIBADI FENDI STORE</h2>
-          
           <div class="price-box">
-            <span class="price-label-sm">HARGA AKUN</span>
+            <span class="price-label-sm">HARGA NETT</span>
             <div id="detail-price" class="detail-price-text">Rp 0</div>
           </div>
         </div>
 
         <div class="detail-card">
           <h3 class="section-title">Spesifikasi Akun</h3>
-          <div id="detail-specs-content" class="detail-specs-text"></div>
+          <p id="detail-specs-content" class="detail-specs-text">-</p>
         </div>
 
         <div class="detail-card seller-card">
           <div class="seller-profile-row">
             <div class="seller-left">
-              <div class="seller-avatar-wrapper">
-                <img src="profile.webp" alt="Foto Penjual" class="seller-avatar-img" onload="this.parentElement.classList.add('loaded')">
+              <div class="seller-avatar-wrapper loaded">
+                <img src="https://lh3.googleusercontent.com/d/1X_EXAMPLE" alt="Admin Fendi" class="seller-avatar-img">
                 <span class="online-indicator-dot"></span>
               </div>
               <div class="seller-info">
-                <h3 class="seller-name">FENDI STORE</h3>
-                <span class="seller-status-text">● Online</span>
+                <span class="seller-name">Fendi Admin</span>
+                <span class="seller-status-text">Online • Respon Cepat</span>
               </div>
             </div>
-
-            <a href="#" id="btn-buy-now" target="_blank" class="btn-buy-now">Beli Sekarang</a>
+            <a id="btn-buy-now" href="#" target="_blank" class="btn-buy-now">Beli Sekarang</a>
           </div>
-
-          <div class="seller-region-badge">
-            Real Admin Fendi Store Region Madura
-          </div>
+          <div class="seller-region-badge">📍 Penjual Resmi Region Madura, Indonesia</div>
         </div>
 
         <div class="detail-card">
-          <span class="badge-pink-light" style="font-size: 10px;">REKOMENDASI</span>
-          <h3 class="section-title" style="margin-top: 4px;">Produk lainnya</h3>
-          <div id="recommendation-grid" class="product-cards-grid" style="margin-top: 10px;"></div>
+          <h3 class="section-title">Rekomendasi Lainnya</h3>
+          <div id="recommendation-grid" class="product-cards-grid" style="margin-top: 8px;">
+            <!-- Diisi JavaScript -->
+          </div>
         </div>
-
       </div>
-    </div>
+    </section>
 
-    <!-- TAB 3: DATAME -->
-    <div id="tab-datame" class="tab-content">
+    <!-- TAB 3: DATAME (KONTAK) -->
+    <section id="tab-datame" class="tab-content">
       <div class="datame-header">
-        <h2>Kontak & Sosmed Resmi</h2>
-        <p>Gunakan kontak di bawah untuk memastikan keaslian transaksi.</p>
+        <h2>Kontak Resmi</h2>
+        <p>Hubungi admin hanya melalui saluran di bawah ini</p>
       </div>
-
       <div class="contact-list">
         <a href="https://wa.me/6285854325988" target="_blank" class="contact-card">
           <div class="card-icon wa-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
           </div>
           <div class="card-info">
-            <span class="card-title">WhatsApp Japost</span>
-            <span class="card-detail">085854325988</span>
+            <span class="card-title">WhatsApp Resmi Admin</span>
+            <span class="card-detail">+62 858-5432-5988</span>
           </div>
-          <span class="card-arrow">&rarr;</span>
+          <span class="card-arrow">→</span>
         </a>
-
-        <a href="https://wa.me/6281553801021" target="_blank" class="contact-card">
-          <div class="card-icon wa-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
+        <a href="https://www.tiktok.com/@fenditiktok__" target="_blank" class="contact-card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
           </div>
           <div class="card-info">
-            <span class="card-title">WhatsApp Rekber</span>
-            <span class="card-detail">081553801021</span>
-          </div>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-
-        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="contact-card">
-          <div class="card-icon group-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <div class="card-info">
-            <span class="card-title">Grup Jb WhatsApp</span>
-            <span class="card-detail">Gabung Komunitas Jual Beli</span>
-          </div>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-
-        <a href="https://tiktok.com/@fenditiktok__" target="_blank" class="contact-card">
-          <div class="card-icon tiktok-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
-            </svg>
-          </div>
-          <div class="card-info">
-            <span class="card-title">TikTok Resmi</span>
+            <span class="card-title">TikTok Official</span>
             <span class="card-detail">@fenditiktok__</span>
           </div>
-          <span class="card-arrow">&rarr;</span>
+          <span class="card-arrow">→</span>
         </a>
-
-        <a href="https://instagram.com/fendi.store_" target="_blank" class="contact-card">
-          <div class="card-icon ig-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
+        <a href="https://www.instagram.com/fendi.store_" target="_blank" class="contact-card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </div>
           <div class="card-info">
-            <span class="card-title">Instagram</span>
+            <span class="card-title">Instagram Official</span>
             <span class="card-detail">@fendi.store_</span>
           </div>
-          <span class="card-arrow">&rarr;</span>
+          <span class="card-arrow">→</span>
         </a>
-
         <a href="https://t.me/testifendistore" target="_blank" class="contact-card">
-          <div class="card-icon tele-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
           </div>
           <div class="card-info">
-            <span class="card-title">Telegram / Testimoni</span>
+            <span class="card-title">Telegram Testimoni</span>
             <span class="card-detail">t.me/testifendistore</span>
           </div>
-          <span class="card-arrow">&rarr;</span>
+          <span class="card-arrow">→</span>
         </a>
       </div>
-    </div>
+    </section>
 
-    <!-- TAB 4: AKUN -->
-    <div id="tab-akun" class="tab-content">
+    <!-- TAB 4: AKUN & ADMIN PANEL -->
+    <section id="tab-akun" class="tab-content">
+      <!-- VIEW TAMU (LOGIN/DAFTAR) -->
       <div id="auth-guest-view" class="auth-card">
         <div class="auth-toggle-bar">
           <button type="button" class="auth-tab-btn active" data-auth="login">Masuk</button>
@@ -341,171 +235,141 @@
         <form id="login-form" class="auth-form active">
           <div class="form-header">
             <h3>Login Akun</h3>
-            <p>Masuk untuk transaksi & kelola akun di FENDI STORE.</p>
+            <p>Masuk untuk mengelola postingan atau akun kamu</p>
           </div>
-
           <div class="form-group">
-            <label for="login-username">No. WhatsApp</label>
-            <input type="tel" id="login-username" placeholder="08xxxxxxxxxx" required>
+            <label>Username / No. WA</label>
+            <input type="text" id="login-username" placeholder="Masukkan ID / WA" required>
           </div>
-
           <div class="form-group">
-            <label for="login-password">Kata Sandi</label>
-            <input type="password" id="login-password" placeholder="••••••••" required>
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="Masukkan password" required>
           </div>
-
           <button type="submit" id="btn-login" class="btn-auth-submit">Masuk Sekarang</button>
         </form>
 
         <form id="register-form" class="auth-form">
           <div class="form-header">
             <h3>Daftar Akun Baru</h3>
-            <p>Buat akun FENDI STORE kamu secara gratis.</p>
+            <p>Buat akun pengunjung Fendi Store</p>
           </div>
-
           <div class="form-group">
-            <label for="reg-name">Nama Lengkap</label>
+            <label>Nama Lengkap</label>
             <input type="text" id="reg-name" placeholder="Nama kamu" required>
           </div>
-
           <div class="form-group">
-            <label for="reg-wa">Nomor WhatsApp</label>
-            <input type="tel" id="reg-wa" placeholder="08xxxxxxxxxx" required>
+            <label>No. WhatsApp</label>
+            <input type="text" id="reg-wa" placeholder="08xxxxxxxxxx" required>
           </div>
-
           <div class="form-group">
-            <label for="reg-password">Kata Sandi</label>
-            <input type="password" id="reg-password" placeholder="Buat kata sandi" required>
+            <label>Password</label>
+            <input type="password" id="reg-password" placeholder="Buat password" required>
           </div>
-
           <button type="submit" id="btn-register" class="btn-auth-submit">Daftar Akun</button>
         </form>
       </div>
 
+      <!-- VIEW LOGGED IN USER -->
       <div id="auth-logged-view" class="auth-card" style="display: none;">
         <div class="user-profile-box">
           <div class="user-info-row">
             <div>
-              <h3 id="display-user-name">Nama User</h3>
+              <h3 id="display-user-name">User</h3>
               <p id="display-user-wa" style="font-size: 11px; color: var(--text-sub);">08xxx</p>
             </div>
             <span id="display-user-role" class="badge-role">USER</span>
           </div>
-          <button type="button" id="btn-logout" class="btn-logout">Keluar / Logout</button>
+          <button type="button" id="btn-logout" class="btn-logout">Keluar Akun</button>
         </div>
 
-        <div id="admin-panel-section" style="display: none;" class="admin-section">
+        <!-- PANEL ADMIN KHUSUS -->
+        <div id="admin-panel-section" style="display: none;">
           <hr class="divider">
-          
           <div class="admin-header">
-            <h3>Panel Admin Fendi Store</h3>
-            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive.</p>
+            <h3>+ Post Jualan Baru (Admin)</h3>
           </div>
-
-          <form id="admin-upload-form" class="auth-form active">
+          <form id="admin-upload-form" class="auth-form active" style="margin-top: 10px;">
             <div class="form-group">
-              <label for="post-category">Kategori Game</label>
-              <select id="post-category" required>
+              <label>Kategori Game</label>
+              <select id="post-category">
                 <option value="ff">Free Fire</option>
                 <option value="ml">Mobile Legends</option>
               </select>
             </div>
-
             <div class="form-group">
-              <label>Nomor Urut / Kode Akun</label>
-              <div class="auto-code-badge">Otomatis Dideteksi Oleh Sistem (#FF-xx / #ML-xx)</div>
+              <label>Harga Akun (Rp)</label>
+              <input type="text" id="post-price" placeholder="Contoh: 150000" required>
             </div>
-
             <div class="form-group">
-              <label for="post-price">Harga (Rp)</label>
-              <input type="text" id="post-price" placeholder="Contoh: 100.000" required>
-            </div>
-
-            <div class="form-group">
-              <label for="post-file">Upload Foto Akun (Dari HP/Galeri)</label>
+              <label>Upload Foto (Dari HP)</label>
               <input type="file" id="post-file" accept="image/*">
             </div>
-
             <div class="form-group">
-              <label for="post-url">Atau Link Foto (Opsional jika tanpa file)</label>
+              <label>Atau Link Gambar Direct (Opsional)</label>
               <input type="text" id="post-url" placeholder="https://...">
             </div>
-
             <div class="form-group">
-              <label for="post-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
-              <textarea id="post-specs" rows="3" placeholder="Contoh: Vault Rame, Old Season, Diamond 200, Log VK" required></textarea>
+              <label>Spesifikasi Akun</label>
+              <textarea id="post-specs" rows="3" placeholder="Satu baris per spesifikasi / pisahkan dengan ||"></textarea>
             </div>
-
             <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Produk</button>
           </form>
 
-          <div style="margin-top: 10px;">
-            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola / Hapus Akun</h4>
-            <div id="admin-manage-list" class="admin-manage-grid"></div>
+          <hr class="divider">
+          <div class="admin-header">
+            <h3>Kelola / Hapus Akun</h3>
+          </div>
+          <div id="admin-manage-list" class="admin-manage-grid">
+            <!-- Diisi JavaScript -->
           </div>
         </div>
-
       </div>
-
-    </div>
+    </section>
 
   </main>
 
-  <!-- MODAL FULL ZOOM FOTO PRODUK -->
+  <!-- MODAL FULL ZOOM FOTO -->
   <div id="image-zoom-modal" class="image-modal">
-    <span class="modal-close" id="modal-close-btn">&times;</span>
-    <img class="modal-content" id="img-full-zoom">
+    <span id="modal-close-btn" class="modal-close">&times;</span>
+    <img id="img-full-zoom" class="modal-content" src="" alt="Zoom Foto">
   </div>
 
-  <!-- BOTTOM NAVIGATION BAR -->
-  <nav class="bottom-nav-wrapper">
-    <div class="bottom-nav">
+  <!-- BOTTOM NAVIGATION BAR FIXED -->
+  <div class="bottom-nav-wrapper">
+    <nav class="bottom-nav">
       <div class="nav-indicator"></div>
-
-      <a href="#home" class="nav-item active" data-index="0" data-target="tab-home">
+      
+      <a href="/home" class="nav-item active" data-index="0" data-target="tab-home">
         <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
         <span>Home</span>
       </a>
 
-      <a href="#produk" class="nav-item" data-index="1" data-target="tab-produk">
+      <a href="/produk" class="nav-item" data-index="1" data-target="tab-produk">
         <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
         </div>
         <span>Produk</span>
       </a>
 
-      <a href="#datame" class="nav-item" data-index="2" data-target="tab-datame">
+      <a href="/datame" class="nav-item" data-index="2" data-target="tab-datame">
         <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-            <path d="M21 19c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
         </div>
-        <span>DataMe</span>
+        <span>Datame</span>
       </a>
 
-      <a href="#akun" class="nav-item" data-index="3" data-target="tab-akun">
+      <a href="/akun" class="nav-item" data-index="3" data-target="tab-akun">
         <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </div>
         <span>Akun</span>
       </a>
-    </div>
-  </nav>
+    </nav>
+  </div>
 
+  <!-- LINK KE SCRIPT.JS -->
   <script src="script.js"></script>
 </body>
 </html>

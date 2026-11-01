@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FENDI STORE OFFICIAL</title>
 
-  <!-- PWA MANIFEST & ICON (PASTIKAN PWA DIPASANG DI SINI) -->
-  <link rel="manifest" href="/manifest.json">
+  <!-- DUKUNGAN APLIKASI PWA -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#000000">
-  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- LINK KE STYLE.CSS -->
+  <!-- CSS UTAMA -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -73,18 +73,16 @@
         </button>
       </div>
 
-      <!-- SEKSI REKOMENDASI PRODUK DI HOME -->
+      <!-- REKOMENDASI PRODUK HOME -->
       <div class="home-recommendations-section">
         <div class="section-title-box">
           <h2 class="section-title">Stok Terbaru</h2>
           <p style="font-size: 11px; color: var(--text-sub);">Pilihan akun terlaris minggu ini</p>
         </div>
-        <div id="home-recommendation-grid" class="product-cards-grid">
-          <!-- Diisi otomatis oleh JavaScript -->
-        </div>
+        <div id="home-recommendation-grid" class="product-cards-grid"></div>
       </div>
 
-      <!-- FOOTER TRUST -->
+      <!-- FOOTER & INFORMASI TRUST -->
       <div class="home-footer-section">
         <hr class="footer-divider">
         <div class="footer-block">
@@ -116,9 +114,7 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
           <button type="button" class="sub-tab-item" data-sub="ff">Free Fire</button>
         </div>
-        <div id="product-list-container" class="product-cards-grid">
-          <!-- Diisi otomatis oleh JavaScript -->
-        </div>
+        <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
       <!-- DETAIL VIEW -->
@@ -166,9 +162,7 @@
 
         <div class="detail-card">
           <h3 class="section-title">Rekomendasi Lainnya</h3>
-          <div id="recommendation-grid" class="product-cards-grid" style="margin-top: 8px;">
-            <!-- Diisi JavaScript -->
-          </div>
+          <div id="recommendation-grid" class="product-cards-grid" style="margin-top: 8px;"></div>
         </div>
       </div>
     </section>
@@ -319,9 +313,7 @@
           <div class="admin-header">
             <h3>Kelola / Hapus Akun</h3>
           </div>
-          <div id="admin-manage-list" class="admin-manage-grid">
-            <!-- Diisi JavaScript -->
-          </div>
+          <div id="admin-manage-list" class="admin-manage-grid"></div>
         </div>
       </div>
     </section>
@@ -369,7 +361,7 @@
     </nav>
   </div>
 
-  <!-- LINK KE SCRIPT.JS -->
+  <!-- SCRIPT UTAMA -->
   <script src="script.js"></script>
 </body>
 </html>

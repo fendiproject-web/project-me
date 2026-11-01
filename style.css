@@ -84,7 +84,7 @@ body.light-mode .zoom-image-wrapper {
   animation: shimmerPulseLight 1.6s infinite ease-in-out;
 }
 
-/* MATIKAN ANIMASI SHIMMER SETELAH FOTO SELESAI DIMUAT (.loaded) */
+/* MATIKAN ANIMASI SHIMMER SETELAH FOTO SELESAI DIMUAT */
 .profile-avatar.loaded,
 .seller-avatar-wrapper.loaded,
 .banner-container.loaded,
@@ -94,7 +94,7 @@ body.light-mode .zoom-image-wrapper {
   background-color: transparent !important;
 }
 
-/* GAMBAR LANGSUNG TAMPIL (TANPA OPACITY 0) */
+/* GAMBAR LANGSUNG TAMPIL */
 .account-img, 
 .detail-img-full, 
 .profile-img, 
@@ -188,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* TOMBOL MODE TERANG & GELAP (DESAIN TERPISAH / STANDALONE PILL) */
+/* TOMBOL MODE TERANG & GELAP */
 .theme-toggle-btn {
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
@@ -372,7 +372,7 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* KATALOG PRODUK (2 KOLOM GRID DEFAUL HP, RASIO 9:16) */
+/* KATALOG PRODUK */
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -469,9 +469,7 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   max-width: 100%;
 }
 
-body.light-mode .spec-item {
-  background: #eef5ff;
-}
+body.light-mode .spec-item { background: #eef5ff; }
 
 .btn-see-now {
   display: block;
@@ -488,7 +486,7 @@ body.light-mode .spec-item {
   cursor: pointer;
 }
 
-/* SKELETON PLACEHOLDER CARDS (SAAT AWAL LOAD/FETCHING) */
+/* SKELETON PLACEHOLDER CARDS */
 .skeleton-card {
   display: flex;
   flex-direction: column;
@@ -612,9 +610,7 @@ body.light-mode .skeleton-line {
   margin-top: 4px;
 }
 
-body.light-mode .price-box {
-  background: #e6f0fa;
-}
+body.light-mode .price-box { background: #e6f0fa; }
 
 .price-label-sm { font-size: 9px; color: var(--text-sub); font-weight: 700; }
 .detail-price-text { font-size: 19px; font-weight: 900; color: var(--text-main); margin-top: 2px; }
@@ -702,9 +698,7 @@ body.light-mode .price-box {
   color: var(--text-main);
 }
 
-body.light-mode .seller-region-badge {
-  background: #e6f0fa;
-}
+body.light-mode .seller-region-badge { background: #e6f0fa; }
 
 /* FOOTER & SINYAL TRUST DI HOME */
 .home-footer-section {
@@ -755,9 +749,7 @@ body.light-mode .seller-region-badge {
 }
 
 .footer-link-item:hover,
-.footer-link-item:active {
-  color: var(--text-main);
-}
+.footer-link-item:active { color: var(--text-main); }
 
 .footer-link-item svg {
   width: 16px;
@@ -781,13 +773,8 @@ body.light-mode .seller-region-badge {
   flex-shrink: 0;
 }
 
-body.dark-mode .trust-item svg {
-  stroke: #c084fc;
-}
-
-body.light-mode .trust-item svg {
-  stroke: #3b82f6;
-}
+body.dark-mode .trust-item svg { stroke: #c084fc; }
+body.light-mode .trust-item svg { stroke: #3b82f6; }
 
 .footer-bottom-credits {
   text-align: center;
@@ -859,9 +846,7 @@ body.light-mode .trust-item svg {
   border: 1px solid var(--border-color);
 }
 
-body.light-mode .auth-toggle-bar {
-  background: #e6f0fa;
-}
+body.light-mode .auth-toggle-bar { background: #e6f0fa; }
 
 .auth-tab-btn {
   flex: 1;
@@ -901,9 +886,7 @@ body.light-mode .auth-toggle-bar {
   font-weight: 600;
 }
 
-body.light-mode .auto-code-badge {
-  background: #e6f0fa;
-}
+body.light-mode .auto-code-badge { background: #e6f0fa; }
 
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
@@ -970,9 +953,7 @@ body.light-mode .form-group textarea { background: #ffffff; }
   border-radius: 10px;
 }
 
-body.light-mode .manage-item {
-  background: #e6f0fa;
-}
+body.light-mode .manage-item { background: #e6f0fa; }
 
 .btn-delete-prod {
   background: rgba(239, 68, 68, 0.15);
@@ -1018,9 +999,7 @@ body.light-mode .manage-item {
   color: var(--text-main);
 }
 
-body.light-mode .card-icon {
-  background: #e6f0fa;
-}
+body.light-mode .card-icon { background: #e6f0fa; }
 
 .card-icon svg { width: 20px; height: 20px; stroke: var(--text-main); }
 .wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
@@ -1122,103 +1101,126 @@ body.light-mode .card-icon {
 .icon-box.bounce { animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
 /* ==========================================
-   RESPONSIVE DESIGN (TABLET & PC / DESKTOP)
+   POPUP INSTALL APLIKASI PWA (DESAIN 1:1)
    ========================================== */
-
-/* 1. TAMPILAN TABLET (Layar minimal 768px) */
-@media (min-width: 768px) {
-  .top-bar {
-    max-width: 720px;
-    padding: 10px 20px;
-  }
-
-  .main-content {
-    max-width: 720px;
-    padding-top: 95px;
-  }
-
-  .bottom-nav {
-    max-width: 480px;
-  }
-
-  .banner-container {
-    aspect-ratio: 16 / 7;
-  }
-
-  .product-cards-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .skeleton-card {
-    border-radius: 18px;
-  }
+.pwa-banner-modal {
+  position: fixed;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 410px;
+  z-index: 10000;
+  animation: slideUpPwa 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* 2. TAMPILAN LAPTOP & PC DESKTOP (Layar minimal 1024px) */
+@keyframes slideUpPwa {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.pwa-banner-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 14px 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pwa-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pwa-banner-icon {
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.pwa-banner-text h3 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 3px;
+  letter-spacing: 0.5px;
+}
+
+.pwa-banner-text p {
+  font-size: 10px;
+  color: var(--text-sub);
+  line-height: 1.4;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-pwa-later {
+  flex: 1;
+  padding: 9px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-pwa-install {
+  flex: 1;
+  padding: 9px;
+  border-radius: 12px;
+  background: #25d366;
+  border: none;
+  color: #000000;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-pwa-later:active, 
+.btn-pwa-install:active { transform: scale(0.96); }
+
+/* ==========================================
+   RESPONSIVE DESIGN (TABLET & PC / DESKTOP)
+   ========================================== */
+@media (min-width: 768px) {
+  .top-bar { max-width: 720px; padding: 10px 20px; }
+  .main-content { max-width: 720px; padding-top: 95px; }
+  .bottom-nav { max-width: 480px; }
+  .banner-container { aspect-ratio: 16 / 7; }
+  .product-cards-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .skeleton-card { border-radius: 18px; }
+  .pwa-banner-modal { max-width: 480px; bottom: 90px; }
+}
+
 @media (min-width: 1024px) {
-  .top-bar {
-    max-width: 1080px;
-    padding: 12px 24px;
-  }
-
-  .main-content {
-    max-width: 1080px;
-    padding-top: 105px;
-    padding-bottom: 110px;
-  }
-
-  .bottom-nav {
-    max-width: 520px;
-    height: 64px;
-  }
-
-  .nav-item {
-    font-size: 11px;
-  }
-
-  .banner-container {
-    aspect-ratio: 21 / 7;
-  }
-
-  .home-actions {
-    flex-direction: row;
-    gap: 12px;
-  }
-
-  .action-row {
-    flex: 2;
-  }
-
-  .btn-group {
-    flex: 1;
-  }
-
-  .product-cards-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-  #product-detail-view.detail-container {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 20px;
-    align-items: start;
-  }
-
-  .btn-back-nav {
-    grid-column: span 2;
-  }
-
-  .zoom-image-wrapper {
-    grid-row: span 3;
-  }
-
-  .seller-card {
-    grid-column: span 2;
-  }
-
-  #product-detail-view .detail-card:last-child {
-    grid-column: span 2;
-  }
+  .top-bar { max-width: 1080px; padding: 12px 24px; }
+  .main-content { max-width: 1080px; padding-top: 105px; padding-bottom: 110px; }
+  .bottom-nav { max-width: 520px; height: 64px; }
+  .nav-item { font-size: 11px; }
+  .banner-container { aspect-ratio: 21 / 7; }
+  .home-actions { flex-direction: row; gap: 12px; }
+  .action-row { flex: 2; }
+  .btn-group { flex: 1; }
+  .product-cards-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  #product-detail-view.detail-container { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
+  .btn-back-nav { grid-column: span 2; }
+  .zoom-image-wrapper { grid-row: span 3; }
+  .seller-card { grid-column: span 2; }
+  #product-detail-view .detail-card:last-child { grid-column: span 2; }
+  .pwa-banner-modal { max-width: 500px; bottom: 95px; }
 }

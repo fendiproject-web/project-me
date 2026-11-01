@@ -9,7 +9,6 @@ const urlsToCache = [
   'manifest.json'
 ];
 
-// PROSES INSTALL & CACHE ASSET UTAMA
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -19,7 +18,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// AKTIVASI & HAPUS CACHE LAMA JIKA ADA UPDATE
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -35,7 +33,6 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// AMBIL DATA DARI CACHE ATAU NETWORK
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {

@@ -372,7 +372,7 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* KATALOG PRODUK (2 KOLOM GRID, RASIO 9:16) */
+/* KATALOG PRODUK (2 KOLOM GRID DEFAUL HP, RASIO 9:16) */
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1120,3 +1120,105 @@ body.light-mode .card-icon {
 }
 
 .icon-box.bounce { animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+/* ==========================================
+   RESPONSIVE DESIGN (TABLET & PC / DESKTOP)
+   ========================================== */
+
+/* 1. TAMPILAN TABLET (Layar minimal 768px) */
+@media (min-width: 768px) {
+  .top-bar {
+    max-width: 720px;
+    padding: 10px 20px;
+  }
+
+  .main-content {
+    max-width: 720px;
+    padding-top: 95px;
+  }
+
+  .bottom-nav {
+    max-width: 480px;
+  }
+
+  .banner-container {
+    aspect-ratio: 16 / 7;
+  }
+
+  .product-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .skeleton-card {
+    border-radius: 18px;
+  }
+}
+
+/* 2. TAMPILAN LAPTOP & PC DESKTOP (Layar minimal 1024px) */
+@media (min-width: 1024px) {
+  .top-bar {
+    max-width: 1080px;
+    padding: 12px 24px;
+  }
+
+  .main-content {
+    max-width: 1080px;
+    padding-top: 105px;
+    padding-bottom: 110px;
+  }
+
+  .bottom-nav {
+    max-width: 520px;
+    height: 64px;
+  }
+
+  .nav-item {
+    font-size: 11px;
+  }
+
+  .banner-container {
+    aspect-ratio: 21 / 7;
+  }
+
+  .home-actions {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .action-row {
+    flex: 2;
+  }
+
+  .btn-group {
+    flex: 1;
+  }
+
+  .product-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  #product-detail-view.detail-container {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .btn-back-nav {
+    grid-column: span 2;
+  }
+
+  .zoom-image-wrapper {
+    grid-row: span 3;
+  }
+
+  .seller-card {
+    grid-column: span 2;
+  }
+
+  #product-detail-view .detail-card:last-child {
+    grid-column: span 2;
+  }
+}

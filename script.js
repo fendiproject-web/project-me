@@ -36,7 +36,7 @@ function fixImageUrl(url) {
   return url;
 }
 
-// FORMAT FORMAT RUPIAH
+// FORMAT RUPIAH
 function formatRupiah(val) {
   if (!val) return '0';
   const cleanNum = String(val).replace(/\D/g, '');
@@ -726,7 +726,7 @@ window.deleteProductFromSheets = async function(productId) {
 };
 
 // ==========================================
-// REGISTRASI PWA SERVICE WORKER
+// REGISTRASI PWA & LOGIKA NOTIFIKASI INSTALL
 // ==========================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -737,11 +737,37 @@ if ('serviceWorker' in navigator) {
 }
 
 let deferredPrompt;
+const pwaBanner = document.getElementById('pwa-install-banner');
+const btnPwaInstall = document.getElementById('btn-pwa-install');
+const btnPwaDismiss = document.getElementById('btn-pwa-dismiss');
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  console.log("Aplikasi Fendi Store siap diinstall!");
+
+  if (!sessionStorage.getItem('fendi_pwa_dismissed') && pwaBanner) {
+    pwaBanner.style.display = 'block';
+  }
 });
+
+if (btnPwaInstall) {
+  btnPwaInstall.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`Pilihan user: ${outcome}`);
+      deferredPrompt = null;
+      if (pwaBanner) pwaBanner.style.display = 'none';
+    }
+  });
+}
+
+if (btnPwaDismiss) {
+  btnPwaDismiss.addEventListener('click', () => {
+    if (pwaBanner) pwaBanner.style.display = 'none';
+    sessionStorage.setItem('fendi_pwa_dismissed', 'true');
+  });
+}
 
 // INISIALISASI HALAMAN
 initTheme();

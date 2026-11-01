@@ -1,24 +1,22 @@
 {
   "name": "FENDI STORE",
-  "short_name": "FendiStore",
-  "description": "Layanan Jual Beli Akun & Rekber Game Fendi Store",
+  "short_name": "FENDISTORE",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "profile.webp",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/webp",
+      "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "profile.webp",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/webp",
+      "purpose": "any"
     }
   ]
 }

@@ -1,10 +1,10 @@
-// LINK GOOGLE APPS SCRIPT
+// LINK GOOGLE APPS SCRIPT BACKEND
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
 
-// PLACEHOLDER NETRAL JIKA GAMBAR EROR
+// PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// TAMPILKAN SKELETON PLACEHOLDER DI GRID SEBELUM DATA SELESAI DI-FETCH
+// ANIMASI SKELETON LOADING
 function renderSkeletons() {
   const skeletonHTML = Array(4).fill(0).map(() => `
     <div class="skeleton-card">
@@ -24,7 +24,7 @@ function renderSkeletons() {
   if (homeRecContainer) homeRecContainer.innerHTML = skeletonHTML;
 }
 
-// KONVERSI LINK GOOGLE DRIVE AGAR BISA DITAMPILKAN DIRECT
+// PERBAIKI LINK GOOGLE DRIVE
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
   if (url.includes('drive.google.com') && url.includes('/d/')) {
@@ -36,14 +36,14 @@ function fixImageUrl(url) {
   return url;
 }
 
-// FORMAT RUPIAH
+// FORMAT FORMAT RUPIAH
 function formatRupiah(val) {
   if (!val) return '0';
   const cleanNum = String(val).replace(/\D/g, '');
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI KOMPRESI GAMBAR OTOMATIS SEBELUM UPLOAD
+// KOMPRESI GAMBAR DARI HP
 function compressImage(file, maxWidth = 800, quality = 0.75) {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -75,7 +75,7 @@ function compressImage(file, maxWidth = 800, quality = 0.75) {
 }
 
 // ==========================================
-// SISTEM TEMA
+// SISTEM MODE TERANG / GELAP (THEME)
 // ==========================================
 const themeToggleBtn = document.getElementById('themeToggle');
 
@@ -108,7 +108,7 @@ if (themeToggleBtn) {
   });
 }
 
-// FORMAT HARGA REALTIME ADMIN
+// FORMAT INPUT HARGA ADMIN REALTIME
 const postPriceInput = document.getElementById('post-price');
 if (postPriceInput) {
   postPriceInput.addEventListener('input', function () {
@@ -118,7 +118,7 @@ if (postPriceInput) {
 }
 
 // ==========================================
-// FETCH & RENDER PRODUK
+// FETCH & RENDER PRODUK DARI GOOGLE SHEETS
 // ==========================================
 const productListContainer = document.getElementById('product-list-container');
 let currentCategory = 'all';
@@ -166,7 +166,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
   }
 }
 
-// RENDER REKOMENDASI HOME
+// REKOMENDASI PRODUK DI HOME
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -209,7 +209,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// RENDER KATALOG PRODUK
+// KATALOG PRODUK
 function renderProducts(filterCat = 'all') {
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
@@ -301,7 +301,7 @@ function openProductDetail(productId, updateHistory = true) {
   }
 }
 
-// CEK QUERY URL
+// CEK URL UNTUK DIRECT DETAIL
 function checkUrlForProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodCode = urlParams.get('id');
@@ -315,7 +315,7 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL FULL ZOOM FOTO PRODUK
+// MODAL ZOOM FOTO PRODUK
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -396,7 +396,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TABS FILTER
+// SUB TAB FILTER (FF / ML / SEMUA)
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
@@ -410,7 +410,9 @@ subTabItems.forEach((btn) => {
   });
 });
 
+// ==========================================
 // BOTTOM NAV & ROUTING MANAGER
+// ==========================================
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -498,7 +500,9 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// FORM LOGIN & DAFTAR
+// ==========================================
+// FORM LOGIN & REGISTRASI AKUN
+// ==========================================
 const authTabBtns = document.querySelectorAll('.auth-tab-btn');
 const authForms = document.querySelectorAll('.auth-form');
 
@@ -515,7 +519,6 @@ authTabBtns.forEach(btn => {
   });
 });
 
-// SESSION USER & LOGIN
 function getCurrentUser() {
   const data = localStorage.getItem('fendi_session_user');
   return data ? JSON.parse(data) : null;
@@ -546,7 +549,7 @@ function updateAccountView() {
   } else {
     guestView.style.display = 'flex';
     loggedView.style.display = 'none';
-    adminPanel.style.display = 'none';
+    if (adminPanel) adminPanel.style.display = 'none';
   }
 }
 
@@ -557,7 +560,7 @@ document.getElementById('btn-logout')?.addEventListener('click', () => {
   alert("Kamu telah keluar.");
 });
 
-// DAFTAR AKUN
+// DAFTAR AKUN BARU
 document.getElementById('register-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('reg-name').value.trim();
@@ -679,7 +682,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 });
 
-// KELOLA & HAPUS PRODUK
+// KELOLA & HAPUS PRODUK ADMIN
 function renderAdminManageList() {
   const adminManageList = document.getElementById('admin-manage-list');
   if (!adminManageList) return;
@@ -700,7 +703,7 @@ function renderAdminManageList() {
   `).join('');
 }
 
-// HAPUS PRODUK DARI SHEETS
+// HAPUS PRODUK DARI GOOGLE SHEETS
 window.deleteProductFromSheets = async function(productId) {
   const user = getCurrentUser();
   if (!user || user.role !== 'admin') return;
@@ -723,13 +726,13 @@ window.deleteProductFromSheets = async function(productId) {
 };
 
 // ==========================================
-// REGISTRASI PWA (DISATUKAN DI PALING BAWAH)
+// REGISTRASI PWA SERVICE WORKER
 // ==========================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('PWA Service Worker Aktif!', reg))
-      .catch(err => console.error('PWA Gagal:', err));
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('PWA Service Worker Aktif:', reg.scope))
+      .catch(err => console.error('PWA Service Worker Gagal:', err));
   });
 }
 
@@ -740,7 +743,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   console.log("Aplikasi Fendi Store siap diinstall!");
 });
 
-// INISIALISASI UTAMA
+// INISIALISASI HALAMAN
 initTheme();
 renderSkeletons();
 loadProductsFromSheets();

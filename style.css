@@ -189,23 +189,14 @@ body.light-mode .zoom-image-wrapper {
 }
 
 /* ==========================================
-   ANIMASI TEMA MODE TERANG & GELAP
+   ANIMASI TEMA MODE TERANG & GELAP (SLIDE ATAS & BAWAH)
    ========================================== */
-@keyframes animFromTop {
-  0% { transform: translateY(-24px) scale(0.6); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-@keyframes animFromBottom {
-  0% { transform: translateY(24px) scale(0.6); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
 .theme-toggle-btn {
+  position: relative;
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -215,37 +206,38 @@ body.light-mode .zoom-image-wrapper {
   flex-shrink: 0;
   backdrop-filter: blur(8px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: transform 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
-  overflow: hidden;
-}
-
-.theme-toggle-btn:active {
-  transform: scale(0.92);
+  overflow: hidden; /* Sembunyikan icon saat bergeser keluar dari tombol */
 }
 
 .theme-toggle-btn svg {
-  width: 18px;
-  height: 18px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
 }
 
-/* GELAP KE TERANG (LIGHT MODE AKTIF): ICON MOON MUNCUL DARI ATAS */
-body.light-mode .sun-icon { 
-  display: none; 
-}
-body.light-mode .moon-icon { 
-  display: block; 
-  stroke: #c084fc; 
-  animation: animFromTop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+/* SAAT MODE GELAP (DARK MODE): SUN TAMPIL DI TENGAH, MOON TERSEMBUNYI DI ATAS */
+body.dark-mode .sun-icon {
+  transform: translateY(0);
+  opacity: 1;
+  stroke: #ffffff;
 }
 
-/* TERANG KE GELAP (DARK MODE AKTIF): ICON SUN MUNCUL DARI BAWAH */
-body.dark-mode .sun-icon { 
-  display: block; 
-  stroke: #ffffff; 
-  animation: animFromBottom 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+body.dark-mode .moon-icon {
+  transform: translateY(-160%); /* Berada di atas tombol */
+  opacity: 0;
 }
-body.dark-mode .moon-icon { 
-  display: none; 
+
+/* SAAT MODE TERANG (LIGHT MODE): MOON MELUNCUR MASUK DARI ATAS, SUN MELUNCUR KELUAR KE BAWAH */
+body.light-mode .sun-icon {
+  transform: translateY(160%); /* Bergeser keluar ke bawah */
+  opacity: 0;
+}
+
+body.light-mode .moon-icon {
+  transform: translateY(0); /* Meluncur masuk dari atas ke tengah */
+  opacity: 1;
+  stroke: #c084fc;
 }
 
 /* MAIN CONTENT CONTAINER */
@@ -323,7 +315,7 @@ body.dark-mode .moon-icon {
 }
 
 .action-row .btn-action { flex: 1; }
-.btn-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+.btn-action svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 .btn-action:active { transform: scale(0.97); }
 
 .btn-wa {
@@ -780,9 +772,10 @@ body.light-mode .seller-region-badge { background: #e6f0fa; }
 .footer-link-item:active { color: var(--text-main); }
 
 .footer-link-item svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  display: block;
 }
 
 .trust-item {
@@ -798,6 +791,7 @@ body.light-mode .seller-region-badge { background: #e6f0fa; }
   height: 16px;
   stroke: var(--accent-color);
   flex-shrink: 0;
+  display: block;
 }
 
 body.dark-mode .trust-item svg { stroke: #c084fc; }
@@ -993,7 +987,9 @@ body.light-mode .manage-item { background: #e6f0fa; }
   cursor: pointer;
 }
 
-/* DATAME CONTACT CARDS STYLES */
+/* ==========================================
+   DATAME CONTACT CARDS & ICON STYLES PRESISI
+   ========================================== */
 .datame-header { text-align: center; margin-bottom: 2px; }
 .datame-header h2 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
 .datame-header p { font-size: 11px; color: var(--text-sub); }
@@ -1015,20 +1011,24 @@ body.light-mode .manage-item { background: #e6f0fa; }
 }
 
 .card-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.06);
-  color: var(--text-main);
 }
 
 body.light-mode .card-icon { background: #e6f0fa; }
 
-.card-icon svg { width: 20px; height: 20px; }
+.card-icon svg { 
+  width: 20px; 
+  height: 20px; 
+  display: block; 
+}
+
 .wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
 .wa-icon svg { fill: #25d366; }
 
@@ -1100,7 +1100,7 @@ body.light-mode .card-icon { background: #e6f0fa; }
   justify-content: center;
 }
 
-.icon-box svg { width: 100%; height: 100%; stroke: var(--text-sub); }
+.icon-box svg { width: 100%; height: 100%; stroke: var(--text-sub); display: block; }
 
 .nav-item.active { color: var(--text-main); }
 .nav-item.active .icon-box svg { stroke: var(--text-main); }

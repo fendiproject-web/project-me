@@ -213,7 +213,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK DENGAN LOGIKA PAGINATION & UI RINGKASAN
+// KATALOG PRODUK & LOGIKA NAVIGASI HALAMAN (PRESISI CONTOH GAMBAR)
 function renderProducts(filterCat = 'all', page = 1) {
   currentCategory = filterCat;
   currentPage = page;
@@ -228,47 +228,87 @@ function renderProducts(filterCat = 'all', page = 1) {
   if (currentPage > totalPages) currentPage = totalPages;
   if (currentPage < 1) currentPage = 1;
 
-  // LOGIKA PEMOTONGAN 10 PRODUK PER HALAMAN
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const startIndex = totalProducts > 0 ? (currentPage - 1) * ITEMS_PER_PAGE : 0;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
   const paginatedProducts = filtered.slice(startIndex, endIndex);
 
-  // UPDATE UI PESAN RINGKASAN
-  const catNames = { 'all': 'SEMUA PRODUK', 'ff': 'FREE FIRE', 'ml': 'MOBILE LEGENDS' };
-  const summaryCatBadge = document.getElementById('summary-category-badge');
-  const summaryTotalBadge = document.getElementById('summary-total-badge');
-  const summaryDetails = document.getElementById('summary-details');
-
-  if (summaryCatBadge) summaryCatBadge.textContent = catNames[filterCat] || 'SEMUA PRODUK';
-  if (summaryTotalBadge) summaryTotalBadge.textContent = `${totalProducts} Akun`;
-  if (summaryDetails) {
-    summaryDetails.innerHTML = `Menampilkan Halaman <b>${currentPage}</b> dari <b>${totalPages}</b> (10 Akun/Halaman)`;
-  }
-
-  // UPDATE TABEL NAVIGASI ANGKA HALAMAN
-  const paginationList = document.getElementById('pagination-list');
-  if (paginationList) {
-    if (totalPages <= 1) {
-      paginationList.innerHTML = `<button type="button" class="page-btn active">1</button>`;
+  // UPDATE TEKS RINGKASAN: "Menampilkan 1-10 dari 89 produk"
+  const summaryTextEl = document.getElementById('pagination-summary-text');
+  if (summaryTextEl) {
+    if (totalProducts === 0) {
+      summaryTextEl.textContent = "Belum ada produk tersedia";
     } else {
-      let pageButtonsHTML = '';
-      for (let i = 1; i <= totalPages; i++) {
-        pageButtonsHTML += `
-          <button type="button" class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changeProductPage(${i})">${i}</button>
-        `;
-      }
-      paginationList.innerHTML = pageButtonsHTML;
+      summaryTextEl.textContent = `Menampilkan ${startIndex + 1}-${endIndex} dari ${totalProducts} produk`;
     }
   }
 
+  // GENERATE TOMBOL NAVIGASI HALAMAN BULAT
+  const paginationButtonsEl = document.getElementById('pagination-buttons');
+  if (paginationButtonsEl) {
+    if (totalProducts === 0) {
+      paginationButtonsEl.innerHTML = '';
+    } else {
+      let buttonsHTML = '';
+
+      // TOMBOL PANAH KIRI (<)
+      buttonsHTML += `
+        <button type="button" class="page-circle-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changeProductPage(${currentPage - 1})" title="Sebelumnya">
+          &lt;
+        </button>
+      `;
+
+      // LOGIKA PEMBULATAN KARTU ANGKA & ELLIPSIS (...)
+      const maxVisiblePages = 5;
+      let pages = [];
+
+      if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        if (currentPage > 3) pages.push('...');
+        
+        let start = Math.max(2, currentPage - 1);
+        let end = Math.min(totalPages - 1, currentPage + 1);
+
+        for (let i = start; i <= end; i++) {
+          if (!pages.includes(i)) pages.push(i);
+        }
+
+        if (currentPage < totalPages - 2) pages.push('...');
+        if (!pages.includes(totalPages)) pages.push(totalPages);
+      }
+
+      pages.forEach(p => {
+        if (p === '...') {
+          buttonsHTML += `<span class="page-ellipsis">...</span>`;
+        } else {
+          buttonsHTML += `
+            <button type="button" class="page-circle-btn ${p === currentPage ? 'active' : ''}" onclick="changeProductPage(${p})">
+              ${p}
+            </button>
+          `;
+        }
+      });
+
+      // TOMBOL PANAH KANAN (>)
+      buttonsHTML += `
+        <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changeProductPage(${currentPage + 1})" title="Selanjutnya">
+          &gt;
+        </button>
+      `;
+
+      paginationButtonsEl.innerHTML = buttonsHTML;
+    }
+  }
+
+  // RENDER CARDS PRODUK KARTU
   if (!productListContainer) return;
 
   if (paginatedProducts.length === 0) {
-    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub);">Belum ada akun jualan di kategori ini.</p>`;
+    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub); padding: 20px 0;">Belum ada akun jualan di kategori ini.</p>`;
     return;
   }
 
-  // RENDER HANYA 10 PRODUK DI HALAMAN INI
   productListContainer.innerHTML = paginatedProducts.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const validImg = fixImageUrl(item.image);
@@ -301,7 +341,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   });
 }
 
-// FUNGSI GANTI HALAMAN SAAT ANGKA TABEL DIKLIK
+// FUNGSI KELOLA PERPINDAHAN ANGKA HALAMAN
 window.changeProductPage = function(pageNumber) {
   renderProducts(currentCategory, pageNumber);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -458,7 +498,7 @@ subTabItems.forEach((btn) => {
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
 
-    // RESET HALAMAN KE 1 SAAT GANTI KATEGORI
+    // RESET HALAMAN KE HALAMAN 1 SAAT BERPINDAH KATEGORI
     renderProducts(targetSub, 1);
   });
 });

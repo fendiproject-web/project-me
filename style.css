@@ -188,7 +188,19 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* TOMBOL MODE TERANG & GELAP */
+/* ==========================================
+   ANIMASI TEMA MODE TERANG & GELAP
+   ========================================== */
+@keyframes animFromTop {
+  0% { transform: translateY(-24px) scale(0.6); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes animFromBottom {
+  0% { transform: translateY(24px) scale(0.6); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
 .theme-toggle-btn {
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
@@ -204,6 +216,7 @@ body.light-mode .zoom-image-wrapper {
   backdrop-filter: blur(8px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   transition: transform 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
 }
 
 .theme-toggle-btn:active {
@@ -215,10 +228,25 @@ body.light-mode .zoom-image-wrapper {
   height: 18px;
 }
 
-body.dark-mode .sun-icon { display: block; stroke: #ffffff; }
-body.dark-mode .moon-icon { display: none; }
-body.light-mode .sun-icon { display: none; }
-body.light-mode .moon-icon { display: block; stroke: #c084fc; }
+/* GELAP KE TERANG (LIGHT MODE AKTIF): ICON MOON MUNCUL DARI ATAS */
+body.light-mode .sun-icon { 
+  display: none; 
+}
+body.light-mode .moon-icon { 
+  display: block; 
+  stroke: #c084fc; 
+  animation: animFromTop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+/* TERANG KE GELAP (DARK MODE AKTIF): ICON SUN MUNCUL DARI BAWAH */
+body.dark-mode .sun-icon { 
+  display: block; 
+  stroke: #ffffff; 
+  animation: animFromBottom 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+body.dark-mode .moon-icon { 
+  display: none; 
+}
 
 /* MAIN CONTENT CONTAINER */
 .main-content {
@@ -303,7 +331,7 @@ body.light-mode .moon-icon { display: block; stroke: #c084fc; }
   background: rgba(37, 211, 102, 0.08);
   color: #25d366;
 }
-.btn-wa svg { stroke: #25d366; }
+.btn-wa svg { fill: #25d366; }
 
 .btn-verify {
   border-color: var(--border-color);
@@ -754,7 +782,6 @@ body.light-mode .seller-region-badge { background: #e6f0fa; }
 .footer-link-item svg {
   width: 16px;
   height: 16px;
-  stroke: var(--text-sub);
   flex-shrink: 0;
 }
 
@@ -1001,9 +1028,21 @@ body.light-mode .manage-item { background: #e6f0fa; }
 
 body.light-mode .card-icon { background: #e6f0fa; }
 
-.card-icon svg { width: 20px; height: 20px; stroke: var(--text-main); }
+.card-icon svg { width: 20px; height: 20px; }
 .wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
-.wa-icon svg { stroke: #25d366; }
+.wa-icon svg { fill: #25d366; }
+
+.tiktok-icon { background: rgba(255, 255, 255, 0.12); color: var(--text-main); }
+.tiktok-icon svg { fill: var(--text-main); }
+
+.ig-icon { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
+.ig-icon svg { stroke: #e1306c; }
+
+.tele-icon { background: rgba(0, 136, 204, 0.12); color: #0088cc; }
+.tele-icon svg { fill: #0088cc; }
+
+.group-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+.group-icon svg { stroke: #25d366; }
 
 .card-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .card-title { font-size: 12px; font-weight: 600; }
@@ -1100,9 +1139,7 @@ body.light-mode .card-icon { background: #e6f0fa; }
 
 .icon-box.bounce { animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-/* ==========================================
-   POPUP INSTALL APLIKASI PWA (DESAIN 1:1)
-   ========================================== */
+/* POPUP INSTALL APLIKASI PWA (DESAIN 1:1) */
 .pwa-banner-modal {
   position: fixed;
   bottom: 85px;
@@ -1194,9 +1231,7 @@ body.light-mode .card-icon { background: #e6f0fa; }
 .btn-pwa-later:active, 
 .btn-pwa-install:active { transform: scale(0.96); }
 
-/* ==========================================
-   RESPONSIVE DESIGN (TABLET & PC / DESKTOP)
-   ========================================== */
+/* RESPONSIVE DESIGN (TABLET & PC / DESKTOP) */
 @media (min-width: 768px) {
   .top-bar { max-width: 720px; padding: 10px 20px; }
   .main-content { max-width: 720px; padding-top: 95px; }

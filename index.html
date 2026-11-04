@@ -13,7 +13,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body class="dark-mode">
 
@@ -30,7 +30,7 @@
       </div>
 
       <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
-        <!-- ICON SUN (SLIDE MASUK DARI BAWAH SAAT KE DARK MODE) -->
+        <!-- ICON SUN -->
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -42,7 +42,7 @@
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <!-- ICON MOON (SLIDE MASUK DARI ATAS SAAT KE LIGHT MODE) -->
+        <!-- ICON MOON -->
         <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
@@ -62,7 +62,6 @@
       <div class="home-actions">
         <div class="action-row">
           <a href="https://wa.me/6285854325988" target="_blank" class="btn-action btn-wa">
-            <!-- ICON WHATSAPP UTUH DENGAN SAFETY PADDING -->
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2a9.93 9.93 0 0 0-8.48 15.09L2 22l5.06-1.32A9.93 9.93 0 1 0 12 2zm0 18a8.07 8.07 0 0 1-4.12-1.13l-.3-.18-3.06.8.82-2.98-.2-.31A8.07 8.07 0 1 1 12 20zm4.51-6.04c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13s-.66.8-.81.97c-.15.17-.3.19-.55.06a7.02 7.02 0 0 1-2.07-1.28 7.74 7.74 0 0 1-1.43-1.78c-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.57-1.37-.78-1.87c-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.45.06-.68.31s-.89.87-.89 2.13.91 2.47 1.04 2.64c.13.17 1.8 2.75 4.36 3.85.61.26 1.09.42 1.46.54.61.19 1.17.17 1.61.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.3z"/>
             </svg>
@@ -184,6 +183,30 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
+        <!-- PESAN RINGKASAN UI KATEGORI & TOTAL PRODUK -->
+        <div id="product-summary-box" class="product-summary-card">
+          <div class="summary-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <div class="summary-text">
+            <div class="summary-header">
+              <span id="summary-category-badge" class="badge-cat-info">SEMUA PRODUK</span>
+              <span id="summary-total-badge" class="badge-count-info">0 Akun</span>
+            </div>
+            <p id="summary-details">Menampilkan Halaman <b>1</b> dari <b>1</b> (10 Akun/Halaman)</p>
+          </div>
+        </div>
+
+        <!-- TABEL NAVIGASI HALAMAN (10 PRODUK PER ANGKA) -->
+        <div class="pagination-container">
+          <div class="pagination-title">Pilih Halaman Produk:</div>
+          <div id="pagination-list" class="pagination-grid"></div>
+        </div>
+
         <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
@@ -213,7 +236,7 @@
           <div id="detail-specs-content" class="detail-specs-text"></div>
         </div>
 
-        <!-- SELLER CARD PERBAIKAN (TITIK ONLINE TIDAK KEPOTONG) -->
+        <!-- SELLER CARD (TITIK ONLINE TIDAK KEPOTONG) -->
         <div class="detail-card seller-card">
           <div class="seller-profile-row">
             <div class="seller-left">

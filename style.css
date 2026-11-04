@@ -10,6 +10,7 @@
   --pill-bg: rgba(255, 255, 255, 0.12);
   --pill-border: rgba(255, 255, 255, 0.25);
   --accent-color: #ffffff;
+  --pink-primary: #ff2d75;
   --wa-green: #25d366;
   --danger-red: #ef4444;
 }
@@ -26,6 +27,7 @@ body.light-mode {
   --pill-bg: rgba(192, 132, 252, 0.15);
   --pill-border: rgba(192, 132, 252, 0.35);
   --accent-color: #c084fc;
+  --pink-primary: #ff2d75;
   --wa-green: #128c7e;
   --danger-red: #dc2626;
 }
@@ -387,129 +389,82 @@ body.light-mode .moon-icon {
 }
 
 /* ==========================================
-   DESAIN PESAN RINGKASAN UI & TABEL HALAMAN
+   WADAH PAGINATION PRESISI SEPERTI GAMBAR
    ========================================== */
-.product-summary-card {
+.pagination-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 16px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  margin-bottom: 12px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.summary-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--pill-bg);
-  border: 1px solid var(--pill-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.summary-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--text-main);
-  display: block;
-}
-
-.summary-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-  flex: 1;
-}
-
-.summary-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.badge-cat-info {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.badge-count-info {
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(37, 211, 102, 0.15);
-  border: 1px solid rgba(37, 211, 102, 0.3);
-  color: #25d366;
-}
-
-.summary-text p {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-
-.summary-text p b {
-  color: var(--text-main);
-  font-weight: 700;
-}
-
-/* TABEL NAVIGASI HALAMAN (PAGINATION) */
-.pagination-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  border-radius: 22px;
   margin-bottom: 16px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  text-align: center;
 }
 
-.pagination-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-sub);
-}
-
-.pagination-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.page-btn {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 10px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-sub);
-  font-size: 12px;
+.pagination-summary-text {
+  font-size: 13px;
   font-weight: 700;
-  cursor: pointer;
+  color: var(--text-main);
+  letter-spacing: 0.1px;
+}
+
+.pagination-buttons-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(12px);
-  transition: all 0.2s ease;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.page-btn:active {
-  transform: scale(0.95);
-}
-
-.page-btn.active {
-  background: var(--pill-bg);
-  border-color: var(--pill-border);
+.page-circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
   color: var(--text-main);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+body.light-mode .page-circle-btn {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.page-circle-btn:active {
+  transform: scale(0.92);
+}
+
+/* TOMBOL ANGKA AKTIF (PINK MERONA TERANG PRESISI GAMBAR) */
+.page-circle-btn.active {
+  background: var(--pink-primary);
+  border-color: var(--pink-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 45, 117, 0.4);
+}
+
+.page-circle-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.page-ellipsis {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-sub);
+  padding: 0 3px;
 }
 
 /* KATALOG PRODUK */

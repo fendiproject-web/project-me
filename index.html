@@ -13,7 +13,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body class="dark-mode">
 
@@ -183,28 +183,14 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
-        <!-- PESAN RINGKASAN UI KATEGORI & TOTAL PRODUK -->
-        <div id="product-summary-box" class="product-summary-card">
-          <div class="summary-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
+        <!-- WADAH NAVIGASI HALAMAN & INFORMASI JUMLAH PRODUK (PRESISI SEPERTI GAMBAR) -->
+        <div id="product-pagination-card" class="pagination-card">
+          <div id="pagination-summary-text" class="pagination-summary-text">
+            Menampilkan 1-10 dari 0 produk
           </div>
-          <div class="summary-text">
-            <div class="summary-header">
-              <span id="summary-category-badge" class="badge-cat-info">SEMUA PRODUK</span>
-              <span id="summary-total-badge" class="badge-count-info">0 Akun</span>
-            </div>
-            <p id="summary-details">Menampilkan Halaman <b>1</b> dari <b>1</b> (10 Akun/Halaman)</p>
+          <div id="pagination-buttons" class="pagination-buttons-row">
+            <!-- Dihasilkan Otomatis Oleh JavaScript -->
           </div>
-        </div>
-
-        <!-- TABEL NAVIGASI HALAMAN (10 PRODUK PER ANGKA) -->
-        <div class="pagination-container">
-          <div class="pagination-title">Pilih Halaman Produk:</div>
-          <div id="pagination-list" class="pagination-grid"></div>
         </div>
 
         <div id="product-list-container" class="product-cards-grid"></div>

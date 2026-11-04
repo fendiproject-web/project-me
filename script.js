@@ -4,11 +4,20 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
+// DATA SAMPEL CADANGAN (MENCEGAH WEBSITE KOSONG JIKA SHEETS BELUM TERHUBUNG / MEMUAT)
+const SAMPLE_PRODUCTS = [
+  { id: "101", code: "#FF-01", category: "ff", price: "120000", image: "banner1.png", specs: ["Vault Rame", "Old Season", "SG2 Reaper"] },
+  { id: "102", code: "#FF-02", category: "ff", price: "250000", image: "banner1.png", specs: ["Bundle Incu", "EVO Gun Max", "Log FB"] },
+  { id: "103", code: "#ML-01", category: "ml", price: "180000", image: "banner1.png", specs: ["Skin Epic", "Hero 90", "Moonton Sepaket"] },
+  { id: "104", code: "#ML-02", category: "ml", price: "350000", image: "banner1.png", specs: ["Skin Collector", "Wr High", "All Unbind"] },
+  { id: "105", code: "#FF-03", category: "ff", price: "95000", image: "banner1.png", specs: ["Akun GG", "S3 Old", "Vault Mantap"] }
+];
+
 // PARAMETER PAGINATION (10 PRODUK PER HALAMAN)
 const ITEMS_PER_PAGE = 10;
 let currentPage = 1;
 let currentCategory = 'all';
-let fetchedProducts = [];
+let fetchedProducts = [...SAMPLE_PRODUCTS]; // MENGGUNAKAN SAMPEL AWAL AGAR ANGKA 1 SELALU MUNCUL
 
 // ANIMASI SKELETON LOADING
 function renderSkeletons() {
@@ -136,7 +145,10 @@ async function loadProductsFromSheets(forceRefresh = false) {
   const now = new Date().getTime();
 
   if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
-    fetchedProducts = JSON.parse(cachedData);
+    const parsed = JSON.parse(cachedData);
+    if (parsed && parsed.length > 0) {
+      fetchedProducts = parsed;
+    }
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
     renderAdminManageList();
@@ -150,23 +162,20 @@ async function loadProductsFromSheets(forceRefresh = false) {
     const response = await fetch(`${SCRIPT_URL}?action=getProducts`);
     const data = await response.json();
 
-    if (data.success) {
+    if (data.success && Array.isArray(data.products) && data.products.length > 0) {
       fetchedProducts = data.products;
       localStorage.setItem('fendi_products_cache', JSON.stringify(data.products));
       localStorage.setItem('fendi_products_cache_time', now.toString());
-
-      renderProducts(currentCategory, 1);
-      renderHomeRecommendations();
-      renderAdminManageList();
-      checkUrlForProductDetail();
     } else {
-      renderProducts(currentCategory, 1);
-      renderHomeRecommendations();
+      console.warn("Memakai data sampel cadangan.");
     }
   } catch (err) {
-    console.error("Gagal mengambil produk:", err);
+    console.error("Gagal mengambil data dari Google Sheets, menggunakan data sampel:", err);
+  } finally {
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
+    renderAdminManageList();
+    checkUrlForProductDetail();
   }
 }
 
@@ -213,17 +222,17 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & LOGIKA NAVIGASI HALAMAN (PRESISI CONTOH GAMBAR)
+// KATALOG PRODUK & LOGIKA PAGINATION DENGAN JAMINAN ANGKA 1 SELALU MUNCUL
 function renderProducts(filterCat = 'all', page = 1) {
-  currentCategory = filterCat;
+  currentCategory = filterCat.toLowerCase();
   currentPage = page;
 
-  const filtered = filterCat === 'all' 
+  const filtered = currentCategory === 'all' 
     ? fetchedProducts 
-    : fetchedProducts.filter(p => p.category === filterCat);
+    : fetchedProducts.filter(p => String(p.category).toLowerCase() === currentCategory);
 
   const totalProducts = filtered.length;
-  const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.max(1, Math.ceil(totalProducts / ITEMS_PER_PAGE));
 
   if (currentPage > totalPages) currentPage = totalPages;
   if (currentPage < 1) currentPage = 1;
@@ -232,32 +241,36 @@ function renderProducts(filterCat = 'all', page = 1) {
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
   const paginatedProducts = filtered.slice(startIndex, endIndex);
 
-  // UPDATE TEKS RINGKASAN: "Menampilkan 1-10 dari 89 produk"
+  // UPDATE TEKS RINGKASAN PRODUK
   const summaryTextEl = document.getElementById('pagination-summary-text');
   if (summaryTextEl) {
     if (totalProducts === 0) {
-      summaryTextEl.textContent = "Belum ada produk tersedia";
+      summaryTextEl.textContent = "Menampilkan 0 produk";
     } else {
       summaryTextEl.textContent = `Menampilkan ${startIndex + 1}-${endIndex} dari ${totalProducts} produk`;
     }
   }
 
-  // GENERATE TOMBOL NAVIGASI HALAMAN BULAT
+  // GENERATE NAVIGASI ANGKA HALAMAN (ANGKA 1 SELALU MUNCUL)
   const paginationButtonsEl = document.getElementById('pagination-buttons');
   if (paginationButtonsEl) {
-    if (totalProducts === 0) {
-      paginationButtonsEl.innerHTML = '';
-    } else {
-      let buttonsHTML = '';
+    let buttonsHTML = '';
 
-      // TOMBOL PANAH KIRI (<)
+    // TOMBOL PANAH KIRI (<)
+    buttonsHTML += `
+      <button type="button" class="page-circle-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changeProductPage(${currentPage - 1})" title="Sebelumnya">
+        &lt;
+      </button>
+    `;
+
+    if (totalPages <= 1) {
+      // JIKA HANYA 1 HALAMAN ATAU BELUM ADA DATA, TETAP TAMPILKAN ANGKA 1
       buttonsHTML += `
-        <button type="button" class="page-circle-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changeProductPage(${currentPage - 1})" title="Sebelumnya">
-          &lt;
+        <button type="button" class="page-circle-btn active" onclick="changeProductPage(1)">
+          1
         </button>
       `;
-
-      // LOGIKA PEMBULATAN KARTU ANGKA & ELLIPSIS (...)
+    } else {
       const maxVisiblePages = 5;
       let pages = [];
 
@@ -289,28 +302,29 @@ function renderProducts(filterCat = 'all', page = 1) {
           `;
         }
       });
-
-      // TOMBOL PANAH KANAN (>)
-      buttonsHTML += `
-        <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changeProductPage(${currentPage + 1})" title="Selanjutnya">
-          &gt;
-        </button>
-      `;
-
-      paginationButtonsEl.innerHTML = buttonsHTML;
     }
+
+    // TOMBOL PANAH KANAN (>)
+    buttonsHTML += `
+      <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changeProductPage(${currentPage + 1})" title="Selanjutnya">
+        &gt;
+      </button>
+    `;
+
+    paginationButtonsEl.innerHTML = buttonsHTML;
   }
 
-  // RENDER CARDS PRODUK KARTU
+  // RENDER CARDS PRODUK
   if (!productListContainer) return;
 
   if (paginatedProducts.length === 0) {
-    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub); padding: 20px 0;">Belum ada akun jualan di kategori ini.</p>`;
+    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub); padding: 30px 0;">Belum ada akun jualan di kategori ini.</p>`;
     return;
   }
 
   productListContainer.innerHTML = paginatedProducts.map(item => {
-    const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
+    const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
+    const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
     const validImg = fixImageUrl(item.image);
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
@@ -373,10 +387,12 @@ function openProductDetail(productId, updateHistory = true) {
 
     detailImg.src = fixImageUrl(item.image);
 
+    const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
+
     document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
-    document.getElementById('detail-specs-content').textContent = item.specs.join(" || ");
+    document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
 
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
     const buyNowBtn = document.getElementById('btn-buy-now');
@@ -788,7 +804,7 @@ function renderAdminManageList() {
   adminManageList.innerHTML = fetchedProducts.map(item => `
     <div class="manage-item">
       <div>
-        <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category.toUpperCase()})</span>
+        <span style="font-size: 12px; font-weight: 700;">${item.code} (${String(item.category).toUpperCase()})</span>
         <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
       </div>
       <button type="button" class="btn-delete-prod" onclick="deleteProductFromSheets('${item.id}')">Hapus</button>

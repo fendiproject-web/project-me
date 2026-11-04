@@ -4,6 +4,12 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
+// PARAMETER PAGINATION (10 PRODUK PER HALAMAN)
+const ITEMS_PER_PAGE = 10;
+let currentPage = 1;
+let currentCategory = 'all';
+let fetchedProducts = [];
+
 // ANIMASI SKELETON LOADING
 function renderSkeletons() {
   const skeletonHTML = Array(4).fill(0).map(() => `
@@ -121,8 +127,6 @@ if (postPriceInput) {
 // FETCH & RENDER PRODUK DARI GOOGLE SHEETS
 // ==========================================
 const productListContainer = document.getElementById('product-list-container');
-let currentCategory = 'all';
-let fetchedProducts = [];
 
 async function loadProductsFromSheets(forceRefresh = false) {
   if (!productListContainer) return;
@@ -133,7 +137,7 @@ async function loadProductsFromSheets(forceRefresh = false) {
 
   if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
     fetchedProducts = JSON.parse(cachedData);
-    renderProducts(currentCategory);
+    renderProducts(currentCategory, 1);
     renderHomeRecommendations();
     renderAdminManageList();
     checkUrlForProductDetail();
@@ -151,17 +155,17 @@ async function loadProductsFromSheets(forceRefresh = false) {
       localStorage.setItem('fendi_products_cache', JSON.stringify(data.products));
       localStorage.setItem('fendi_products_cache_time', now.toString());
 
-      renderProducts(currentCategory);
+      renderProducts(currentCategory, 1);
       renderHomeRecommendations();
       renderAdminManageList();
       checkUrlForProductDetail();
     } else {
-      renderProducts(currentCategory);
+      renderProducts(currentCategory, 1);
       renderHomeRecommendations();
     }
   } catch (err) {
     console.error("Gagal mengambil produk:", err);
-    renderProducts(currentCategory);
+    renderProducts(currentCategory, 1);
     renderHomeRecommendations();
   }
 }
@@ -209,20 +213,63 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK
-function renderProducts(filterCat = 'all') {
+// KATALOG PRODUK DENGAN LOGIKA PAGINATION & UI RINGKASAN
+function renderProducts(filterCat = 'all', page = 1) {
+  currentCategory = filterCat;
+  currentPage = page;
+
   const filtered = filterCat === 'all' 
     ? fetchedProducts 
     : fetchedProducts.filter(p => p.category === filterCat);
 
+  const totalProducts = filtered.length;
+  const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE) || 1;
+
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  // LOGIKA PEMOTONGAN 10 PRODUK PER HALAMAN
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedProducts = filtered.slice(startIndex, endIndex);
+
+  // UPDATE UI PESAN RINGKASAN
+  const catNames = { 'all': 'SEMUA PRODUK', 'ff': 'FREE FIRE', 'ml': 'MOBILE LEGENDS' };
+  const summaryCatBadge = document.getElementById('summary-category-badge');
+  const summaryTotalBadge = document.getElementById('summary-total-badge');
+  const summaryDetails = document.getElementById('summary-details');
+
+  if (summaryCatBadge) summaryCatBadge.textContent = catNames[filterCat] || 'SEMUA PRODUK';
+  if (summaryTotalBadge) summaryTotalBadge.textContent = `${totalProducts} Akun`;
+  if (summaryDetails) {
+    summaryDetails.innerHTML = `Menampilkan Halaman <b>${currentPage}</b> dari <b>${totalPages}</b> (10 Akun/Halaman)`;
+  }
+
+  // UPDATE TABEL NAVIGASI ANGKA HALAMAN
+  const paginationList = document.getElementById('pagination-list');
+  if (paginationList) {
+    if (totalPages <= 1) {
+      paginationList.innerHTML = `<button type="button" class="page-btn active">1</button>`;
+    } else {
+      let pageButtonsHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        pageButtonsHTML += `
+          <button type="button" class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changeProductPage(${i})">${i}</button>
+        `;
+      }
+      paginationList.innerHTML = pageButtonsHTML;
+    }
+  }
+
   if (!productListContainer) return;
 
-  if (filtered.length === 0) {
+  if (paginatedProducts.length === 0) {
     productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub);">Belum ada akun jualan di kategori ini.</p>`;
     return;
   }
 
-  productListContainer.innerHTML = filtered.map(item => {
+  // RENDER HANYA 10 PRODUK DI HALAMAN INI
+  productListContainer.innerHTML = paginatedProducts.map(item => {
     const displaySpecs = item.specs.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const validImg = fixImageUrl(item.image);
     return `
@@ -253,6 +300,12 @@ function renderProducts(filterCat = 'all') {
     });
   });
 }
+
+// FUNGSI GANTI HALAMAN SAAT ANGKA TABEL DIKLIK
+window.changeProductPage = function(pageNumber) {
+  renderProducts(currentCategory, pageNumber);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 // BUKA DETAIL PRODUK
 function openProductDetail(productId, updateHistory = true) {
@@ -401,12 +454,12 @@ const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
     const targetSub = this.getAttribute('data-sub');
-    currentCategory = targetSub;
 
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
 
-    renderProducts(targetSub);
+    // RESET HALAMAN KE 1 SAAT GANTI KATEGORI
+    renderProducts(targetSub, 1);
   });
 });
 

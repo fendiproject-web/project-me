@@ -186,9 +186,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* ==========================================
-   ANIMASI TEMA MODE TERANG & GELAP (SLIDE ATAS & BAWAH)
-   ========================================== */
+/* ANIMASI TEMA MODE TERANG & GELAP */
 .theme-toggle-btn {
   position: relative;
   background: var(--pill-bg);
@@ -364,7 +362,7 @@ body.light-mode .moon-icon {
   gap: 8px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .sub-tab-item {
@@ -386,6 +384,132 @@ body.light-mode .moon-icon {
   border-color: var(--pill-border);
   color: var(--text-main);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================
+   DESAIN PESAN RINGKASAN UI & TABEL HALAMAN
+   ========================================== */
+.product-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.summary-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summary-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-main);
+  display: block;
+}
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-cat-info {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-count-info {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(37, 211, 102, 0.15);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  color: #25d366;
+}
+
+.summary-text p {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.summary-text p b {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* TABEL NAVIGASI HALAMAN (PAGINATION) */
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.pagination-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.pagination-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.page-btn:active {
+  transform: scale(0.95);
+}
+
+.page-btn.active {
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+  color: var(--text-main);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* KATALOG PRODUK */
@@ -634,9 +758,7 @@ body.light-mode .price-box { background: #e6f0fa; }
 .section-title { font-size: 13px; font-weight: 700; }
 .detail-specs-text { font-size: 12px; color: var(--text-sub); line-height: 1.5; white-space: pre-line; }
 
-/* ==========================================
-   PROFIL PENJUAL & FIX STATUS ONLINE KEPOTONG
-   ========================================== */
+/* PROFIL PENJUAL & STATUS ONLINE UTUH */
 .seller-card { position: relative; overflow: visible; }
 
 .seller-profile-row {
@@ -654,7 +776,6 @@ body.light-mode .price-box { background: #e6f0fa; }
   min-width: 0;
 }
 
-/* WADAH UTAMA AVATAR UNTUK BUBBLE ONLINE SUPAYA TIDAK KEPOTONG OVERFLOW */
 .seller-avatar-box {
   position: relative;
   width: 42px;
@@ -681,7 +802,6 @@ body.light-mode .price-box { background: #e6f0fa; }
   object-fit: cover;
 }
 
-/* TITIK ONLINE UTUHMULUS DENGAN BORDER RING HARMONIS */
 .online-indicator-dot {
   position: absolute;
   bottom: 0px;
@@ -1004,9 +1124,7 @@ body.light-mode .manage-item { background: #e6f0fa; }
   cursor: pointer;
 }
 
-/* ==========================================
-   DATAME CONTACT CARDS & FIX ICON CLIP
-   ========================================== */
+/* DATAME CONTACT CARDS */
 .datame-header { text-align: center; margin-bottom: 2px; }
 .datame-header h2 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
 .datame-header p { font-size: 11px; color: var(--text-sub); }
@@ -1158,7 +1276,7 @@ body.light-mode .card-icon { background: #e6f0fa; }
 
 .icon-box.bounce { animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-/* POPUP INSTALL APLIKASI PWA (DESAIN 1:1) */
+/* POPUP INSTALL APLIKASI PWA */
 .pwa-banner-modal {
   position: fixed;
   bottom: 85px;

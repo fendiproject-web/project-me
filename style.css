@@ -448,9 +448,9 @@ body.light-mode .page-circle-btn {
 
 /* TOMBOL ANGKA AKTIF (PINK MERONA TERANG PRESISI GAMBAR) */
 .page-circle-btn.active {
-  background: var(--pink-primary);
-  border-color: var(--pink-primary);
-  color: #ffffff;
+  background: var(--pink-primary) !important;
+  border-color: var(--pink-primary) !important;
+  color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(255, 45, 117, 0.4);
 }
 
@@ -1079,7 +1079,7 @@ body.light-mode .manage-item { background: #e6f0fa; }
   cursor: pointer;
 }
 
-/* DATAME CONTACT CARDS */
+/* DATAME CONTACT CARDS & ICON TIKTOK RAPAT STYLISH */
 .datame-header { text-align: center; margin-bottom: 2px; }
 .datame-header h2 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
 .datame-header p { font-size: 11px; color: var(--text-sub); }
@@ -1109,7 +1109,7 @@ body.light-mode .manage-item { background: #e6f0fa; }
   justify-content: center;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.06);
-  overflow: visible;
+  overflow: hidden;
 }
 
 body.light-mode .card-icon { background: #e6f0fa; }
@@ -1118,14 +1118,18 @@ body.light-mode .card-icon { background: #e6f0fa; }
   width: 20px; 
   height: 20px; 
   display: block; 
-  overflow: visible;
 }
 
 .wa-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
 .wa-icon svg { fill: #25d366; }
 
-.tiktok-icon { background: rgba(255, 255, 255, 0.12); color: var(--text-main); }
-.tiktok-icon svg { fill: var(--text-main); }
+.tiktok-icon { 
+  background: #000000; 
+  color: #ffffff; 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
+}
+.tiktok-icon svg { fill: #ffffff; }
 
 .ig-icon { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
 .ig-icon svg { stroke: #e1306c; }

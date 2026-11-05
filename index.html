@@ -13,7 +13,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body class="dark-mode">
 
@@ -183,7 +183,7 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
-        <!-- GRID PRODUK KATALOG LANGSUNG DI BAWAH TABS (SISA BOX TELAH DIHAPUS) -->
+        <!-- GRID PRODUK KATALOG LANGSUNG DI BAWAH TABS -->
         <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
@@ -411,7 +411,7 @@
             <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive & Google Sheets.</p>
           </div>
 
-          <!-- FORM PENGISIAN UPLOAD STOK ADMIN -->
+          <!-- FORM PENGISIAN UPLOAD STOK ADMIN (TERSEDIA INPUT LABEL STOK) -->
           <form id="admin-upload-form" class="auth-form active">
             <div class="form-group">
               <label for="post-category">Kategori Game</label>
@@ -419,6 +419,11 @@
                 <option value="ff">Free Fire</option>
                 <option value="ml">Mobile Legends</option>
               </select>
+            </div>
+
+            <div class="form-group">
+              <label for="post-stock-label">Label Stok (Muncul di Kartu Jualan)</label>
+              <input type="text" id="post-stock-label" value="STOCK PRIBADI FENDI STORE" placeholder="STOCK PRIBADI FENDI STORE" required>
             </div>
 
             <div class="form-group">

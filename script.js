@@ -1,4 +1,6 @@
+// LINK GOOGLE APPS SCRIPT WEB APP
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcLqSBqeptlNAPOfj5AeUOVZrlJj_cwEylq2GtHSb7ojSBuURbMZAr6g1hdjHFLg/exec";
+
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
@@ -53,6 +55,13 @@ function getCategoryLabel(catRaw) {
   if (cat === 'ff' || cat.includes('free') || cat.includes('fire')) return 'FREE FIRE';
   if (cat === 'ml' || cat.includes('mobile') || cat.includes('legend')) return 'MOBILE LEGENDS';
   return String(catRaw).toUpperCase();
+}
+
+// FUNGSI PARSER SPECS AGAR TIDAK EROR .map()
+function parseSpecs(specs) {
+  if (Array.isArray(specs)) return specs;
+  if (!specs) return [];
+  return String(specs).split(',').map(s => s.trim()).filter(s => s.length > 0);
 }
 
 function matchCategory(productCat, targetFilter) {
@@ -156,9 +165,8 @@ function renderProducts(filterCat = 'all') {
   }
 
   productListContainer.innerHTML = filtered.map(item => {
-    // PERBAIKAN BUG SPECS MAP
-    const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
-    const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
+    const specsArr = parseSpecs(item.specs);
+    const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const validImg = fixImageUrl(item.image);
     const gameCategoryLabel = getCategoryLabel(item.category);
     const stockLabelText = item.stockLabel || 'STOCK PRIBADI FENDI STORE';
@@ -207,7 +215,7 @@ function openProductDetail(productId, updateHistory = true) {
 
     detailImg.src = fixImageUrl(item.image);
 
-    const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
+    const specsArr = parseSpecs(item.specs);
 
     document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
     document.getElementById('detail-title').textContent = `${item.stockLabel || 'STOCK PRIBADI FENDI STORE'} ${item.code.replace('#', '')}`;
@@ -505,7 +513,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD DENGAN KONVERSI FOTO KE BASE64
+// SUBMIT ADMIN UPLOAD
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -529,7 +537,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   let imageBase64 = null;
   let mimeType = null;
 
-  // READ FILE DARI HP & KONVERSI KE BASE64
   if (fileInput && fileInput.files.length > 0) {
     const file = fileInput.files[0];
     mimeType = file.type;

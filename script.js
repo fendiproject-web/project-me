@@ -1,13 +1,9 @@
-// LINK GOOGLE APPS SCRIPT BACKEND
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0gBruI00Y1Iwdw6QCuobIezCtajvvNIxdgiMIucs9n31PN4/exec";
-
-// PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
 let fetchedProducts = [];
 
-// INISIALISASI TEMA
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
   if (savedTheme === 'light') {
@@ -34,7 +30,6 @@ if (themeToggleBtn) {
   });
 }
 
-// FIX URL GOOGLE DRIVE
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
   if (url.includes('drive.google.com') && url.includes('/d/')) {
@@ -46,27 +41,20 @@ function fixImageUrl(url) {
   return url;
 }
 
-// FORMAT RUPIAH
 function formatRupiah(val) {
   if (!val) return '0';
   const cleanNum = String(val).replace(/\D/g, '');
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI KONVERSI LABEL KATEGORI GAME
 function getCategoryLabel(catRaw) {
   if (!catRaw) return 'FREE FIRE';
   const cat = String(catRaw).toLowerCase().trim();
-  if (cat === 'ff' || cat.includes('free') || cat.includes('fire')) {
-    return 'FREE FIRE';
-  }
-  if (cat === 'ml' || cat.includes('mobile') || cat.includes('legend')) {
-    return 'MOBILE LEGENDS';
-  }
+  if (cat === 'ff' || cat.includes('free') || cat.includes('fire')) return 'FREE FIRE';
+  if (cat === 'ml' || cat.includes('mobile') || cat.includes('legend')) return 'MOBILE LEGENDS';
   return String(catRaw).toUpperCase();
 }
 
-// PENCOCOKAN KATEGORI FILTER
 function matchCategory(productCat, targetFilter) {
   if (!targetFilter || targetFilter === 'all') return true;
   const cat = String(productCat || '').toLowerCase().trim();
@@ -77,7 +65,6 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// FETCH PRODUK DARI GOOGLE SHEETS
 const productListContainer = document.getElementById('product-list-container');
 
 async function loadProductsFromSheets() {
@@ -111,7 +98,6 @@ async function loadProductsFromSheets() {
   }
 }
 
-// REKOMENDASI HOME (URUTAN FIX: 1. GAME, 2. STOCK PRIBADI, 3. FENDI STORE, 4. HARGA AKUN)
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -158,7 +144,6 @@ function renderHomeRecommendations() {
   });
 }
 
-// RENDER KATALOG PRODUK (URUTAN FIX: 1. GAME, 2. STOCK PRIBADI, 3. FENDI STORE, 4. HARGA AKUN)
 function renderProducts(filterCat = 'all') {
   currentCategory = filterCat.toLowerCase();
   const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
@@ -171,6 +156,7 @@ function renderProducts(filterCat = 'all') {
   }
 
   productListContainer.innerHTML = filtered.map(item => {
+    // PERBAIKAN BUG SPECS MAP
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
     const validImg = fixImageUrl(item.image);
@@ -207,7 +193,6 @@ function renderProducts(filterCat = 'all') {
   });
 }
 
-// OPEN DETAIL PRODUK
 function openProductDetail(productId, updateHistory = true) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
@@ -243,7 +228,6 @@ function openProductDetail(productId, updateHistory = true) {
   }
 }
 
-// CEK URL DETAIL PRODUK
 function checkUrlForProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodCode = urlParams.get('id');
@@ -257,7 +241,6 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL ZOOM FOTO PRODUK
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -281,13 +264,10 @@ if (closeModalBtn) {
 
 if (zoomModal) {
   zoomModal.addEventListener('click', (e) => {
-    if (e.target === zoomModal) {
-      zoomModal.style.display = 'none';
-    }
+    if (e.target === zoomModal) zoomModal.style.display = 'none';
   });
 }
 
-// KEMBALI KE KATALOG
 document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   const catalogView = document.getElementById('product-catalog-view');
   const detailView = document.getElementById('product-detail-view');
@@ -298,7 +278,6 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAIN DI DETAIL PRODUK
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -337,7 +316,6 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TAB FILTER (ALL / FF / ML)
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
@@ -347,7 +325,6 @@ subTabItems.forEach((btn) => {
   });
 });
 
-// BOTTOM NAV & ROUTING MANAGER
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -413,7 +390,6 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// FORM LOGIN & REGISTRASI AKUN
 const authTabBtns = document.querySelectorAll('.auth-tab-btn');
 const authForms = document.querySelectorAll('.auth-form');
 
@@ -529,7 +505,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU ADMIN (MENGIRIM KATEGORI & LABEL STOK)
+// SUBMIT ADMIN UPLOAD DENGAN KONVERSI FOTO KE BASE64
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -544,10 +520,25 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const cleanPrice = rawPrice.replace(/\D/g, '');
   const urlInput = document.getElementById('post-url').value.trim();
   const specsRaw = document.getElementById('post-specs').value.trim();
+  const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengunggah...";
+  btn.textContent = "Mengompres & Mengunggah Foto...";
   btn.disabled = true;
+
+  let imageBase64 = null;
+  let mimeType = null;
+
+  // READ FILE DARI HP & KONVERSI KE BASE64
+  if (fileInput && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    mimeType = file.type;
+    imageBase64 = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.readAsDataURL(file);
+    });
+  }
 
   try {
     const response = await fetch(SCRIPT_URL, {
@@ -559,6 +550,8 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
         stockLabel: stockLabel || 'STOCK PRIBADI FENDI STORE',
         price: cleanPrice,
         imageUrl: urlInput,
+        imageBase64: imageBase64,
+        mimeType: mimeType,
         specs: specsRaw
       })
     });
@@ -619,47 +612,6 @@ window.deleteProductFromSheets = async function(productId) {
     }
   }
 };
-
-// PWA SERVICE WORKER
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('PWA Service Worker Aktif:', reg.scope))
-      .catch(err => console.error('PWA Service Worker Gagal:', err));
-  });
-}
-
-let deferredPrompt;
-const pwaBanner = document.getElementById('pwa-install-banner');
-const btnPwaInstall = document.getElementById('btn-pwa-install');
-const btnPwaDismiss = document.getElementById('btn-pwa-dismiss');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  if (!sessionStorage.getItem('fendi_pwa_dismissed') && pwaBanner) {
-    pwaBanner.style.display = 'block';
-  }
-});
-
-if (btnPwaInstall) {
-  btnPwaInstall.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      if (pwaBanner) pwaBanner.style.display = 'none';
-    }
-  });
-}
-
-if (btnPwaDismiss) {
-  btnPwaDismiss.addEventListener('click', () => {
-    if (pwaBanner) pwaBanner.style.display = 'none';
-    sessionStorage.setItem('fendi_pwa_dismissed', 'true');
-  });
-}
 
 initTheme();
 renderProducts(currentCategory);

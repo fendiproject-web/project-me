@@ -71,41 +71,47 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// KOMPRESI RIGID UNTUK MEMASTIKAN BASE64 AMAN DAN BISA DIBACA GAS
-function compressImageFast(file) {
+// PROSES AMBIL BASE64 DENGAN FALLBACK AMAN
+function getBase64FromFileInput(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = (e) => {
+    reader.onload = () => {
+      const result = reader.result;
       const img = new Image();
-      img.src = e.target.result;
+      img.src = result;
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 600;
+        try {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 600;
 
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
           }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressed = canvas.toDataURL('image/jpeg', 0.5);
+          resolve(compressed.split(',')[1]);
+        } catch (e) {
+          resolve(result.split(',')[1]);
         }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
-        const parts = dataUrl.split(',');
-        resolve(parts[1]);
       };
-      img.onerror = (err) => reject(err);
+      img.onerror = () => {
+        resolve(result.split(',')[1]);
+      };
     };
     reader.onerror = (err) => reject(err);
   });
@@ -575,10 +581,10 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   if (fileInput && fileInput.files.length > 0) {
     try {
-      imageBase64 = await compressImageFast(fileInput.files[0]);
+      imageBase64 = await getBase64FromFileInput(fileInput.files[0]);
     } catch (err) {
       alert("Gagal memproses foto: " + err.toString());
-      btn.textContent = "+ Upload Akun Ke Katalog Stok";
+      btn.textContent = "+ Upload Akun Ke Produk";
       btn.disabled = false;
       return;
     }
@@ -610,7 +616,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   } catch (err) {
     alert("Gagal upload: " + err.toString());
   } finally {
-    btn.textContent = "+ Upload Akun Ke Katalog Stok";
+    btn.textContent = "+ Upload Akun Ke Produk";
     btn.disabled = false;
   }
 });

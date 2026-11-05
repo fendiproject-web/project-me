@@ -71,7 +71,7 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// FUNGSI KOMPRESI FOTO SANGAT PENTING AGAR FOTO DARI HP TIDAK TERPOTONG SAAT JADI BASE64
+// FUNGSI KOMPRESI FOTO
 function convertAndCompressFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -100,7 +100,6 @@ function convertAndCompressFile(file) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Menghasilkan DataURL ringan berkualitas 60%
         const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
         resolve(dataUrl);
       };
@@ -245,7 +244,6 @@ function openProductDetail(productId, updateHistory = true) {
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
-    // Gunakan grid di desktop agar layout 2 kolom
     detailView.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
 
     detailImg.src = fixImageUrl(item.image);
@@ -549,7 +547,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD
+// SUBMIT ADMIN UPLOAD (KITA UBAH PAKAI URLSearchParams AGAR ANTI ERROR BASE64)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -580,18 +578,20 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 
   try {
+    // MENGGUNAKAN URLSearchParams UNTUK MENCEGAH KARAKTER RUSAK
+    const formData = new URLSearchParams();
+    formData.append('action', 'addProduct');
+    formData.append('role', user.role);
+    formData.append('category', category);
+    formData.append('price', cleanPrice);
+    formData.append('imageUrl', urlInput);
+    formData.append('imageBase64', imageBase64 || '');
+    formData.append('specs', specsRaw);
+
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        action: 'addProduct',
-        role: user.role,
-        category: category,
-        price: cleanPrice,
-        imageUrl: urlInput,
-        imageBase64: imageBase64,
-        specs: specsRaw
-      })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
     });
     const result = await response.json();
 

@@ -4,20 +4,23 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// DATA SAMPEL CADANGAN (MENCEGAH WEBSITE KOSONG JIKA SHEETS BELUM TERHUBUNG / MEMUAT)
+// DATA SAMPEL CADANGAN JIKA MEMUAT DARIPADA SHEETS KOSONG (8 PRODUK CONTOH)
 const SAMPLE_PRODUCTS = [
   { id: "101", code: "#FF-01", category: "ff", price: "120000", image: "banner1.png", specs: ["Vault Rame", "Old Season", "SG2 Reaper"] },
   { id: "102", code: "#FF-02", category: "ff", price: "250000", image: "banner1.png", specs: ["Bundle Incu", "EVO Gun Max", "Log FB"] },
   { id: "103", code: "#ML-01", category: "ml", price: "180000", image: "banner1.png", specs: ["Skin Epic", "Hero 90", "Moonton Sepaket"] },
   { id: "104", code: "#ML-02", category: "ml", price: "350000", image: "banner1.png", specs: ["Skin Collector", "Wr High", "All Unbind"] },
-  { id: "105", code: "#FF-03", category: "ff", price: "95000", image: "banner1.png", specs: ["Akun GG", "S3 Old", "Vault Mantap"] }
+  { id: "105", code: "#FF-03", category: "ff", price: "95000", image: "banner1.png", specs: ["Akun GG", "S3 Old", "Vault Mantap"] },
+  { id: "106", code: "#FF-04", category: "ff", price: "150000", image: "banner1.png", specs: ["Bundle Langka", "Akun Sultan", "Log Unbind"] },
+  { id: "107", code: "#ML-03", category: "ml", price: "210000", image: "banner1.png", specs: ["Skin Legend", "Emblem Max", "Clean Moonton"] },
+  { id: "108", code: "#FF-05", category: "ff", price: "300000", image: "banner1.png", specs: ["Old Account", "SG2 Incu", "Vault Rame"] }
 ];
 
-// PARAMETER PAGINATION (10 PRODUK PER HALAMAN)
-const ITEMS_PER_PAGE = 10;
+// PARAMETER PAGINATION (SET 8 PRODUK PER HALAMAN PRESISI SESUAI GAMBAR DARI USER)
+const ITEMS_PER_PAGE = 8;
 let currentPage = 1;
 let currentCategory = 'all';
-let fetchedProducts = [...SAMPLE_PRODUCTS]; // MENGGUNAKAN SAMPEL AWAL AGAR ANGKA 1 SELALU MUNCUL
+let fetchedProducts = [...SAMPLE_PRODUCTS]; 
 
 // ANIMASI SKELETON LOADING
 function renderSkeletons() {
@@ -39,7 +42,7 @@ function renderSkeletons() {
   if (homeRecContainer) homeRecContainer.innerHTML = skeletonHTML;
 }
 
-// PERBAIKI LINK GOOGLE DRIVE
+// PERBAIKI LINK GOOGLE DRIVE FOTO
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
   if (url.includes('drive.google.com') && url.includes('/d/')) {
@@ -144,10 +147,14 @@ async function loadProductsFromSheets(forceRefresh = false) {
   const cacheTime = localStorage.getItem('fendi_products_cache_time');
   const now = new Date().getTime();
 
-  if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 300000)) {
-    const parsed = JSON.parse(cachedData);
-    if (parsed && parsed.length > 0) {
-      fetchedProducts = parsed;
+  if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 180000)) {
+    try {
+      const parsed = JSON.parse(cachedData);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        fetchedProducts = parsed;
+      }
+    } catch (e) {
+      console.error("Gagal parsing cache:", e);
     }
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
@@ -163,14 +170,23 @@ async function loadProductsFromSheets(forceRefresh = false) {
     const data = await response.json();
 
     if (data.success && Array.isArray(data.products) && data.products.length > 0) {
-      fetchedProducts = data.products;
-      localStorage.setItem('fendi_products_cache', JSON.stringify(data.products));
+      // FORMAT DAHULU DATA DARI GOOGLE SHEETS UNTUK MEMASTIKAN PROPERTI TERBACA
+      fetchedProducts = data.products.map((item, idx) => ({
+        id: String(item.id || item.ID || idx + 1),
+        code: String(item.code || item.Kode || item.KODE || `#AKUN-${idx + 1}`),
+        category: String(item.category || item.Kategori || item.kategori || 'ff').toLowerCase(),
+        price: String(item.price || item.Harga || item.harga || '0'),
+        image: String(item.image || item.Foto || item.foto || item.imageUrl || ''),
+        specs: item.specs || item.Spesifikasi || item.spesifikasi || []
+      }));
+
+      localStorage.setItem('fendi_products_cache', JSON.stringify(fetchedProducts));
       localStorage.setItem('fendi_products_cache_time', now.toString());
     } else {
-      console.warn("Memakai data sampel cadangan.");
+      console.warn("Koneksi Sheets berhasil tetapi data kosong, menggunakan sampel.");
     }
   } catch (err) {
-    console.error("Gagal mengambil data dari Google Sheets, menggunakan data sampel:", err);
+    console.error("Gagal mengambil data dari Google Sheets, menggunakan sampel cadangan:", err);
   } finally {
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
@@ -222,7 +238,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & LOGIKA PAGINATION DENGAN JAMINAN ANGKA 1 SELALU MUNCUL
+// KATALOG PRODUK & LOGIKA PAGINATION PRESISI SESUAI GAMBAR USER
 function renderProducts(filterCat = 'all', page = 1) {
   currentCategory = filterCat.toLowerCase();
   currentPage = page;
@@ -241,7 +257,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
   const paginatedProducts = filtered.slice(startIndex, endIndex);
 
-  // UPDATE TEKS RINGKASAN PRODUK
+  // UPDATE TEKS RINGKASAN PRODUK ("Menampilkan 1-8 dari 89 produk")
   const summaryTextEl = document.getElementById('pagination-summary-text');
   if (summaryTextEl) {
     if (totalProducts === 0) {
@@ -251,7 +267,7 @@ function renderProducts(filterCat = 'all', page = 1) {
     }
   }
 
-  // GENERATE NAVIGASI ANGKA HALAMAN (ANGKA 1 SELALU MUNCUL)
+  // GENERATE TAMPILAN NAVIGASI PAGINATION PRESISI SEPERTI DI GAMBAR USER
   const paginationButtonsEl = document.getElementById('pagination-buttons');
   if (paginationButtonsEl) {
     let buttonsHTML = '';
@@ -264,44 +280,50 @@ function renderProducts(filterCat = 'all', page = 1) {
     `;
 
     if (totalPages <= 1) {
-      // JIKA HANYA 1 HALAMAN ATAU BELUM ADA DATA, TETAP TAMPILKAN ANGKA 1
       buttonsHTML += `
         <button type="button" class="page-circle-btn active" onclick="changeProductPage(1)">
           1
         </button>
       `;
     } else {
-      const maxVisiblePages = 5;
-      let pages = [];
+      // SUSUNAN HALAMAN SEPERTI GAMBAR: 1, 2, ..., [HALAMAN TERAKHIR]
+      buttonsHTML += `
+        <button type="button" class="page-circle-btn ${currentPage === 1 ? 'active' : ''}" onclick="changeProductPage(1)">
+          1
+        </button>
+      `;
 
-      if (totalPages <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        if (currentPage > 3) pages.push('...');
-        
-        let start = Math.max(2, currentPage - 1);
-        let end = Math.min(totalPages - 1, currentPage + 1);
-
-        for (let i = start; i <= end; i++) {
-          if (!pages.includes(i)) pages.push(i);
-        }
-
-        if (currentPage < totalPages - 2) pages.push('...');
-        if (!pages.includes(totalPages)) pages.push(totalPages);
+      if (totalPages >= 2) {
+        buttonsHTML += `
+          <button type="button" class="page-circle-btn ${currentPage === 2 ? 'active' : ''}" onclick="changeProductPage(2)">
+            2
+          </button>
+        `;
       }
 
-      pages.forEach(p => {
-        if (p === '...') {
-          buttonsHTML += `<span class="page-ellipsis">...</span>`;
-        } else {
-          buttonsHTML += `
-            <button type="button" class="page-circle-btn ${p === currentPage ? 'active' : ''}" onclick="changeProductPage(${p})">
-              ${p}
-            </button>
-          `;
-        }
-      });
+      if (totalPages > 3 && currentPage > 3) {
+        buttonsHTML += `<span class="page-ellipsis">...</span>`;
+      }
+
+      if (currentPage > 2 && currentPage < totalPages) {
+        buttonsHTML += `
+          <button type="button" class="page-circle-btn active" onclick="changeProductPage(${currentPage})">
+            ${currentPage}
+          </button>
+        `;
+      }
+
+      if (totalPages > 3 && currentPage < totalPages - 1) {
+        buttonsHTML += `<span class="page-ellipsis">...</span>`;
+      }
+
+      if (totalPages >= 3) {
+        buttonsHTML += `
+          <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'active' : ''}" onclick="changeProductPage(${totalPages})">
+            ${totalPages}
+          </button>
+        `;
+      }
     }
 
     // TOMBOL PANAH KANAN (>)
@@ -355,7 +377,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   });
 }
 
-// FUNGSI KELOLA PERPINDAHAN ANGKA HALAMAN
+// FUNGSI PERPINDAHAN ANGKA HALAMAN
 window.changeProductPage = function(pageNumber) {
   renderProducts(currentCategory, pageNumber);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -410,7 +432,7 @@ function openProductDetail(productId, updateHistory = true) {
   }
 }
 
-// CEK URL UNTUK DIRECT DETAIL
+// CEK URL UNTUK DIRECT DETAIL PRODUK
 function checkUrlForProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodCode = urlParams.get('id');
@@ -514,7 +536,7 @@ subTabItems.forEach((btn) => {
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
 
-    // RESET HALAMAN KE HALAMAN 1 SAAT BERPINDAH KATEGORI
+    // RESET KE HALAMAN 1 SAAT BERPINDAH KATEGORI
     renderProducts(targetSub, 1);
   });
 });

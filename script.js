@@ -1,8 +1,12 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyujJrRhXbjhvGzldJXm9jjZf79J5ASTtBOgZ9GiBSFiFSN7211nEmb3coub3MDpr4/exec";
+// ==========================================
+// 100% MURNI FRONTEND - TANPA GOOGLE SHEETS, TANPA CODE.GS, TANPA DRIVE
+// ==========================================
+
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
-let fetchedProducts = [];
+// Mengambil data langsung dari penyimpanan lokal HP/Browser kamu
+let fetchedProducts = JSON.parse(localStorage.getItem('fendi_local_products')) || [];
 
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
@@ -32,13 +36,7 @@ if (themeToggleBtn) {
 
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
-  if (url.includes('drive.google.com') && url.includes('/d/')) {
-    const match = url.match(/\/d\/([^\/]+)/);
-    if (match && match[1]) {
-      return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
-    }
-  }
-  return url;
+  return url; 
 }
 
 function formatRupiah(val) {
@@ -71,75 +69,15 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// FUNGSI KOMPRESI FOTO
-function convertAndCompressFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDimension = 600;
-
-        if (width > maxDimension || height > maxDimension) {
-          if (width > height) {
-            height = Math.round((height * maxDimension) / width);
-            width = maxDimension;
-          } else {
-            width = Math.round((width * maxDimension) / height);
-            height = maxDimension;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-        resolve(dataUrl);
-      };
-      img.onerror = (err) => reject(err);
-    };
-    reader.onerror = (err) => reject(err);
-  });
-}
-
 const productListContainer = document.getElementById('product-list-container');
 
-async function loadProductsFromSheets() {
-  try {
-    const fetchUrl = `${SCRIPT_URL}?action=getProducts&t=${new Date().getTime()}`;
-    const response = await fetch(fetchUrl);
-    const data = await response.json();
-
-    if (data && data.products && Array.isArray(data.products)) {
-      fetchedProducts = data.products;
-    } else if (Array.isArray(data)) {
-      fetchedProducts = data.map((item, idx) => ({
-        id: String(item[0] || idx + 1),
-        code: String(item[1] || '#AKUN-' + (idx + 1)),
-        category: String(item[2] || 'FREE FIRE'),
-        stockLabel: 'STOCK PRIBADI FENDI STORE',
-        price: String(item[3] || '0'),
-        image: String(item[4] || ''),
-        specs: String(item[5] || '')
-      }));
-    } else {
-      fetchedProducts = [];
-    }
-  } catch (err) {
-    console.error("Gagal load produk:", err);
-  } finally {
-    renderProducts(currentCategory);
-    renderHomeRecommendations();
-    renderAdminManageList();
-    checkUrlForProductDetail();
-  }
+// FUNGSI LOAD TANPA FETCH KE SERVER
+function loadProductsFromSheets() {
+  // Hanya membaca variabel lokal
+  renderProducts(currentCategory);
+  renderHomeRecommendations();
+  renderAdminManageList();
+  checkUrlForProductDetail();
 }
 
 function renderHomeRecommendations() {
@@ -244,7 +182,7 @@ function openProductDetail(productId, updateHistory = true) {
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
-    detailView.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
+    detailView.style.display = 'flex';
 
     detailImg.src = fixImageUrl(item.image);
 
@@ -412,6 +350,7 @@ function handleRouting() {
   };
   const currentRoute = routeMap[path] || routeMap['/'];
   switchTab(currentRoute.tab, currentRoute.index, false);
+  checkUrlForProductDetail();
 }
 
 window.addEventListener('popstate', handleRouting);
@@ -430,181 +369,85 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-const authTabBtns = document.querySelectorAll('.auth-tab-btn');
-const authForms = document.querySelectorAll('.auth-form');
-
-authTabBtns.forEach(btn => {
-  btn.addEventListener('click', function() {
-    const targetAuth = this.getAttribute('data-auth');
-    authTabBtns.forEach(b => b.classList.remove('active'));
-    authForms.forEach(f => f.classList.remove('active'));
-    this.classList.add('active');
-    const targetForm = document.getElementById(`${targetAuth}-form`);
-    if (targetForm) targetForm.classList.add('active');
-  });
-});
-
-function getCurrentUser() {
-  const data = localStorage.getItem('fendi_session_user');
-  return data ? JSON.parse(data) : null;
-}
-
-function updateAccountView() {
-  const user = getCurrentUser();
+// ==========================================
+// PENGOSONGAN LOGIN & REGISTER
+// ==========================================
+function setupEmptyAccountTab() {
   const guestView = document.getElementById('auth-guest-view');
   const loggedView = document.getElementById('auth-logged-view');
   const adminPanel = document.getElementById('admin-panel-section');
-
-  if (!guestView || !loggedView) return;
-
-  if (user) {
-    guestView.style.display = 'none';
-    loggedView.style.display = 'flex';
-    document.getElementById('display-user-name').textContent = user.name;
-    document.getElementById('display-user-wa').textContent = user.wa;
-    document.getElementById('display-user-role').textContent = user.role.toUpperCase();
-
-    if (user.role === 'admin') {
-      adminPanel.style.display = 'block';
-      renderAdminManageList();
-    } else {
-      adminPanel.style.display = 'none';
-    }
-  } else {
-    guestView.style.display = 'flex';
-    loggedView.style.display = 'none';
-    if (adminPanel) adminPanel.style.display = 'none';
-  }
+  
+  if (guestView) guestView.style.display = 'none';
+  if (loggedView) loggedView.style.display = 'none';
+  
+  // Langsung buka form upload agar kamu bisa langsung tes secara lokal
+  if (adminPanel) adminPanel.style.display = 'block';
 }
 
-document.getElementById('btn-logout')?.addEventListener('click', () => {
-  localStorage.removeItem('fendi_session_user');
-  updateAccountView();
-  alert("Kamu telah keluar.");
-});
+// BACA FILE GAMBAR SEBAGAI URL DATA (MURNI LOKAL JAVASCRIPT)
+function getLocalImageURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
 
-document.getElementById('register-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('reg-name').value.trim();
-  const wa = document.getElementById('reg-wa').value.trim();
-  const password = document.getElementById('reg-password').value.trim();
-  const btn = document.getElementById('btn-register');
-
-  btn.textContent = "Proses Mendaftar...";
-  btn.disabled = true;
-
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'register', name: name, wa: wa, password: password })
-    });
-    const result = await response.json();
-
-    alert(result.message);
-    if (result.success) {
-      document.getElementById('register-form').reset();
-      document.querySelector('.auth-tab-btn[data-auth="login"]').click();
-    }
-  } catch (err) {
-    alert("Gagal mendaftar: " + err.toString());
-  } finally {
-    btn.textContent = "Daftar Akun";
-    btn.disabled = false;
-  }
-});
-
-document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value.trim();
-  const btn = document.getElementById('btn-login');
-
-  btn.textContent = "Proses Login...";
-  btn.disabled = true;
-
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'login', username: username, password: password })
-    });
-    const result = await response.json();
-
-    if (result.success) {
-      localStorage.setItem('fendi_session_user', JSON.stringify(result.user));
-      updateAccountView();
-      document.getElementById('login-form').reset();
-      alert(`Selamat datang kembali, ${result.user.name}!`);
-    } else {
-      alert(result.message);
-    }
-  } catch (err) {
-    alert("Gagal login: " + err.toString());
-  } finally {
-    btn.textContent = "Masuk Sekarang";
-    btn.disabled = false;
-  }
-});
-
-// SUBMIT ADMIN UPLOAD (ANTI-GAGAL)
+// ==========================================
+// SUBMIT UPLOAD LOKAL (TANPA SERVER, TANPA GOOGLE)
+// ==========================================
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
-  const user = getCurrentUser();
-  if (!user || user.role !== 'admin') {
-    alert("Hanya admin yang dapat memposting!");
-    return;
-  }
 
   const category = document.getElementById('post-category').value;
   const rawPrice = document.getElementById('post-price').value.trim();
   const cleanPrice = rawPrice.replace(/\D/g, '');
-  const urlInput = document.getElementById('post-url')?.value.trim() || '';
+  let urlInput = document.getElementById('post-url')?.value.trim() || '';
   const specsRaw = document.getElementById('post-specs').value.trim();
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengompres & Mengunggah Foto...";
+  btn.textContent = "Menyimpan ke Browser...";
   btn.disabled = true;
 
-  let imageBase64 = null;
-
-  if (fileInput && fileInput.files.length > 0) {
-    try {
-      imageBase64 = await convertAndCompressFile(fileInput.files[0]);
-    } catch (err) {
-      console.error("Gagal memproses foto:", err);
-    }
-  }
-
   try {
-    // Kirim pakai URLSearchParams biar Base64 aman tidak berubah jadi spasi
-    const formData = new URLSearchParams();
-    formData.append('action', 'addProduct');
-    formData.append('role', user.role);
-    formData.append('category', category);
-    formData.append('price', cleanPrice);
-    formData.append('imageUrl', urlInput);
-    formData.append('imageBase64', imageBase64 || '');
-    formData.append('specs', specsRaw);
-
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    });
-    const result = await response.json();
-
-    alert(result.message);
-    if (result.success) {
-      document.getElementById('admin-upload-form').reset();
-      await loadProductsFromSheets();
-      switchTab('tab-produk', 1);
+    // Jika upload foto dari HP, jadikan URL lokal langsung (tanpa dikirim kemana-mana)
+    if (fileInput && fileInput.files.length > 0) {
+      urlInput = await getLocalImageURL(fileInput.files[0]);
     }
+
+    // Buat kode otomatis
+    const catPrefix = (category.toLowerCase().includes('mobile') || category.toLowerCase() === 'ml') ? 'ML' : 'FF';
+    const nextId = fetchedProducts.length + 1;
+    const generatedCode = `#${catPrefix}-${String(nextId).padStart(2, '0')}`;
+
+    // Simpan objek produk ke array lokal
+    const newProduct = {
+      id: String(Date.now()),
+      code: generatedCode,
+      category: (catPrefix === 'ML') ? 'MOBILE LEGENDS' : 'FREE FIRE',
+      stockLabel: 'STOCK PRIBADI FENDI STORE',
+      price: cleanPrice || '0',
+      image: urlInput,
+      specs: specsRaw
+    };
+
+    fetchedProducts.push(newProduct);
+    
+    // Simpan ke memory browser (Local Storage)
+    localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
+
+    alert("Berhasil ditambahkan!");
+    document.getElementById('admin-upload-form').reset();
+    
+    loadProductsFromSheets(); // Memanggil fungsi render ulang
+    switchTab('tab-produk', 1);
+
   } catch (err) {
-    alert("Gagal upload: " + err.toString());
+    alert("Gagal menyimpan lokal: " + err.toString());
   } finally {
-    btn.textContent = "+ Upload Akun Ke Katalog Stok";
+    btn.textContent = "+ Upload Akun Ke Produk";
     btn.disabled = false;
   }
 });
@@ -629,30 +472,21 @@ function renderAdminManageList() {
   `).join('');
 }
 
-window.deleteProductFromSheets = async function(productId) {
-  const user = getCurrentUser();
-  if (!user || user.role !== 'admin') return;
-
+window.deleteProductFromSheets = function(productId) {
   if (confirm("Yakin mau menghapus produk akun ini?")) {
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'deleteProduct', role: user.role, productId: productId })
-      });
-      const result = await response.json();
-      alert(result.message);
-      if (result.success) {
-        await loadProductsFromSheets();
-      }
-    } catch (err) {
-      alert("Gagal menghapus: " + err.toString());
-    }
+    // Hapus dari array lokal
+    fetchedProducts = fetchedProducts.filter(p => String(p.id) !== String(productId));
+    
+    // Update Local Storage
+    localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
+    
+    alert("Produk berhasil dihapus!");
+    loadProductsFromSheets();
   }
 };
 
 initTheme();
 renderProducts(currentCategory);
 loadProductsFromSheets();
-updateAccountView();
+setupEmptyAccountTab(); 
 handleRouting();

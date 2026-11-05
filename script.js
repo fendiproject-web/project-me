@@ -1,4 +1,4 @@
-// URL DEPLOYMENT APPS SCRIPT BARU KAMU
+// URL DEPLOYMENT GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyujJrRhXbjhvGzldJXm9jjZf79J5ASTtBOgZ9GiBSFiFSN7211nEmb3coub3MDpr4/exec";
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
@@ -70,44 +70,6 @@ function matchCategory(productCat, targetFilter) {
   if (filter === 'ff') return cat.includes('free') || cat.includes('fire') || cat === 'ff';
   if (filter === 'ml') return cat.includes('mobile') || cat.includes('legend') || cat === 'ml';
   return cat === filter;
-}
-
-// KOMPRESI FOTO SANGAT RINGAN (<80KB) AGAR BASE64 TIDAK TERPOTONG DILUAR KAPASITAS
-function compressImageForAppsScript(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 500; // Ditingkatkan ke resolusi ideal HP
-
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.4); // Kualitas 40% sangat ringan
-        resolve(dataUrl.replace(/^data:image\/\w+;base64,/, ''));
-      };
-      img.onerror = () => resolve(null);
-      img.src = e.target.result;
-    };
-    reader.onerror = () => resolve(null);
-    reader.readAsDataURL(file);
-  });
 }
 
 const productListContainer = document.getElementById('product-list-container');
@@ -547,7 +509,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD
+// SUBMIT ADMIN UPLOAD (KIRIM FILE FISIK VIA FORMDATA DIRECT)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -567,28 +529,22 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   btn.textContent = "Mengunggah Foto...";
   btn.disabled = true;
 
-  let imageBase64 = null;
+  const formData = new FormData();
+  formData.append('action', 'addProduct');
+  formData.append('role', user.role);
+  formData.append('category', category);
+  formData.append('price', cleanPrice);
+  formData.append('imageUrl', urlInput);
+  formData.append('specs', specsRaw);
 
   if (fileInput && fileInput.files.length > 0) {
-    try {
-      imageBase64 = await compressImageForAppsScript(fileInput.files[0]);
-    } catch (err) {
-      console.error("Gagal kompres foto:", err);
-    }
+    formData.append('postFile', fileInput.files[0]);
   }
 
   try {
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({
-        action: 'addProduct',
-        role: user.role,
-        category: category,
-        price: cleanPrice,
-        imageUrl: urlInput,
-        imageBase64: imageBase64,
-        specs: specsRaw
-      })
+      body: formData
     });
     const result = await response.json();
 

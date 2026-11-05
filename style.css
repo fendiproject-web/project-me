@@ -188,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* TOGGLE TEMA */
+/* TOGGLE TEMA (MODE TERANG = SUN / MATAHARI, MODE GELAP = MOON / BULAN) */
 .theme-toggle-btn {
   position: relative;
   background: var(--pill-bg);
@@ -410,11 +410,11 @@ body.dark-mode .moon-icon {
   cursor: pointer;
 }
 
-/* RASIO FOTO DILUAR UBAH KE 4:5 */
+/* UKURAN FOTO KARTU TERKUNCI KE RASIO 4:5 */
 .account-media {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 5 !important;
   overflow: hidden;
 }
 
@@ -440,6 +440,7 @@ body.dark-mode .moon-icon {
   backdrop-filter: blur(4px);
 }
 
+/* KONTEN KARTU STOK DENGAN TEKS KATEGORI, JUDUL, SELLER, HARGA */
 .account-body {
   padding: 10px;
   display: flex;
@@ -447,9 +448,9 @@ body.dark-mode .moon-icon {
   gap: 2px;
 }
 
-/* STYLING TEKS KARD SESUAI URUTAN */
+/* 1. BADGE KATEGORI GAME (FREE FIRE / MOBILE LEGENDS) */
 .badge-cat-inline {
-  display: inline-block;
+  display: inline-block !important;
   align-self: flex-start;
   font-size: 9px;
   font-weight: 800;
@@ -459,11 +460,12 @@ body.dark-mode .moon-icon {
   padding: 2px 7px;
   border-radius: 6px;
   letter-spacing: 0.5px;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
+/* 2. TEKS STOCK PRIBADI FENDI STORE */
 .card-stock-label {
-  display: block;
+  display: block !important;
   font-size: 10px;
   font-weight: 800;
   color: var(--text-main) !important;
@@ -471,14 +473,16 @@ body.dark-mode .moon-icon {
   line-height: 1.25;
 }
 
+/* 3. TEKS Fendi Store */
 .card-seller-name {
-  display: block;
+  display: block !important;
   font-size: 9px;
   font-weight: 600;
   color: var(--text-sub) !important;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
+/* 4. TEKS HARGA AKUN & NOMINAL RP */
 .account-price-row {
   display: flex;
   flex-direction: column;
@@ -486,8 +490,17 @@ body.dark-mode .moon-icon {
   margin-top: 2px;
 }
 
-.price-label { font-size: 9px; color: var(--text-sub); font-weight: 600; }
-.account-price { font-size: 13px; font-weight: 800; color: var(--text-main); }
+.price-label {
+  font-size: 9px;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
+.account-price {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+}
 
 .account-specs-list {
   display: flex;
@@ -540,7 +553,7 @@ body.light-mode .spec-item { background: #e2e8f0; }
 
 .skeleton-media {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 5 !important;
   animation: shimmerPulse 1.6s infinite ease-in-out;
 }
 

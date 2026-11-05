@@ -547,7 +547,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD (KITA UBAH PAKAI URLSearchParams AGAR ANTI ERROR BASE64)
+// SUBMIT ADMIN UPLOAD (ANTI-GAGAL)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -578,7 +578,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 
   try {
-    // MENGGUNAKAN URLSearchParams UNTUK MENCEGAH KARAKTER RUSAK
+    // Kirim pakai URLSearchParams biar Base64 aman tidak berubah jadi spasi
     const formData = new URLSearchParams();
     formData.append('action', 'addProduct');
     formData.append('role', user.role);

@@ -35,7 +35,7 @@ function fixImageUrl(url) {
   if (url.includes('drive.google.com') && url.includes('/d/')) {
     const match = url.match(/\/d\/([^\/]+)/);
     if (match && match[1]) {
-      return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
     }
   }
   return url;
@@ -245,7 +245,8 @@ function openProductDetail(productId, updateHistory = true) {
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
-    detailView.style.display = 'flex';
+    // Gunakan grid di desktop agar layout 2 kolom
+    detailView.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
 
     detailImg.src = fixImageUrl(item.image);
 
@@ -413,7 +414,6 @@ function handleRouting() {
   };
   const currentRoute = routeMap[path] || routeMap['/'];
   switchTab(currentRoute.tab, currentRoute.index, false);
-  checkUrlForProductDetail();
 }
 
 window.addEventListener('popstate', handleRouting);
@@ -498,6 +498,7 @@ document.getElementById('register-form')?.addEventListener('submit', async (e) =
   try {
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'register', name: name, wa: wa, password: password })
     });
     const result = await response.json();
@@ -527,6 +528,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   try {
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'login', username: username, password: password })
     });
     const result = await response.json();
@@ -580,6 +582,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   try {
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         action: 'addProduct',
         role: user.role,
@@ -601,7 +604,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   } catch (err) {
     alert("Gagal upload: " + err.toString());
   } finally {
-    btn.textContent = "+ Upload Akun Ke Produk";
+    btn.textContent = "+ Upload Akun Ke Katalog Stok";
     btn.disabled = false;
   }
 });
@@ -634,6 +637,7 @@ window.deleteProductFromSheets = async function(productId) {
     try {
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'deleteProduct', role: user.role, productId: productId })
       });
       const result = await response.json();

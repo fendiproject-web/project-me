@@ -4,13 +4,10 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// PARAMETER PAGINATION (8 PRODUK PER HALAMAN)
-const ITEMS_PER_PAGE = 8;
-let currentPage = 1;
 let currentCategory = 'all';
 let fetchedProducts = [];
 
-// INISIALISASI & TOGGLE TEMA (DARK / LIGHT MODE)
+// INISIALISASI TEMA
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
   if (savedTheme === 'light') {
@@ -37,7 +34,7 @@ if (themeToggleBtn) {
   });
 }
 
-// PERBAIKI LINK GOOGLE DRIVE FOTO
+// FIX URL GOOGLE DRIVE
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
   if (url.includes('drive.google.com') && url.includes('/d/')) {
@@ -56,7 +53,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI PENCOCOKAN KATEGORI
+// PENCOCOKAN KATEGORI
 function matchCategory(productCat, targetFilter) {
   if (!targetFilter || targetFilter === 'all') return true;
   const cat = String(productCat || '').toLowerCase().trim();
@@ -71,9 +68,7 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// ==========================================
 // FETCH PRODUK DARI GOOGLE SHEETS
-// ==========================================
 const productListContainer = document.getElementById('product-list-container');
 
 async function loadProductsFromSheets() {
@@ -115,14 +110,14 @@ async function loadProductsFromSheets() {
   } catch (err) {
     console.error("Gagal mengambil data produk:", err);
   } finally {
-    renderProducts(currentCategory, 1);
+    renderProducts(currentCategory);
     renderHomeRecommendations();
     renderAdminManageList();
     checkUrlForProductDetail();
   }
 }
 
-// REKOMENDASI PRODUK DI HOME
+// REKOMENDASI HOME
 function renderHomeRecommendations() {
   const homeRecContainer = document.getElementById('home-recommendation-grid');
   if (!homeRecContainer) return;
@@ -165,107 +160,19 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & RINGKASAN HALAMAN
-function renderProducts(filterCat = 'all', page = 1) {
+// RENDER GRID KATALOG PRODUK
+function renderProducts(filterCat = 'all') {
   currentCategory = filterCat.toLowerCase();
-  currentPage = page;
-
   const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
-  const totalProducts = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalProducts / ITEMS_PER_PAGE));
 
-  if (currentPage > totalPages) currentPage = totalPages;
-  if (currentPage < 1) currentPage = 1;
-
-  const startIndex = totalProducts > 0 ? (currentPage - 1) * ITEMS_PER_PAGE : 0;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
-  const paginatedProducts = filtered.slice(startIndex, endIndex);
-
-  // UPDATE TEKS RINGKASAN PRODUK
-  const summaryTextEl = document.getElementById('pagination-summary-text');
-  if (summaryTextEl) {
-    if (totalProducts === 0) {
-      summaryTextEl.textContent = "Menampilkan 0 produk";
-    } else {
-      summaryTextEl.textContent = `Menampilkan ${startIndex + 1}-${endIndex} dari ${totalProducts} produk`;
-    }
-  }
-
-  // GENERATE TOMBOL PAGINATION (< 1 2 ... >)
-  const paginationButtonsEl = document.getElementById('pagination-buttons');
-  if (paginationButtonsEl) {
-    let buttonsHTML = '';
-
-    buttonsHTML += `
-      <button type="button" class="page-circle-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changeProductPage(${currentPage - 1})" title="Sebelumnya">
-        &lt;
-      </button>
-    `;
-
-    if (totalPages <= 1) {
-      buttonsHTML += `
-        <button type="button" class="page-circle-btn active" onclick="changeProductPage(1)">
-          1
-        </button>
-      `;
-    } else {
-      buttonsHTML += `
-        <button type="button" class="page-circle-btn ${currentPage === 1 ? 'active' : ''}" onclick="changeProductPage(1)">
-          1
-        </button>
-      `;
-
-      if (totalPages >= 2) {
-        buttonsHTML += `
-          <button type="button" class="page-circle-btn ${currentPage === 2 ? 'active' : ''}" onclick="changeProductPage(2)">
-            2
-          </button>
-        `;
-      }
-
-      if (totalPages > 3 && currentPage > 3) {
-        buttonsHTML += `<span class="page-ellipsis">...</span>`;
-      }
-
-      if (currentPage > 2 && currentPage < totalPages) {
-        buttonsHTML += `
-          <button type="button" class="page-circle-btn active" onclick="changeProductPage(${currentPage})">
-            ${currentPage}
-          </button>
-        `;
-      }
-
-      if (totalPages > 3 && currentPage < totalPages - 1) {
-        buttonsHTML += `<span class="page-ellipsis">...</span>`;
-      }
-
-      if (totalPages >= 3) {
-        buttonsHTML += `
-          <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'active' : ''}" onclick="changeProductPage(${totalPages})">
-            ${totalPages}
-          </button>
-        `;
-      }
-    }
-
-    buttonsHTML += `
-      <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changeProductPage(${currentPage + 1})" title="Selanjutnya">
-        &gt;
-      </button>
-    `;
-
-    paginationButtonsEl.innerHTML = buttonsHTML;
-  }
-
-  // RENDER GRID PRODUK
   if (!productListContainer) return;
 
-  if (paginatedProducts.length === 0) {
+  if (filtered.length === 0) {
     productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub); padding: 30px 0;">Belum ada akun jualan di kategori ini.</p>`;
     return;
   }
 
-  productListContainer.innerHTML = paginatedProducts.map(item => {
+  productListContainer.innerHTML = filtered.map(item => {
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
     const validImg = fixImageUrl(item.image);
@@ -298,13 +205,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   });
 }
 
-// PERPINDAHAN HALAMAN
-window.changeProductPage = function(pageNumber) {
-  renderProducts(currentCategory, pageNumber);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-// BUKA DETAIL PRODUK
+// OPEN DETAIL PRODUK
 function openProductDetail(productId, updateHistory = true) {
   const item = fetchedProducts.find(p => String(p.id) === String(productId));
   if (!item) return;
@@ -353,7 +254,7 @@ function openProductDetail(productId, updateHistory = true) {
   }
 }
 
-// CEK URL UNTUK DIRECT DETAIL PRODUK
+// CEK URL DETAIL PRODUK
 function checkUrlForProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodCode = urlParams.get('id');
@@ -367,7 +268,7 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL ZOOM FOTO
+// MODAL ZOOM FOTO PRODUK
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -408,7 +309,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAIN DI DETAIL
+// REKOMENDASI PRODUK LAIN DI DETAIL PRODUK
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -457,13 +358,11 @@ subTabItems.forEach((btn) => {
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
 
-    renderProducts(targetSub, 1);
+    renderProducts(targetSub);
   });
 });
 
-// ==========================================
 // BOTTOM NAV & ROUTING MANAGER
-// ==========================================
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -551,9 +450,7 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// ==========================================
 // FORM LOGIN & REGISTRASI AKUN
-// ==========================================
 const authTabBtns = document.querySelectorAll('.auth-tab-btn');
 const authForms = document.querySelectorAll('.auth-form');
 
@@ -808,7 +705,7 @@ if (btnPwaDismiss) {
 
 // INISIALISASI UTAMA
 initTheme();
-renderProducts(currentCategory, 1);
+renderProducts(currentCategory);
 loadProductsFromSheets();
 updateAccountView();
 handleRouting();

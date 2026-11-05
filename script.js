@@ -4,11 +4,38 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// PARAMETER PAGINATION (8 PRODUK PER HALAMAN PRESISI GAMBAR)
+// PARAMETER PAGINATION (8 PRODUK PER HALAMAN)
 const ITEMS_PER_PAGE = 8;
 let currentPage = 1;
 let currentCategory = 'all';
-let fetchedProducts = []; 
+let fetchedProducts = [];
+
+// FUNGSI INISIALISASI & TOGGLE TEMA (DARK / LIGHT MODE)
+function initTheme() {
+  const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
+  if (savedTheme === 'light') {
+    document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode');
+  } else {
+    document.body.classList.remove('light-mode');
+    document.body.classList.add('dark-mode');
+  }
+}
+
+const themeToggleBtn = document.getElementById('themeToggle');
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    if (document.body.classList.contains('dark-mode')) {
+      document.body.classList.remove('dark-mode');
+      document.body.classList.add('light-mode');
+      localStorage.setItem('fendi_theme', 'light');
+    } else {
+      document.body.classList.remove('light-mode');
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('fendi_theme', 'dark');
+    }
+  });
+}
 
 // ANIMASI SKELETON LOADING
 function renderSkeletons() {
@@ -49,7 +76,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI PENCOCOKAN KATEGORI (FLEKSIBEL: BISA FF / FREE FIRE / ML / MOBILE LEGENDS)
+// FUNGSI PENCOCOKAN KATEGORI FLEKSIBEL
 function matchCategory(productCat, targetFilter) {
   if (!targetFilter || targetFilter === 'all') return true;
   const cat = String(productCat || '').toLowerCase().trim();
@@ -70,12 +97,9 @@ function matchCategory(productCat, targetFilter) {
 const productListContainer = document.getElementById('product-list-container');
 
 async function loadProductsFromSheets(forceRefresh = true) {
-  if (!productListContainer) return;
-
   renderSkeletons();
 
   try {
-    // TENTUKAN URL DENGAN TIMESTAMP AGAR BROWSER TIDAK MENYIMPAN CACHE LAMA
     const fetchUrl = `${SCRIPT_URL}?action=getProducts&t=${new Date().getTime()}`;
     const response = await fetch(fetchUrl);
     const data = await response.json();
@@ -90,7 +114,6 @@ async function loadProductsFromSheets(forceRefresh = true) {
     }
 
     if (rawList.length > 0) {
-      // FORMAT DATA SECARA OTOMATIS BERDASARKAN VARIASI NAMA KOLOM SHEETS
       fetchedProducts = rawList.map((item, idx) => {
         let id = item.id || item.ID || item[0] || (idx + 1);
         let code = item.code || item.Kode || item.KODE || item.kode || item[1] || `#AKUN-${idx + 1}`;
@@ -165,14 +188,12 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & LOGIKA PAGINATION (DESAIN MENAMPILKAN X-Y DARI TOTAL PRODUK)
+// KATALOG PRODUK & LOGIKA PAGINATION DENGAN PERHITUNGAN DINAMIS
 function renderProducts(filterCat = 'all', page = 1) {
   currentCategory = filterCat.toLowerCase();
   currentPage = page;
 
-  // HITING HANYA PRODUK YANG COCOK DENGAN KATEGORI
   const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
-
   const totalProducts = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalProducts / ITEMS_PER_PAGE));
 
@@ -183,7 +204,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
   const paginatedProducts = filtered.slice(startIndex, endIndex);
 
-  // UPDATE TEKS RINGKASAN PRODUK ("Menampilkan 1-8 dari 89 produk")
+  // UPDATE TEKS RINGKASAN PRODUK SECARA DINAMIS
   const summaryTextEl = document.getElementById('pagination-summary-text');
   if (summaryTextEl) {
     if (totalProducts === 0) {
@@ -193,7 +214,7 @@ function renderProducts(filterCat = 'all', page = 1) {
     }
   }
 
-  // GENERATE TOMBOL PAGINATION DENGAN FORMAT: < 1 2 ... 12 >
+  // GENERATE TOMBOL PAGINATION DENGAN FORMAT: < 1 2 ... >
   const paginationButtonsEl = document.getElementById('pagination-buttons');
   if (paginationButtonsEl) {
     let buttonsHTML = '';
@@ -302,7 +323,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   });
 }
 
-// FUNGSI PERPINDAHAN ANGKA HALAMAN
+// FUNGSI PERPINDAHAN HALAMAN
 window.changeProductPage = function(pageNumber) {
   renderProducts(currentCategory, pageNumber);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -452,7 +473,7 @@ function renderRecommendations(currentId) {
   });
 }
 
-// SUB TAB FILTER (FF / ML / SEMUA)
+// SUB TAB FILTER (ALL / FF / ML)
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
@@ -461,7 +482,6 @@ subTabItems.forEach((btn) => {
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
 
-    // RESET KE HALAMAN 1 SAAT BERPINDAH KATEGORI
     renderProducts(targetSub, 1);
   });
 });
@@ -697,7 +717,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengompres & Mengunggah Foto...";
+  btn.textContent = "Mengunggah Foto...";
   btn.disabled = true;
 
   const sendPayload = async (imageBase64 = null) => {
@@ -730,12 +750,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
     }
   };
 
-  if (fileInput.files && fileInput.files[0]) {
-    const compressedBase64 = await compressImage(fileInput.files[0]);
-    sendPayload(compressedBase64);
-  } else {
-    sendPayload(null);
-  }
+  sendPayload(null);
 });
 
 // KELOLA & HAPUS PRODUK ADMIN
@@ -781,9 +796,7 @@ window.deleteProductFromSheets = async function(productId) {
   }
 };
 
-// ==========================================
-// REGISTRASI PWA & LOGIKA NOTIFIKASI INSTALL
-// ==========================================
+// PWA SERVICE WORKER
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
@@ -811,7 +824,6 @@ if (btnPwaInstall) {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      console.log(`Pilihan user: ${outcome}`);
       deferredPrompt = null;
       if (pwaBanner) pwaBanner.style.display = 'none';
     }
@@ -825,7 +837,7 @@ if (btnPwaDismiss) {
   });
 }
 
-// INISIALISASI HALAMAN
+// INISIALISASI UTAMA
 initTheme();
 renderSkeletons();
 loadProductsFromSheets(true);

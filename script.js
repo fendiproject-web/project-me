@@ -71,6 +71,15 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+  });
+}
+
 const productListContainer = document.getElementById('product-list-container');
 
 async function loadProductsFromSheets() {
@@ -508,7 +517,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD (MURNI MENGIRIM LINK / URL GAMBAR TEKS)
+// SUBMIT ADMIN UPLOAD
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -522,10 +531,21 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const cleanPrice = rawPrice.replace(/\D/g, '');
   const urlInput = document.getElementById('post-url')?.value.trim() || '';
   const specsRaw = document.getElementById('post-specs').value.trim();
+  const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengunggah...";
+  btn.textContent = "Mengunggah Foto...";
   btn.disabled = true;
+
+  let imageBase64 = null;
+
+  if (fileInput && fileInput.files.length > 0) {
+    try {
+      imageBase64 = await readFileAsBase64(fileInput.files[0]);
+    } catch (err) {
+      console.error("Gagal membaca file foto:", err);
+    }
+  }
 
   try {
     const response = await fetch(SCRIPT_URL, {
@@ -536,6 +556,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
         category: category,
         price: cleanPrice,
         imageUrl: urlInput,
+        imageBase64: imageBase64,
         specs: specsRaw
       })
     });

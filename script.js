@@ -4,23 +4,11 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH5tILYOzA5zWntQir0
 // PLACEHOLDER GAMBAR EROR
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
-// DATA SAMPEL CADANGAN JIKA MEMUAT DARIPADA SHEETS KOSONG (8 PRODUK CONTOH)
-const SAMPLE_PRODUCTS = [
-  { id: "101", code: "#FF-01", category: "ff", price: "120000", image: "banner1.png", specs: ["Vault Rame", "Old Season", "SG2 Reaper"] },
-  { id: "102", code: "#FF-02", category: "ff", price: "250000", image: "banner1.png", specs: ["Bundle Incu", "EVO Gun Max", "Log FB"] },
-  { id: "103", code: "#ML-01", category: "ml", price: "180000", image: "banner1.png", specs: ["Skin Epic", "Hero 90", "Moonton Sepaket"] },
-  { id: "104", code: "#ML-02", category: "ml", price: "350000", image: "banner1.png", specs: ["Skin Collector", "Wr High", "All Unbind"] },
-  { id: "105", code: "#FF-03", category: "ff", price: "95000", image: "banner1.png", specs: ["Akun GG", "S3 Old", "Vault Mantap"] },
-  { id: "106", code: "#FF-04", category: "ff", price: "150000", image: "banner1.png", specs: ["Bundle Langka", "Akun Sultan", "Log Unbind"] },
-  { id: "107", code: "#ML-03", category: "ml", price: "210000", image: "banner1.png", specs: ["Skin Legend", "Emblem Max", "Clean Moonton"] },
-  { id: "108", code: "#FF-05", category: "ff", price: "300000", image: "banner1.png", specs: ["Old Account", "SG2 Incu", "Vault Rame"] }
-];
-
-// PARAMETER PAGINATION (SET 8 PRODUK PER HALAMAN PRESISI SESUAI GAMBAR DARI USER)
+// PARAMETER PAGINATION (8 PRODUK PER HALAMAN PRESISI GAMBAR)
 const ITEMS_PER_PAGE = 8;
 let currentPage = 1;
 let currentCategory = 'all';
-let fetchedProducts = [...SAMPLE_PRODUCTS]; 
+let fetchedProducts = []; 
 
 // ANIMASI SKELETON LOADING
 function renderSkeletons() {
@@ -61,78 +49,19 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// KOMPRESI GAMBAR DARI HP
-function compressImage(file, maxWidth = 800, quality = 0.75) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
+// FUNGSI PENCOCOKAN KATEGORI (FLEKSIBEL: BISA FF / FREE FIRE / ML / MOBILE LEGENDS)
+function matchCategory(productCat, targetFilter) {
+  if (!targetFilter || targetFilter === 'all') return true;
+  const cat = String(productCat || '').toLowerCase().trim();
+  const filter = String(targetFilter).toLowerCase().trim();
 
-        if (width > maxWidth) {
-          height = Math.round((height * maxWidth) / width);
-          width = maxWidth;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const compressedBase64 = canvas.toDataURL('image/webp', quality);
-        resolve(compressedBase64);
-      };
-    };
-  });
-}
-
-// ==========================================
-// SISTEM MODE TERANG / GELAP (THEME)
-// ==========================================
-const themeToggleBtn = document.getElementById('themeToggle');
-
-function applyTheme(theme) {
-  if (theme === 'light') {
-    document.body.classList.add('light-mode');
-    document.body.classList.remove('dark-mode');
-  } else {
-    document.body.classList.add('dark-mode');
-    document.body.classList.remove('light-mode');
+  if (filter === 'ff') {
+    return cat === 'ff' || cat.includes('free fire') || cat.includes('fire');
   }
-}
-
-function initTheme() {
-  const savedTheme = localStorage.getItem('fendi_theme');
-  if (savedTheme) {
-    applyTheme(savedTheme);
-  } else {
-    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-    applyTheme(systemPrefersLight ? 'light' : 'dark');
+  if (filter === 'ml') {
+    return cat === 'ml' || cat.includes('mobile') || cat.includes('legend');
   }
-}
-
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener('click', () => {
-    const isCurrentlyLight = document.body.classList.contains('light-mode');
-    const newTheme = isCurrentlyLight ? 'dark' : 'light';
-    applyTheme(newTheme);
-    localStorage.setItem('fendi_theme', newTheme);
-  });
-}
-
-// FORMAT INPUT HARGA ADMIN REALTIME
-const postPriceInput = document.getElementById('post-price');
-if (postPriceInput) {
-  postPriceInput.addEventListener('input', function () {
-    let rawValue = this.value.replace(/\D/g, '');
-    this.value = rawValue ? new Intl.NumberFormat('id-ID').format(rawValue) : '';
-  });
+  return cat === filter;
 }
 
 // ==========================================
@@ -140,53 +69,51 @@ if (postPriceInput) {
 // ==========================================
 const productListContainer = document.getElementById('product-list-container');
 
-async function loadProductsFromSheets(forceRefresh = false) {
+async function loadProductsFromSheets(forceRefresh = true) {
   if (!productListContainer) return;
-
-  const cachedData = localStorage.getItem('fendi_products_cache');
-  const cacheTime = localStorage.getItem('fendi_products_cache_time');
-  const now = new Date().getTime();
-
-  if (!forceRefresh && cachedData && cacheTime && (now - cacheTime < 180000)) {
-    try {
-      const parsed = JSON.parse(cachedData);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        fetchedProducts = parsed;
-      }
-    } catch (e) {
-      console.error("Gagal parsing cache:", e);
-    }
-    renderProducts(currentCategory, 1);
-    renderHomeRecommendations();
-    renderAdminManageList();
-    checkUrlForProductDetail();
-    return;
-  }
 
   renderSkeletons();
 
   try {
-    const response = await fetch(`${SCRIPT_URL}?action=getProducts`);
+    // TENTUKAN URL DENGAN TIMESTAMP AGAR BROWSER TIDAK MENYIMPAN CACHE LAMA
+    const fetchUrl = `${SCRIPT_URL}?action=getProducts&t=${new Date().getTime()}`;
+    const response = await fetch(fetchUrl);
     const data = await response.json();
 
-    if (data.success && Array.isArray(data.products) && data.products.length > 0) {
-      // FORMAT DAHULU DATA DARI GOOGLE SHEETS UNTUK MEMASTIKAN PROPERTI TERBACA
-      fetchedProducts = data.products.map((item, idx) => ({
-        id: String(item.id || item.ID || idx + 1),
-        code: String(item.code || item.Kode || item.KODE || `#AKUN-${idx + 1}`),
-        category: String(item.category || item.Kategori || item.kategori || 'ff').toLowerCase(),
-        price: String(item.price || item.Harga || item.harga || '0'),
-        image: String(item.image || item.Foto || item.foto || item.imageUrl || ''),
-        specs: item.specs || item.Spesifikasi || item.spesifikasi || []
-      }));
+    let rawList = [];
+    if (Array.isArray(data)) {
+      rawList = data;
+    } else if (data && Array.isArray(data.products)) {
+      rawList = data.products;
+    } else if (data && Array.isArray(data.data)) {
+      rawList = data.data;
+    }
 
-      localStorage.setItem('fendi_products_cache', JSON.stringify(fetchedProducts));
-      localStorage.setItem('fendi_products_cache_time', now.toString());
+    if (rawList.length > 0) {
+      // FORMAT DATA SECARA OTOMATIS BERDASARKAN VARIASI NAMA KOLOM SHEETS
+      fetchedProducts = rawList.map((item, idx) => {
+        let id = item.id || item.ID || item[0] || (idx + 1);
+        let code = item.code || item.Kode || item.KODE || item.kode || item[1] || `#AKUN-${idx + 1}`;
+        let category = item.category || item.Kategori || item.kategori || item[2] || 'ff';
+        let price = item.price || item.Harga || item.harga || item[3] || '0';
+        let image = item.image || item.Foto || item.foto || item.imageUrl || item[4] || '';
+        let specs = item.specs || item.Spesifikasi || item.spesifikasi || item[5] || '';
+
+        return {
+          id: String(id),
+          code: String(code),
+          category: String(category),
+          price: String(price),
+          image: String(image),
+          specs: specs
+        };
+      });
     } else {
-      console.warn("Koneksi Sheets berhasil tetapi data kosong, menggunakan sampel.");
+      console.warn("Data dari Google Sheets kosong.");
+      fetchedProducts = [];
     }
   } catch (err) {
-    console.error("Gagal mengambil data dari Google Sheets, menggunakan sampel cadangan:", err);
+    console.error("Gagal mengambil data dari Google Sheets:", err);
   } finally {
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
@@ -201,7 +128,7 @@ function renderHomeRecommendations() {
   if (!homeRecContainer) return;
 
   if (fetchedProducts.length === 0) {
-    homeRecContainer.innerHTML = `<p style="grid-column: span 2; font-size: 12px; text-align:center; color: var(--text-sub);">Belum ada produk jualan.</p>`;
+    homeRecContainer.innerHTML = `<p style="grid-column: span 2; font-size: 12px; text-align:center; color: var(--text-sub); padding: 20px 0;">Belum ada produk jualan.</p>`;
     return;
   }
 
@@ -215,7 +142,7 @@ function renderHomeRecommendations() {
           <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
+            <span class="badge-cat">${item.category}</span>
           </div>
         </div>
         <div class="account-body">
@@ -238,14 +165,13 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & LOGIKA PAGINATION PRESISI SESUAI GAMBAR USER
+// KATALOG PRODUK & LOGIKA PAGINATION (DESAIN MENAMPILKAN X-Y DARI TOTAL PRODUK)
 function renderProducts(filterCat = 'all', page = 1) {
   currentCategory = filterCat.toLowerCase();
   currentPage = page;
 
-  const filtered = currentCategory === 'all' 
-    ? fetchedProducts 
-    : fetchedProducts.filter(p => String(p.category).toLowerCase() === currentCategory);
+  // HITING HANYA PRODUK YANG COCOK DENGAN KATEGORI
+  const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
 
   const totalProducts = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalProducts / ITEMS_PER_PAGE));
@@ -267,7 +193,7 @@ function renderProducts(filterCat = 'all', page = 1) {
     }
   }
 
-  // GENERATE TAMPILAN NAVIGASI PAGINATION PRESISI SEPERTI DI GAMBAR USER
+  // GENERATE TOMBOL PAGINATION DENGAN FORMAT: < 1 2 ... 12 >
   const paginationButtonsEl = document.getElementById('pagination-buttons');
   if (paginationButtonsEl) {
     let buttonsHTML = '';
@@ -286,7 +212,6 @@ function renderProducts(filterCat = 'all', page = 1) {
         </button>
       `;
     } else {
-      // SUSUNAN HALAMAN SEPERTI GAMBAR: 1, 2, ..., [HALAMAN TERAKHIR]
       buttonsHTML += `
         <button type="button" class="page-circle-btn ${currentPage === 1 ? 'active' : ''}" onclick="changeProductPage(1)">
           1
@@ -336,7 +261,7 @@ function renderProducts(filterCat = 'all', page = 1) {
     paginationButtonsEl.innerHTML = buttonsHTML;
   }
 
-  // RENDER CARDS PRODUK
+  // RENDER GRID CARD PRODUK
   if (!productListContainer) return;
 
   if (paginatedProducts.length === 0) {
@@ -354,7 +279,7 @@ function renderProducts(filterCat = 'all', page = 1) {
           <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category === 'ff' ? 'Free Fire' : 'Mobile Legends'}</span>
+            <span class="badge-cat">${item.category}</span>
           </div>
         </div>
         <div class="account-body">
@@ -411,7 +336,7 @@ function openProductDetail(productId, updateHistory = true) {
 
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
 
-    document.getElementById('detail-cat-badge').textContent = item.category === 'ff' ? 'FREE FIRE' : 'MOBILE LEGENDS';
+    document.getElementById('detail-cat-badge').textContent = String(item.category).toUpperCase();
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
     document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
@@ -903,6 +828,6 @@ if (btnPwaDismiss) {
 // INISIALISASI HALAMAN
 initTheme();
 renderSkeletons();
-loadProductsFromSheets();
+loadProductsFromSheets(true);
 updateAccountView();
 handleRouting();

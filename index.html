@@ -13,7 +13,7 @@
   <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
 
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body class="dark-mode">
 
@@ -30,7 +30,7 @@
       </div>
 
       <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
-        <!-- ICON SUN -->
+        <!-- ICON SUN (MODE TERANG) -->
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -42,7 +42,7 @@
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <!-- ICON MOON -->
+        <!-- ICON MOON (MODE GELAP) -->
         <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
@@ -183,7 +183,7 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
-        <!-- GRID PRODUK LANGSUNG DI BAWAH TABS (KOTAK/BANNER DAHULU SUDAH DIHAPUS) -->
+        <!-- GRID PRODUK KATALOG -->
         <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
@@ -407,10 +407,11 @@
           <hr class="divider">
           
           <div class="admin-header">
-            <h3>Panel Admin Fendi Store</h3>
-            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive.</p>
+            <h3>Panel Admin Upload Stok Akun</h3>
+            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive & Google Sheets.</p>
           </div>
 
+          <!-- FORM PENGISIAN UPLOAD STOK ADMIN -->
           <form id="admin-upload-form" class="auth-form active">
             <div class="form-group">
               <label for="post-category">Kategori Game</label>
@@ -422,34 +423,34 @@
 
             <div class="form-group">
               <label>Nomor Urut / Kode Akun</label>
-              <div class="auto-code-badge">Otomatis Dideteksi Oleh Sistem (#FF-xx / #ML-xx)</div>
+              <div class="auto-code-badge">Otomatis Dideteksi Sistem (#FF-xx / #ML-xx)</div>
             </div>
 
             <div class="form-group">
-              <label for="post-price">Harga (Rp)</label>
-              <input type="text" id="post-price" placeholder="Contoh: 100.000" required>
+              <label for="post-price">Harga Akun (Rp)</label>
+              <input type="text" id="post-price" placeholder="Contoh: 162.999" required>
             </div>
 
             <div class="form-group">
-              <label for="post-file">Upload Foto Akun (Dari HP/Galeri)</label>
+              <label for="post-file">Upload Foto Akun Jualan (Galeri/HP)</label>
               <input type="file" id="post-file" accept="image/*">
             </div>
 
             <div class="form-group">
-              <label for="post-url">Atau Link Foto (Opsional jika tanpa file)</label>
+              <label for="post-url">Atau URL/Link Foto Akun (Opsional)</label>
               <input type="text" id="post-url" placeholder="https://...">
             </div>
 
             <div class="form-group">
               <label for="post-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
-              <textarea id="post-specs" rows="3" placeholder="Contoh: Vault Rame, Old Season, Diamond 200, Log VK" required></textarea>
+              <textarea id="post-specs" rows="3" placeholder="Contoh: BIND ON, VAULT 290+, Old Season, Log VK" required></textarea>
             </div>
 
-            <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Produk</button>
+            <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Katalog Stok</button>
           </form>
 
-          <div style="margin-top: 10px;">
-            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola / Hapus Akun</h4>
+          <div style="margin-top: 14px;">
+            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola & Hapus Stok Akun</h4>
             <div id="admin-manage-list" class="admin-manage-grid"></div>
           </div>
         </div>

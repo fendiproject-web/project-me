@@ -1,4 +1,3 @@
-// URL DEPLOYMENT GOOGLE APPS SCRIPT
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyujJrRhXbjhvGzldJXm9jjZf79J5ASTtBOgZ9GiBSFiFSN7211nEmb3coub3MDpr4/exec";
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
@@ -70,6 +69,45 @@ function matchCategory(productCat, targetFilter) {
   if (filter === 'ff') return cat.includes('free') || cat.includes('fire') || cat === 'ff';
   if (filter === 'ml') return cat.includes('mobile') || cat.includes('legend') || cat === 'ml';
   return cat === filter;
+}
+
+// FUNGSI KOMPRESI FOTO SANGAT PENTING AGAR FOTO DARI HP TIDAK TERPOTONG SAAT JADI BASE64
+function convertAndCompressFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 600;
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Menghasilkan DataURL ringan berkualitas 60%
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        resolve(dataUrl);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
 }
 
 const productListContainer = document.getElementById('product-list-container');
@@ -509,7 +547,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD (KIRIM FILE FISIK VIA FORMDATA DIRECT)
+// SUBMIT ADMIN UPLOAD
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -526,25 +564,31 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengunggah Foto...";
+  btn.textContent = "Mengompres & Mengunggah Foto...";
   btn.disabled = true;
 
-  const formData = new FormData();
-  formData.append('action', 'addProduct');
-  formData.append('role', user.role);
-  formData.append('category', category);
-  formData.append('price', cleanPrice);
-  formData.append('imageUrl', urlInput);
-  formData.append('specs', specsRaw);
+  let imageBase64 = null;
 
   if (fileInput && fileInput.files.length > 0) {
-    formData.append('postFile', fileInput.files[0]);
+    try {
+      imageBase64 = await convertAndCompressFile(fileInput.files[0]);
+    } catch (err) {
+      console.error("Gagal memproses foto:", err);
+    }
   }
 
   try {
     const response = await fetch(SCRIPT_URL, {
       method: 'POST',
-      body: formData
+      body: JSON.stringify({
+        action: 'addProduct',
+        role: user.role,
+        category: category,
+        price: cleanPrice,
+        imageUrl: urlInput,
+        imageBase64: imageBase64,
+        specs: specsRaw
+      })
     });
     const result = await response.json();
 

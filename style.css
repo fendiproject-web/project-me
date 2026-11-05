@@ -7,27 +7,27 @@
   --border-color: rgba(255, 255, 255, 0.14);
   --nav-bg: rgba(18, 18, 18, 0.88);
   
-  --pill-bg: rgba(255, 255, 255, 0.12);
-  --pill-border: rgba(255, 255, 255, 0.25);
-  --accent-color: #ffffff;
-  --pink-primary: #ff2d75;
+  --pill-bg: rgba(99, 102, 241, 0.2);
+  --pill-border: rgba(99, 102, 241, 0.4);
+  --accent-color: #818cf8;
+  --theme-primary: #6366f1;
   --wa-green: #25d366;
   --danger-red: #ef4444;
 }
 
 /* TEMA TERANG (LIGHT MODE) */
 body.light-mode {
-  --bg-color: #f0f6ff;
+  --bg-color: #f8fafc;
   --card-bg: rgba(255, 255, 255, 0.92);
   --text-main: #0f172a;
-  --text-sub: #536e88;
-  --border-color: rgba(186, 212, 245, 0.5);
-  --nav-bg: rgba(240, 246, 255, 0.92);
+  --text-sub: #475569;
+  --border-color: rgba(203, 213, 225, 0.8);
+  --nav-bg: rgba(248, 250, 252, 0.92);
   
-  --pill-bg: rgba(192, 132, 252, 0.15);
-  --pill-border: rgba(192, 132, 252, 0.35);
-  --accent-color: #c084fc;
-  --pink-primary: #ff2d75;
+  --pill-bg: rgba(99, 102, 241, 0.12);
+  --pill-border: rgba(99, 102, 241, 0.3);
+  --accent-color: #4f46e5;
+  --theme-primary: #4338ca;
   --wa-green: #128c7e;
   --danger-red: #dc2626;
 }
@@ -188,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* ANIMASI TEMA MODE TERANG & GELAP */
+/* ANIMASI TOGGLE TEMA */
 .theme-toggle-btn {
   position: relative;
   background: var(--pill-bg);
@@ -233,7 +233,7 @@ body.light-mode .sun-icon {
 body.light-mode .moon-icon {
   transform: translateY(0);
   opacity: 1;
-  stroke: #c084fc;
+  stroke: #4f46e5;
 }
 
 /* MAIN CONTENT CONTAINER */
@@ -336,7 +336,7 @@ body.light-mode .moon-icon {
 }
 .btn-group svg { stroke: var(--text-main); }
 
-/* SEKSI REKOMENDASI DI HOME */
+/* REKOMENDASI HOME */
 .home-recommendations-section {
   display: flex;
   flex-direction: column;
@@ -389,7 +389,7 @@ body.light-mode .moon-icon {
 }
 
 /* ==========================================
-   WADAH PAGINATION PRESISI 100% PERSIS GAMBAR
+   WADAH PAGINATION (BERSIH ELEGAN - DILUAR WARNA PINK)
    ========================================== */
 .pagination-card {
   display: flex;
@@ -398,8 +398,8 @@ body.light-mode .moon-icon {
   justify-content: center;
   gap: 14px;
   padding: 18px 20px;
-  background: rgba(255, 235, 243, 0.06);
-  border: 1px solid rgba(255, 182, 210, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
   border-radius: 28px;
   margin-bottom: 16px;
   backdrop-filter: blur(16px);
@@ -407,20 +407,16 @@ body.light-mode .moon-icon {
 }
 
 body.light-mode .pagination-card {
-  background: #fdeef4;
-  border: 1px solid #f9d8e5;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
 }
 
 .pagination-summary-text {
   font-size: 14px;
   font-weight: 700;
-  color: #555577;
+  color: var(--text-main);
   letter-spacing: -0.2px;
   margin-left: 2px;
-}
-
-body.dark-mode .pagination-summary-text {
-  color: #e2e8f0;
 }
 
 .pagination-buttons-row {
@@ -436,8 +432,8 @@ body.dark-mode .pagination-summary-text {
   height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(220, 220, 240, 0.6);
-  color: #4a5568;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  color: #334155;
   font-size: 14px;
   font-weight: 700;
   display: flex;
@@ -449,8 +445,8 @@ body.dark-mode .pagination-summary-text {
 }
 
 body.dark-mode .page-circle-btn {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
 }
 
@@ -458,11 +454,12 @@ body.dark-mode .page-circle-btn {
   transform: scale(0.92);
 }
 
+/* TOMBOL HALAMAN AKTIF (TEMA ELEGAN INDIGO) */
 .page-circle-btn.active {
-  background: #ff2b7a !important;
-  border-color: #ff2b7a !important;
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(255, 43, 122, 0.45) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important;
 }
 
 .page-circle-btn.disabled {
@@ -474,7 +471,7 @@ body.dark-mode .page-circle-btn {
 .page-ellipsis {
   font-size: 14px;
   font-weight: 800;
-  color: #8888aa;
+  color: var(--text-sub);
   padding: 0 2px;
 }
 
@@ -575,7 +572,7 @@ body.dark-mode .page-circle-btn {
   max-width: 100%;
 }
 
-body.light-mode .spec-item { background: #eef5ff; }
+body.light-mode .spec-item { background: #e2e8f0; }
 
 .btn-see-now {
   display: block;
@@ -592,7 +589,7 @@ body.light-mode .spec-item { background: #eef5ff; }
   cursor: pointer;
 }
 
-/* SKELETON PLACEHOLDER CARDS */
+/* SKELETON PLACEHOLDER */
 .skeleton-card {
   display: flex;
   flex-direction: column;
@@ -627,7 +624,7 @@ body.light-mode .skeleton-line {
   animation: shimmerPulseLight 1.6s infinite ease-in-out;
 }
 
-/* VIEW DETAIL PRODUK */
+/* DETAIL PRODUK */
 .detail-container {
   display: flex;
   flex-direction: column;
@@ -686,8 +683,8 @@ body.light-mode .skeleton-line {
 
 .badge-row { display: flex; gap: 6px; }
 
-.badge-pink {
-  background: rgba(255, 255, 255, 0.12);
+.badge-theme {
+  background: var(--pill-bg);
   color: var(--text-main);
   font-size: 9px;
   font-weight: 700;
@@ -696,7 +693,7 @@ body.light-mode .skeleton-line {
   border: 1px solid var(--pill-border);
 }
 
-.badge-pink-light {
+.badge-theme-light {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-sub);
   font-size: 9px;
@@ -716,7 +713,7 @@ body.light-mode .skeleton-line {
   margin-top: 4px;
 }
 
-body.light-mode .price-box { background: #e6f0fa; }
+body.light-mode .price-box { background: #e2e8f0; }
 
 .price-label-sm { font-size: 9px; color: var(--text-sub); font-weight: 700; }
 .detail-price-text { font-size: 19px; font-weight: 900; color: var(--text-main); margin-top: 2px; }
@@ -724,7 +721,7 @@ body.light-mode .price-box { background: #e6f0fa; }
 .section-title { font-size: 13px; font-weight: 700; }
 .detail-specs-text { font-size: 12px; color: var(--text-sub); line-height: 1.5; white-space: pre-line; }
 
-/* PROFIL PENJUAL & STATUS ONLINE UTUH */
+/* SELLER CARD */
 .seller-card { position: relative; overflow: visible; }
 
 .seller-profile-row {
@@ -820,9 +817,9 @@ body.light-mode .price-box { background: #e6f0fa; }
   color: var(--text-main);
 }
 
-body.light-mode .seller-region-badge { background: #e6f0fa; }
+body.light-mode .seller-region-badge { background: #e2e8f0; }
 
-/* FOOTER & SINYAL TRUST DI HOME */
+/* FOOTER */
 .home-footer-section {
   display: flex;
   flex-direction: column;
@@ -897,9 +894,6 @@ body.light-mode .seller-region-badge { background: #e6f0fa; }
   display: block;
 }
 
-body.dark-mode .trust-item svg { stroke: #c084fc; }
-body.light-mode .trust-item svg { stroke: #3b82f6; }
-
 .footer-bottom-credits {
   text-align: center;
   margin-top: 12px;
@@ -948,7 +942,7 @@ body.light-mode .trust-item svg { stroke: #3b82f6; }
   cursor: pointer;
 }
 
-/* AUTH & ADMIN PANEL STYLES */
+/* AUTH & ADMIN PANEL */
 .auth-card {
   width: 100%;
   background: var(--card-bg);
@@ -970,7 +964,7 @@ body.light-mode .trust-item svg { stroke: #3b82f6; }
   border: 1px solid var(--border-color);
 }
 
-body.light-mode .auth-toggle-bar { background: #e6f0fa; }
+body.light-mode .auth-toggle-bar { background: #e2e8f0; }
 
 .auth-tab-btn {
   flex: 1;
@@ -1010,7 +1004,7 @@ body.light-mode .auth-toggle-bar { background: #e6f0fa; }
   font-weight: 600;
 }
 
-body.light-mode .auto-code-badge { background: #e6f0fa; }
+body.light-mode .auto-code-badge { background: #e2e8f0; }
 
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
@@ -1077,7 +1071,7 @@ body.light-mode .form-group textarea { background: #ffffff; }
   border-radius: 10px;
 }
 
-body.light-mode .manage-item { background: #e6f0fa; }
+body.light-mode .manage-item { background: #e2e8f0; }
 
 .btn-delete-prod {
   background: rgba(239, 68, 68, 0.15);
@@ -1123,7 +1117,7 @@ body.light-mode .manage-item { background: #e6f0fa; }
   overflow: hidden;
 }
 
-body.light-mode .card-icon { background: #e6f0fa; }
+body.light-mode .card-icon { background: #e2e8f0; }
 
 .card-icon svg { 
   width: 20px; 
@@ -1246,7 +1240,7 @@ body.light-mode .card-icon { background: #e6f0fa; }
 
 .icon-box.bounce { animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-/* POPUP INSTALL APLIKASI PWA */
+/* PWA INSTALL BANNER */
 .pwa-banner-modal {
   position: fixed;
   bottom: 85px;

@@ -1,6 +1,4 @@
-// LINK GOOGLE APPS SCRIPT WEB APP
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcLqSBqeptlNAPOfj5AeUOVZrlJj_cwEylq2GtHSb7ojSBuURbMZAr6g1hdjHFLg/exec";
-
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
@@ -57,7 +55,6 @@ function getCategoryLabel(catRaw) {
   return String(catRaw).toUpperCase();
 }
 
-// FUNGSI PARSER SPECS AGAR TIDAK EROR .map()
 function parseSpecs(specs) {
   if (Array.isArray(specs)) return specs;
   if (!specs) return [];
@@ -72,6 +69,40 @@ function matchCategory(productCat, targetFilter) {
   if (filter === 'ff') return cat.includes('free') || cat.includes('fire') || cat === 'ff';
   if (filter === 'ml') return cat.includes('mobile') || cat.includes('legend') || cat === 'ml';
   return cat === filter;
+}
+
+// FUNGSI KOMPRESI FOTO DARI HP SEBELUM DI-UPLOAD
+function compressImage(file, maxWidth = 900, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        const base64 = dataUrl.split(',')[1];
+        resolve(base64);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
 }
 
 const productListContainer = document.getElementById('product-list-container');
@@ -513,7 +544,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD
+// SUBMIT ADMIN UPLOAD DENGAN KOMPRESI CANVAS
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -535,16 +566,16 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   btn.disabled = true;
 
   let imageBase64 = null;
-  let mimeType = null;
 
   if (fileInput && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    mimeType = file.type;
-    imageBase64 = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.readAsDataURL(file);
-    });
+    try {
+      imageBase64 = await compressImage(fileInput.files[0]);
+    } catch (err) {
+      alert("Gagal memproses gambar: " + err.toString());
+      btn.textContent = "+ Upload Akun Ke Katalog Stok";
+      btn.disabled = false;
+      return;
+    }
   }
 
   try {
@@ -558,7 +589,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
         price: cleanPrice,
         imageUrl: urlInput,
         imageBase64: imageBase64,
-        mimeType: mimeType,
         specs: specsRaw
       })
     });

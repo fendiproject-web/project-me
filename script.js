@@ -71,52 +71,6 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// PROSES AMBIL BASE64 DENGAN FALLBACK AMAN
-function getBase64FromFileInput(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result = reader.result;
-      const img = new Image();
-      img.src = result;
-      img.onload = () => {
-        try {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 600;
-
-          if (width > maxDim || height > maxDim) {
-            if (width > height) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressed = canvas.toDataURL('image/jpeg', 0.5);
-          resolve(compressed.split(',')[1]);
-        } catch (e) {
-          resolve(result.split(',')[1]);
-        }
-      };
-      img.onerror = () => {
-        resolve(result.split(',')[1]);
-      };
-    };
-    reader.onerror = (err) => reject(err);
-  });
-}
-
 const productListContainer = document.getElementById('product-list-container');
 
 async function loadProductsFromSheets() {
@@ -132,10 +86,10 @@ async function loadProductsFromSheets() {
         id: String(item[0] || idx + 1),
         code: String(item[1] || '#AKUN-' + (idx + 1)),
         category: String(item[2] || 'FREE FIRE'),
-        stockLabel: String(item[3] || 'STOCK PRIBADI FENDI STORE'),
-        price: String(item[4] || '0'),
-        image: String(item[5] || ''),
-        specs: String(item[6] || '')
+        stockLabel: 'STOCK PRIBADI FENDI STORE',
+        price: String(item[3] || '0'),
+        image: String(item[4] || ''),
+        specs: String(item[5] || '')
       }));
     } else {
       fetchedProducts = [];
@@ -164,7 +118,6 @@ function renderHomeRecommendations() {
   homeRecContainer.innerHTML = homeProducts.map(item => {
     const validImg = fixImageUrl(item.image);
     const gameCategoryLabel = getCategoryLabel(item.category);
-    const stockLabelText = item.stockLabel || 'STOCK PRIBADI FENDI STORE';
 
     return `
       <div class="account-card home-card" data-id="${item.id}">
@@ -176,7 +129,7 @@ function renderHomeRecommendations() {
         </div>
         <div class="account-body">
           <span class="badge-cat-inline">${gameCategoryLabel}</span>
-          <div class="card-stock-label">${stockLabelText}</div>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
           <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
@@ -212,7 +165,6 @@ function renderProducts(filterCat = 'all') {
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const validImg = fixImageUrl(item.image);
     const gameCategoryLabel = getCategoryLabel(item.category);
-    const stockLabelText = item.stockLabel || 'STOCK PRIBADI FENDI STORE';
 
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
@@ -224,7 +176,7 @@ function renderProducts(filterCat = 'all') {
         </div>
         <div class="account-body">
           <span class="badge-cat-inline">${gameCategoryLabel}</span>
-          <div class="card-stock-label">${stockLabelText}</div>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
           <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
@@ -261,7 +213,7 @@ function openProductDetail(productId, updateHistory = true) {
     const specsArr = parseSpecs(item.specs);
 
     document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
-    document.getElementById('detail-title').textContent = `${item.stockLabel || 'STOCK PRIBADI FENDI STORE'} ${item.code.replace('#', '')}`;
+    document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
     document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
 
@@ -556,7 +508,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD
+// SUBMIT ADMIN UPLOAD (MURNI MENGIRIM LINK / URL GAMBAR TEKS)
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -566,29 +518,14 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 
   const category = document.getElementById('post-category').value;
-  const stockLabel = document.getElementById('post-stock-label').value.trim();
   const rawPrice = document.getElementById('post-price').value.trim();
   const cleanPrice = rawPrice.replace(/\D/g, '');
-  const urlInput = document.getElementById('post-url').value.trim();
+  const urlInput = document.getElementById('post-url')?.value.trim() || '';
   const specsRaw = document.getElementById('post-specs').value.trim();
-  const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengompres & Mengunggah Foto...";
+  btn.textContent = "Mengunggah...";
   btn.disabled = true;
-
-  let imageBase64 = null;
-
-  if (fileInput && fileInput.files.length > 0) {
-    try {
-      imageBase64 = await getBase64FromFileInput(fileInput.files[0]);
-    } catch (err) {
-      alert("Gagal memproses foto: " + err.toString());
-      btn.textContent = "+ Upload Akun Ke Produk";
-      btn.disabled = false;
-      return;
-    }
-  }
 
   try {
     const response = await fetch(SCRIPT_URL, {
@@ -597,10 +534,8 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
         action: 'addProduct',
         role: user.role,
         category: category,
-        stockLabel: stockLabel || 'STOCK PRIBADI FENDI STORE',
         price: cleanPrice,
         imageUrl: urlInput,
-        imageBase64: imageBase64,
         specs: specsRaw
       })
     });
@@ -609,7 +544,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
     alert(result.message);
     if (result.success) {
       document.getElementById('admin-upload-form').reset();
-      document.getElementById('post-stock-label').value = 'STOCK PRIBADI FENDI STORE';
       await loadProductsFromSheets();
       switchTab('tab-produk', 1);
     }

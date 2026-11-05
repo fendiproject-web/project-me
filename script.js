@@ -1,4 +1,3 @@
-// URL GOOGLE APPS SCRIPT WEB APP SAMA SEPERTI MILIKMU
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcLqSBqeptlNAPOfj5AeUOVZrlJj_cwEylq2GtHSb7ojSBuURbMZAr6g1hdjHFLg/exec";
 
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
@@ -73,26 +72,26 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// FUNGSI KOMPRESI FOTO OTOMATIS (MENGECILKAN FOTO DARI HP AGAR RINGAN & TIDAK TERPOTONG)
-function compressImage(file, maxWidth = 800, quality = 0.6) {
+// KOMPRESI FOTO HP VIA CANVAS BIAR RINGAN & BASE64 TIDAK EROR
+function compressAndConvertToBase64(file, maxDim = 800, quality = 0.6) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = (event) => {
+    reader.onload = (e) => {
       const img = new Image();
-      img.src = event.target.result;
+      img.src = e.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
 
-        if (width > maxWidth || height > maxWidth) {
+        if (width > maxDim || height > maxDim) {
           if (width > height) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
           } else {
-            width = Math.round((width * maxWidth) / height);
-            height = maxWidth;
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
           }
         }
 
@@ -102,9 +101,13 @@ function compressImage(file, maxWidth = 800, quality = 0.6) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        const dataUrl = canvas.toDataURL('image/jpeg', quality);
-        const base64 = dataUrl.split(',')[1];
-        resolve(base64);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        const parts = compressedDataUrl.split(',');
+        if (parts.length > 1) {
+          resolve(parts[1]);
+        } else {
+          reject('Gagal memproses Base64 foto');
+        }
       };
       img.onerror = (err) => reject(err);
     };
@@ -551,7 +554,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// SUBMIT ADMIN UPLOAD DENGAN KOMPRESI CANVAS OTOMATIS
+// SUBMIT ADMIN UPLOAD
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -576,8 +579,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   if (fileInput && fileInput.files.length > 0) {
     try {
-      // Kompres foto ke lebar max 800px & kualitas 60%
-      imageBase64 = await compressImage(fileInput.files[0], 800, 0.6);
+      imageBase64 = await compressAndConvertToBase64(fileInput.files[0]);
     } catch (err) {
       alert("Gagal memproses foto: " + err.toString());
       btn.textContent = "+ Upload Akun Ke Katalog Stok";

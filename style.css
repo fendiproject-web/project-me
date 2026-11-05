@@ -188,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* TOGGLE TEMA (MODE TERANG = SUN / MATAHARI, MODE GELAP = MOON / BULAN) */
+/* TOGGLE TEMA */
 .theme-toggle-btn {
   position: relative;
   background: var(--pill-bg);

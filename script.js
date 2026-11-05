@@ -1,5 +1,4 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcLqSBqeptlNAPOfj5AeUOVZrlJj_cwEylq2GtHSb7ojSBuURbMZAr6g1hdjHFLg/exec";
-
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
@@ -72,8 +71,8 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// KOMPRESI FOTO HP VIA CANVAS BIAR RINGAN & BASE64 TIDAK EROR
-function compressAndConvertToBase64(file, maxDim = 800, quality = 0.6) {
+// KOMPRESI RIGID UNTUK MEMASTIKAN BASE64 AMAN DAN BISA DIBACA GAS
+function compressImageFast(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -84,6 +83,7 @@ function compressAndConvertToBase64(file, maxDim = 800, quality = 0.6) {
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
+        const maxDim = 600;
 
         if (width > maxDim || height > maxDim) {
           if (width > height) {
@@ -101,13 +101,9 @@ function compressAndConvertToBase64(file, maxDim = 800, quality = 0.6) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-        const parts = compressedDataUrl.split(',');
-        if (parts.length > 1) {
-          resolve(parts[1]);
-        } else {
-          reject('Gagal memproses Base64 foto');
-        }
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
+        const parts = dataUrl.split(',');
+        resolve(parts[1]);
       };
       img.onerror = (err) => reject(err);
     };
@@ -579,7 +575,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   if (fileInput && fileInput.files.length > 0) {
     try {
-      imageBase64 = await compressAndConvertToBase64(fileInput.files[0]);
+      imageBase64 = await compressImageFast(fileInput.files[0]);
     } catch (err) {
       alert("Gagal memproses foto: " + err.toString());
       btn.textContent = "+ Upload Akun Ke Katalog Stok";

@@ -458,7 +458,6 @@ body.dark-mode .page-circle-btn {
   transform: scale(0.92);
 }
 
-/* TOMBOL ANGKA AKTIF (WARNA PINK CERAH PRESISI GAMBAR USER) */
 .page-circle-btn.active {
   background: #ff2b7a !important;
   border-color: #ff2b7a !important;

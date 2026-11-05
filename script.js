@@ -53,7 +53,20 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// PENCOCOKAN KATEGORI
+// FUNGSI UNTUK MEMASTIKAN TEPAT BACAAN KATEGORI GAME
+function getCategoryLabel(catRaw) {
+  if (!catRaw) return 'FREE FIRE';
+  const cat = String(catRaw).toLowerCase().trim();
+  if (cat === 'ff' || cat.includes('free') || cat.includes('fire')) {
+    return 'FREE FIRE';
+  }
+  if (cat === 'ml' || cat.includes('mobile') || cat.includes('legend')) {
+    return 'MOBILE LEGENDS';
+  }
+  return String(catRaw).toUpperCase();
+}
+
+// PENCOCOKAN KATEGORI FILTER
 function matchCategory(productCat, targetFilter) {
   if (!targetFilter || targetFilter === 'all') return true;
   const cat = String(productCat || '').toLowerCase().trim();
@@ -131,7 +144,8 @@ function renderHomeRecommendations() {
 
   homeRecContainer.innerHTML = homeProducts.map(item => {
     const validImg = fixImageUrl(item.image);
-    const catName = String(item.category).toUpperCase() === 'FF' ? 'FREE FIRE' : (String(item.category).toUpperCase() === 'ML' ? 'MOBILE LEGENDS' : String(item.category).toUpperCase());
+    const gameCategoryLabel = getCategoryLabel(item.category);
+
     return `
       <div class="account-card home-card" data-id="${item.id}">
         <div class="account-media">
@@ -141,7 +155,7 @@ function renderHomeRecommendations() {
           </div>
         </div>
         <div class="account-body">
-          <span class="badge-cat-inline">${catName}</span>
+          <span class="badge-cat-inline">${gameCategoryLabel}</span>
           <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
           <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
@@ -179,7 +193,7 @@ function renderProducts(filterCat = 'all') {
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
     const validImg = fixImageUrl(item.image);
-    const catName = String(item.category).toUpperCase() === 'FF' ? 'FREE FIRE' : (String(item.category).toUpperCase() === 'ML' ? 'MOBILE LEGENDS' : String(item.category).toUpperCase());
+    const gameCategoryLabel = getCategoryLabel(item.category);
 
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
@@ -190,7 +204,7 @@ function renderProducts(filterCat = 'all') {
           </div>
         </div>
         <div class="account-body">
-          <span class="badge-cat-inline">${catName}</span>
+          <span class="badge-cat-inline">${gameCategoryLabel}</span>
           <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
           <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
@@ -240,7 +254,7 @@ function openProductDetail(productId, updateHistory = true) {
 
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
 
-    document.getElementById('detail-cat-badge').textContent = String(item.category).toUpperCase();
+    document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
     document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
@@ -621,7 +635,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   } catch (err) {
     alert("Gagal upload: " + err.toString());
   } finally {
-    btn.textContent = "+ Upload Akun Ke Produk";
+    btn.textContent = "+ Upload Akun Ke Katalog Stok";
     btn.disabled = false;
   }
 });

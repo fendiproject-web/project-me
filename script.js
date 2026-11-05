@@ -10,7 +10,7 @@ let currentPage = 1;
 let currentCategory = 'all';
 let fetchedProducts = [];
 
-// FUNGSI INISIALISASI & TOGGLE TEMA (DARK / LIGHT MODE)
+// INISIALISASI & TOGGLE TEMA (DARK / LIGHT MODE)
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
   if (savedTheme === 'light') {
@@ -37,26 +37,6 @@ if (themeToggleBtn) {
   });
 }
 
-// ANIMASI SKELETON LOADING
-function renderSkeletons() {
-  const skeletonHTML = Array(4).fill(0).map(() => `
-    <div class="skeleton-card">
-      <div class="skeleton-media"></div>
-      <div class="skeleton-body">
-        <div class="skeleton-line" style="width: 40%;"></div>
-        <div class="skeleton-line" style="width: 75%;"></div>
-        <div class="skeleton-line" style="width: 100%; height: 26px; border-radius: 8px; margin-top: 4px;"></div>
-      </div>
-    </div>
-  `).join('');
-
-  const productContainer = document.getElementById('product-list-container');
-  const homeRecContainer = document.getElementById('home-recommendation-grid');
-
-  if (productContainer) productContainer.innerHTML = skeletonHTML;
-  if (homeRecContainer) homeRecContainer.innerHTML = skeletonHTML;
-}
-
 // PERBAIKI LINK GOOGLE DRIVE FOTO
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
@@ -76,7 +56,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI PENCOCOKAN KATEGORI FLEKSIBEL
+// FUNGSI PENCOCOKAN KATEGORI
 function matchCategory(productCat, targetFilter) {
   if (!targetFilter || targetFilter === 'all') return true;
   const cat = String(productCat || '').toLowerCase().trim();
@@ -92,13 +72,11 @@ function matchCategory(productCat, targetFilter) {
 }
 
 // ==========================================
-// FETCH & RENDER PRODUK DARI GOOGLE SHEETS
+// FETCH PRODUK DARI GOOGLE SHEETS
 // ==========================================
 const productListContainer = document.getElementById('product-list-container');
 
-async function loadProductsFromSheets(forceRefresh = true) {
-  renderSkeletons();
-
+async function loadProductsFromSheets() {
   try {
     const fetchUrl = `${SCRIPT_URL}?action=getProducts&t=${new Date().getTime()}`;
     const response = await fetch(fetchUrl);
@@ -132,11 +110,10 @@ async function loadProductsFromSheets(forceRefresh = true) {
         };
       });
     } else {
-      console.warn("Data dari Google Sheets kosong.");
       fetchedProducts = [];
     }
   } catch (err) {
-    console.error("Gagal mengambil data dari Google Sheets:", err);
+    console.error("Gagal mengambil data produk:", err);
   } finally {
     renderProducts(currentCategory, 1);
     renderHomeRecommendations();
@@ -188,7 +165,7 @@ function renderHomeRecommendations() {
   });
 }
 
-// KATALOG PRODUK & LOGIKA PAGINATION DENGAN PERHITUNGAN DINAMIS
+// KATALOG PRODUK & RINGKASAN HALAMAN
 function renderProducts(filterCat = 'all', page = 1) {
   currentCategory = filterCat.toLowerCase();
   currentPage = page;
@@ -204,7 +181,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalProducts);
   const paginatedProducts = filtered.slice(startIndex, endIndex);
 
-  // UPDATE TEKS RINGKASAN PRODUK SECARA DINAMIS
+  // UPDATE TEKS RINGKASAN PRODUK
   const summaryTextEl = document.getElementById('pagination-summary-text');
   if (summaryTextEl) {
     if (totalProducts === 0) {
@@ -214,12 +191,11 @@ function renderProducts(filterCat = 'all', page = 1) {
     }
   }
 
-  // GENERATE TOMBOL PAGINATION DENGAN FORMAT: < 1 2 ... >
+  // GENERATE TOMBOL PAGINATION (< 1 2 ... >)
   const paginationButtonsEl = document.getElementById('pagination-buttons');
   if (paginationButtonsEl) {
     let buttonsHTML = '';
 
-    // TOMBOL PANAH KIRI (<)
     buttonsHTML += `
       <button type="button" class="page-circle-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changeProductPage(${currentPage - 1})" title="Sebelumnya">
         &lt;
@@ -272,7 +248,6 @@ function renderProducts(filterCat = 'all', page = 1) {
       }
     }
 
-    // TOMBOL PANAH KANAN (>)
     buttonsHTML += `
       <button type="button" class="page-circle-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changeProductPage(${currentPage + 1})" title="Selanjutnya">
         &gt;
@@ -282,7 +257,7 @@ function renderProducts(filterCat = 'all', page = 1) {
     paginationButtonsEl.innerHTML = buttonsHTML;
   }
 
-  // RENDER GRID CARD PRODUK
+  // RENDER GRID PRODUK
   if (!productListContainer) return;
 
   if (paginatedProducts.length === 0) {
@@ -323,7 +298,7 @@ function renderProducts(filterCat = 'all', page = 1) {
   });
 }
 
-// FUNGSI PERPINDAHAN HALAMAN
+// PERPINDAHAN HALAMAN
 window.changeProductPage = function(pageNumber) {
   renderProducts(currentCategory, pageNumber);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -392,7 +367,7 @@ function checkUrlForProductDetail() {
   }
 }
 
-// MODAL ZOOM FOTO PRODUK
+// MODAL ZOOM FOTO
 const zoomImgBox = document.getElementById('detail-img-box');
 const zoomModal = document.getElementById('image-zoom-modal');
 const modalImg = document.getElementById('img-full-zoom');
@@ -433,7 +408,7 @@ document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
   }
 });
 
-// REKOMENDASI PRODUK LAIN DI DETAIL PRODUK
+// REKOMENDASI PRODUK LAIN DI DETAIL
 function renderRecommendations(currentId) {
   const recContainer = document.getElementById('recommendation-grid');
   if (!recContainer) return;
@@ -714,43 +689,37 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const cleanPrice = rawPrice.replace(/\D/g, '');
   const urlInput = document.getElementById('post-url').value.trim();
   const specsRaw = document.getElementById('post-specs').value.trim();
-  const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
   btn.textContent = "Mengunggah Foto...";
   btn.disabled = true;
 
-  const sendPayload = async (imageBase64 = null) => {
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'addProduct',
-          role: user.role,
-          category: category,
-          price: cleanPrice,
-          imageUrl: urlInput,
-          imageBase64: imageBase64,
-          specs: specsRaw
-        })
-      });
-      const result = await response.json();
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'addProduct',
+        role: user.role,
+        category: category,
+        price: cleanPrice,
+        imageUrl: urlInput,
+        specs: specsRaw
+      })
+    });
+    const result = await response.json();
 
-      alert(result.message);
-      if (result.success) {
-        document.getElementById('admin-upload-form').reset();
-        await loadProductsFromSheets(true);
-        switchTab('tab-produk', 1);
-      }
-    } catch (err) {
-      alert("Gagal upload: " + err.toString());
-    } finally {
-      btn.textContent = "+ Upload Akun Ke Produk";
-      btn.disabled = false;
+    alert(result.message);
+    if (result.success) {
+      document.getElementById('admin-upload-form').reset();
+      await loadProductsFromSheets();
+      switchTab('tab-produk', 1);
     }
-  };
-
-  sendPayload(null);
+  } catch (err) {
+    alert("Gagal upload: " + err.toString());
+  } finally {
+    btn.textContent = "+ Upload Akun Ke Produk";
+    btn.disabled = false;
+  }
 });
 
 // KELOLA & HAPUS PRODUK ADMIN
@@ -788,7 +757,7 @@ window.deleteProductFromSheets = async function(productId) {
       const result = await response.json();
       alert(result.message);
       if (result.success) {
-        await loadProductsFromSheets(true);
+        await loadProductsFromSheets();
       }
     } catch (err) {
       alert("Gagal menghapus: " + err.toString());
@@ -839,7 +808,7 @@ if (btnPwaDismiss) {
 
 // INISIALISASI UTAMA
 initTheme();
-renderSkeletons();
-loadProductsFromSheets(true);
+renderProducts(currentCategory, 1);
+loadProductsFromSheets();
 updateAccountView();
 handleRouting();

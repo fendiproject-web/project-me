@@ -131,16 +131,19 @@ function renderHomeRecommendations() {
 
   homeRecContainer.innerHTML = homeProducts.map(item => {
     const validImg = fixImageUrl(item.image);
+    const catName = String(item.category).toUpperCase() === 'FF' ? 'FREE FIRE' : (String(item.category).toUpperCase() === 'ML' ? 'MOBILE LEGENDS' : String(item.category).toUpperCase());
     return `
       <div class="account-card home-card" data-id="${item.id}">
         <div class="account-media">
           <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category}</span>
           </div>
         </div>
         <div class="account-body">
+          <span class="badge-cat-inline">${catName}</span>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
+          <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
             <span class="account-price">Rp ${formatRupiah(item.price)}</span>
@@ -176,16 +179,20 @@ function renderProducts(filterCat = 'all') {
     const specsArr = Array.isArray(item.specs) ? item.specs : String(item.specs || '').split(',');
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s.trim()}</li>`).join('');
     const validImg = fixImageUrl(item.image);
+    const catName = String(item.category).toUpperCase() === 'FF' ? 'FREE FIRE' : (String(item.category).toUpperCase() === 'ML' ? 'MOBILE LEGENDS' : String(item.category).toUpperCase());
+
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
         <div class="account-media">
           <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
-            <span class="badge-cat">${item.category}</span>
           </div>
         </div>
         <div class="account-body">
+          <span class="badge-cat-inline">${catName}</span>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
+          <div class="card-seller-name">Fendi Store</div>
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
             <span class="account-price">Rp ${formatRupiah(item.price)}</span>

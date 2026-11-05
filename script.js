@@ -53,7 +53,7 @@ function formatRupiah(val) {
   return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
 }
 
-// FUNGSI UNTUK MEMASTIKAN TEPAT BACAAN KATEGORI GAME
+// FUNGSI KONVERSI LABEL KATEGORI GAME
 function getCategoryLabel(catRaw) {
   if (!catRaw) return 'FREE FIRE';
   const cat = String(catRaw).toLowerCase().trim();
@@ -72,12 +72,8 @@ function matchCategory(productCat, targetFilter) {
   const cat = String(productCat || '').toLowerCase().trim();
   const filter = String(targetFilter).toLowerCase().trim();
 
-  if (filter === 'ff') {
-    return cat === 'ff' || cat.includes('free fire') || cat.includes('fire');
-  }
-  if (filter === 'ml') {
-    return cat === 'ml' || cat.includes('mobile') || cat.includes('legend');
-  }
+  if (filter === 'ff') return cat.includes('free') || cat.includes('fire') || cat === 'ff';
+  if (filter === 'ml') return cat.includes('mobile') || cat.includes('legend') || cat === 'ml';
   return cat === filter;
 }
 
@@ -90,38 +86,22 @@ async function loadProductsFromSheets() {
     const response = await fetch(fetchUrl);
     const data = await response.json();
 
-    let rawList = [];
-    if (Array.isArray(data)) {
-      rawList = data;
-    } else if (data && Array.isArray(data.products)) {
-      rawList = data.products;
-    } else if (data && Array.isArray(data.data)) {
-      rawList = data.data;
-    }
-
-    if (rawList.length > 0) {
-      fetchedProducts = rawList.map((item, idx) => {
-        let id = item.id || item.ID || item[0] || (idx + 1);
-        let code = item.code || item.Kode || item.KODE || item.kode || item[1] || `#AKUN-${idx + 1}`;
-        let category = item.category || item.Kategori || item.kategori || item[2] || 'ff';
-        let price = item.price || item.Harga || item.harga || item[3] || '0';
-        let image = item.image || item.Foto || item.foto || item.imageUrl || item[4] || '';
-        let specs = item.specs || item.Spesifikasi || item.spesifikasi || item[5] || '';
-
-        return {
-          id: String(id),
-          code: String(code),
-          category: String(category),
-          price: String(price),
-          image: String(image),
-          specs: specs
-        };
-      });
+    if (data && data.products && Array.isArray(data.products)) {
+      fetchedProducts = data.products;
+    } else if (Array.isArray(data)) {
+      fetchedProducts = data.map((item, idx) => ({
+        id: String(item[0] || idx + 1),
+        code: String(item[1] || '#AKUN-' + (idx + 1)),
+        category: String(item[2] || 'FREE FIRE'),
+        price: String(item[3] || '0'),
+        image: String(item[4] || ''),
+        specs: String(item[5] || '')
+      }));
     } else {
       fetchedProducts = [];
     }
   } catch (err) {
-    console.error("Gagal mengambil data produk:", err);
+    console.error("Gagal load produk:", err);
   } finally {
     renderProducts(currentCategory);
     renderHomeRecommendations();
@@ -149,7 +129,7 @@ function renderHomeRecommendations() {
     return `
       <div class="account-card home-card" data-id="${item.id}">
         <div class="account-media">
-          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
           </div>
@@ -170,14 +150,13 @@ function renderHomeRecommendations() {
 
   document.querySelectorAll('.home-card').forEach(card => {
     card.addEventListener('click', function() {
-      const prodId = this.getAttribute('data-id');
       switchTab('tab-produk', 1, false);
-      openProductDetail(prodId);
+      openProductDetail(this.getAttribute('data-id'));
     });
   });
 }
 
-// RENDER GRID KATALOG PRODUK
+// RENDER GRID KATALOG PRODUK (URUTAN 1: GAME, 2: STOCK PRIBADI, 3: FENDI STORE, 4: HARGA AKUN)
 function renderProducts(filterCat = 'all') {
   currentCategory = filterCat.toLowerCase();
   const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
@@ -198,7 +177,7 @@ function renderProducts(filterCat = 'all') {
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
         <div class="account-media">
-          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
           </div>
@@ -220,8 +199,7 @@ function renderProducts(filterCat = 'all') {
 
   document.querySelectorAll('.catalog-card').forEach(card => {
     card.addEventListener('click', function() {
-      const prodId = this.getAttribute('data-id');
-      openProductDetail(prodId);
+      openProductDetail(this.getAttribute('data-id'));
     });
   });
 }
@@ -233,22 +211,11 @@ function openProductDetail(productId, updateHistory = true) {
 
   const catalogView = document.getElementById('product-catalog-view');
   const detailView = document.getElementById('product-detail-view');
-  const detailImgBox = document.getElementById('detail-img-box');
   const detailImg = document.getElementById('detail-img');
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
     detailView.style.display = 'flex';
-
-    if (detailImgBox) detailImgBox.classList.remove('loaded');
-
-    detailImg.onload = function() {
-      if (detailImgBox) detailImgBox.classList.add('loaded');
-    };
-    detailImg.onerror = function() {
-      this.src = FALLBACK_SVG;
-      if (detailImgBox) detailImgBox.classList.add('loaded');
-    };
 
     detailImg.src = fixImageUrl(item.image);
 
@@ -261,9 +228,7 @@ function openProductDetail(productId, updateHistory = true) {
 
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
     const buyNowBtn = document.getElementById('btn-buy-now');
-    if (buyNowBtn) {
-      buyNowBtn.href = `https://wa.me/6285854325988?text=${waText}`;
-    }
+    if (buyNowBtn) buyNowBtn.href = `https://wa.me/6285854325988?text=${waText}`;
 
     renderRecommendations(productId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -347,7 +312,7 @@ function renderRecommendations(currentId) {
     return `
       <div class="account-card rec-card" data-id="${item.id}">
         <div class="account-media">
-          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onload="this.parentElement.classList.add('loaded')" onerror="this.src='${FALLBACK_SVG}'; this.parentElement.classList.add('loaded');">
+          <img src="${validImg}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
           </div>
@@ -364,8 +329,7 @@ function renderRecommendations(currentId) {
 
   document.querySelectorAll('.rec-card').forEach(card => {
     card.addEventListener('click', function() {
-      const prodId = this.getAttribute('data-id');
-      openProductDetail(prodId);
+      openProductDetail(this.getAttribute('data-id'));
     });
   });
 }
@@ -374,12 +338,9 @@ function renderRecommendations(currentId) {
 const subTabItems = document.querySelectorAll('.sub-tab-item');
 subTabItems.forEach((btn) => {
   btn.addEventListener('click', function() {
-    const targetSub = this.getAttribute('data-sub');
-
     subTabItems.forEach(b => b.classList.remove('active'));
     this.classList.add('active');
-
-    renderProducts(targetSub);
+    renderProducts(this.getAttribute('data-sub'));
   });
 });
 
@@ -389,26 +350,15 @@ const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
 
 function updateIndicator(index) {
-  if (navIndicator) {
-    navIndicator.style.transform = `translateX(${index * 100}%)`;
-  }
+  if (navIndicator) navIndicator.style.transform = `translateX(${index * 100}%)`;
 }
 
 function switchTab(targetTabId, navIndex, updateHistory = true) {
-  navItems.forEach(nav => {
-    nav.classList.remove('active');
-    const icon = nav.querySelector('.icon-box');
-    if (icon) icon.classList.remove('bounce');
-  });
-
+  navItems.forEach(nav => nav.classList.remove('active'));
   tabContents.forEach(tab => tab.classList.remove('active'));
 
   const targetNavItem = document.querySelector(`.nav-item[data-index="${navIndex}"]`);
-  if (targetNavItem) {
-    targetNavItem.classList.add('active');
-    const currentIcon = targetNavItem.querySelector('.icon-box');
-    if (currentIcon) currentIcon.classList.add('bounce');
-  }
+  if (targetNavItem) targetNavItem.classList.add('active');
 
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) targetTab.classList.add('active');
@@ -425,14 +375,8 @@ function switchTab(targetTabId, navIndex, updateHistory = true) {
   updateIndicator(navIndex);
 
   if (updateHistory) {
-    const pathMap = {
-      'tab-home': '/home',
-      'tab-produk': '/produk',
-      'tab-datame': '/datame',
-      'tab-akun': '/akun'
-    };
-    const newPath = pathMap[targetTabId] || '/';
-    window.history.pushState({ tabId: targetTabId, index: navIndex }, '', newPath);
+    const pathMap = { 'tab-home': '/home', 'tab-produk': '/produk', 'tab-datame': '/datame', 'tab-akun': '/akun' };
+    window.history.pushState({ tabId: targetTabId, index: navIndex }, '', pathMap[targetTabId] || '/');
   }
 }
 
@@ -445,7 +389,6 @@ function handleRouting() {
     '/datame': { tab: 'tab-datame', index: 2 },
     '/akun': { tab: 'tab-akun', index: 3 }
   };
-
   const currentRoute = routeMap[path] || routeMap['/'];
   switchTab(currentRoute.tab, currentRoute.index, false);
   checkUrlForProductDetail();
@@ -456,18 +399,14 @@ window.addEventListener('popstate', handleRouting);
 navItems.forEach((item) => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
-    const targetTabId = this.getAttribute('data-target');
-    const navIndex = parseInt(this.getAttribute('data-index'));
-    switchTab(targetTabId, navIndex);
+    switchTab(this.getAttribute('data-target'), parseInt(this.getAttribute('data-index')));
   });
 });
 
 const switchTabTriggers = document.querySelectorAll('.switch-tab-trigger');
 switchTabTriggers.forEach((trigger) => {
   trigger.addEventListener('click', function() {
-    const targetTabId = this.getAttribute('data-target-tab');
-    const navIndex = parseInt(this.getAttribute('data-nav-index'));
-    switchTab(targetTabId, navIndex);
+    switchTab(this.getAttribute('data-target-tab'), parseInt(this.getAttribute('data-nav-index')));
   });
 });
 
@@ -478,10 +417,8 @@ const authForms = document.querySelectorAll('.auth-form');
 authTabBtns.forEach(btn => {
   btn.addEventListener('click', function() {
     const targetAuth = this.getAttribute('data-auth');
-
     authTabBtns.forEach(b => b.classList.remove('active'));
     authForms.forEach(f => f.classList.remove('active'));
-
     this.classList.add('active');
     const targetForm = document.getElementById(`${targetAuth}-form`);
     if (targetForm) targetForm.classList.add('active');
@@ -504,7 +441,6 @@ function updateAccountView() {
   if (user) {
     guestView.style.display = 'none';
     loggedView.style.display = 'flex';
-
     document.getElementById('display-user-name').textContent = user.name;
     document.getElementById('display-user-wa').textContent = user.wa;
     document.getElementById('display-user-role').textContent = user.role.toUpperCase();
@@ -522,14 +458,12 @@ function updateAccountView() {
   }
 }
 
-// LOGOUT
 document.getElementById('btn-logout')?.addEventListener('click', () => {
   localStorage.removeItem('fendi_session_user');
   updateAccountView();
   alert("Kamu telah keluar.");
 });
 
-// DAFTAR AKUN BARU
 document.getElementById('register-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('reg-name').value.trim();
@@ -560,7 +494,6 @@ document.getElementById('register-form')?.addEventListener('submit', async (e) =
   }
 });
 
-// LOGIN AKUN
 document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const username = document.getElementById('login-username').value.trim();
@@ -593,7 +526,6 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   }
 });
 
-// UPLOAD PRODUK BARU ADMIN
 document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const user = getCurrentUser();
@@ -609,7 +541,7 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   const specsRaw = document.getElementById('post-specs').value.trim();
   const btn = document.getElementById('btn-submit-product');
 
-  btn.textContent = "Mengunggah Foto...";
+  btn.textContent = "Mengunggah...";
   btn.disabled = true;
 
   try {
@@ -640,7 +572,6 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
   }
 });
 
-// KELOLA & HAPUS PRODUK ADMIN
 function renderAdminManageList() {
   const adminManageList = document.getElementById('admin-manage-list');
   if (!adminManageList) return;
@@ -653,7 +584,7 @@ function renderAdminManageList() {
   adminManageList.innerHTML = fetchedProducts.map(item => `
     <div class="manage-item">
       <div>
-        <span style="font-size: 12px; font-weight: 700;">${item.code} (${String(item.category).toUpperCase()})</span>
+        <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category})</span>
         <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
       </div>
       <button type="button" class="btn-delete-prod" onclick="deleteProductFromSheets('${item.id}')">Hapus</button>
@@ -661,7 +592,6 @@ function renderAdminManageList() {
   `).join('');
 }
 
-// HAPUS PRODUK DARI GOOGLE SHEETS
 window.deleteProductFromSheets = async function(productId) {
   const user = getCurrentUser();
   if (!user || user.role !== 'admin') return;
@@ -724,7 +654,6 @@ if (btnPwaDismiss) {
   });
 }
 
-// INISIALISASI UTAMA
 initTheme();
 renderProducts(currentCategory);
 loadProductsFromSheets();

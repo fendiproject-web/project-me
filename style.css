@@ -188,7 +188,7 @@ body.light-mode .zoom-image-wrapper {
   50% { border-color: var(--accent-color); }
 }
 
-/* ANIMASI TOGGLE TEMA */
+/* TOGGLE TEMA (MODE TERANG = SUN / MATAHARI, MODE GELAP = MOON / BULAN) */
 .theme-toggle-btn {
   position: relative;
   background: var(--pill-bg);
@@ -214,26 +214,28 @@ body.light-mode .zoom-image-wrapper {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
 }
 
-body.dark-mode .sun-icon {
+/* MODE TERANG: TAMPILKAN ICON MATAHARI */
+body.light-mode .sun-icon {
   transform: translateY(0);
   opacity: 1;
-  stroke: #ffffff;
+  stroke: #4f46e5;
 }
 
-body.dark-mode .moon-icon {
+body.light-mode .moon-icon {
   transform: translateY(-160%);
   opacity: 0;
 }
 
-body.light-mode .sun-icon {
+/* MODE GELAP: TAMPILKAN ICON BULAN */
+body.dark-mode .sun-icon {
   transform: translateY(160%);
   opacity: 0;
 }
 
-body.light-mode .moon-icon {
+body.dark-mode .moon-icon {
   transform: translateY(0);
   opacity: 1;
-  stroke: #4f46e5;
+  stroke: #ffffff;
 }
 
 /* MAIN CONTENT CONTAINER */
@@ -364,7 +366,7 @@ body.light-mode .moon-icon {
   gap: 8px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px; /* Jarak pas ke grid produk */
 }
 
 .sub-tab-item {
@@ -388,94 +390,7 @@ body.light-mode .moon-icon {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* ==========================================
-   WADAH PAGINATION (BERSIH ELEGAN - DILUAR WARNA PINK)
-   ========================================== */
-.pagination-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 14px;
-  padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-color);
-  border-radius: 28px;
-  margin-bottom: 16px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode .pagination-card {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-}
-
-.pagination-summary-text {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-main);
-  letter-spacing: -0.2px;
-  margin-left: 2px;
-}
-
-.pagination-buttons-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.page-circle-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  color: #334155;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-body.dark-mode .page-circle-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-}
-
-.page-circle-btn:active {
-  transform: scale(0.92);
-}
-
-/* TOMBOL HALAMAN AKTIF (TEMA ELEGAN INDIGO) */
-.page-circle-btn.active {
-  background: #6366f1 !important;
-  border-color: #6366f1 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important;
-}
-
-.page-circle-btn.disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.page-ellipsis {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--text-sub);
-  padding: 0 2px;
-}
-
-/* KATALOG PRODUK */
+/* KATALOG PRODUK GRID */
 .product-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

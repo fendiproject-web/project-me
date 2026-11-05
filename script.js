@@ -71,12 +71,42 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-function readFileAsBase64(file) {
+// KOMPRESI FOTO OTOMATIS SEBELUM DIKIRIM (MEMASTIKAN BASE64 SANGAT RINGAN & CLEAN)
+function compressImageFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    reader.onerror = () => reject('Gagal membaca file foto');
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject('File gambar rusak');
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const max = 800; // Resolusi ideal untuk katalog HP
+
+        if (width > max || height > max) {
+          if (width > height) {
+            height = Math.round((height * max) / width);
+            width = max;
+          } else {
+            width = Math.round((width * max) / height);
+            height = max;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        const base64Pure = dataUrl.replace(/^data:image\/\w+;base64,/, '');
+        resolve(base64Pure);
+      };
+      img.src = e.target.result;
+    };
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (err) => reject(err);
   });
 }
 
@@ -541,9 +571,9 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   if (fileInput && fileInput.files.length > 0) {
     try {
-      imageBase64 = await readFileAsBase64(fileInput.files[0]);
+      imageBase64 = await compressImageFile(fileInput.files[0]);
     } catch (err) {
-      console.error("Gagal membaca file foto:", err);
+      console.error("Gagal memproses foto:", err);
     }
   }
 

@@ -410,7 +410,7 @@ body.dark-mode .moon-icon {
   cursor: pointer;
 }
 
-/* UKURAN RASIO FOTO DILUAR UBAH KE 4:5 */
+/* RASIO FOTO DILUAR UBAH KE 4:5 */
 .account-media {
   position: relative;
   width: 100%;
@@ -444,15 +444,16 @@ body.dark-mode .moon-icon {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
-/* TAMPILAN URUTAN TEKS CARD */
+/* STYLING TEKS KARD SESUAI URUTAN */
 .badge-cat-inline {
+  display: inline-block;
   align-self: flex-start;
   font-size: 9px;
   font-weight: 800;
-  color: var(--text-main);
+  color: var(--text-main) !important;
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
   padding: 2px 7px;
@@ -462,17 +463,19 @@ body.dark-mode .moon-icon {
 }
 
 .card-stock-label {
-  font-size: 9px;
+  display: block;
+  font-size: 10px;
   font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: 0.3px;
-  line-height: 1.2;
+  color: var(--text-main) !important;
+  letter-spacing: 0.2px;
+  line-height: 1.25;
 }
 
 .card-seller-name {
+  display: block;
   font-size: 9px;
   font-weight: 600;
-  color: var(--text-sub);
+  color: var(--text-sub) !important;
   margin-bottom: 2px;
 }
 
@@ -491,7 +494,7 @@ body.dark-mode .moon-icon {
   flex-wrap: wrap;
   gap: 4px;
   list-style: none;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .spec-item {
@@ -514,7 +517,7 @@ body.light-mode .spec-item { background: #e2e8f0; }
   width: 100%;
   text-align: center;
   padding: 6px 0;
-  margin-top: 4px;
+  margin-top: 6px;
   background: var(--pill-bg);
   border: 1px solid var(--pill-border);
   border-radius: 8px;

@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcLqSBqeptlNAPOfj5AeUOVZrlJj_cwEylq2GtHSb7ojSBuURbMZAr6g1hdjHFLg/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyujJrRhXbjhvGzldJXm9jjZf79J5ASTtBOgZ9GiBSFiFSN7211nEmb3coub3MDpr4/exec";
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';

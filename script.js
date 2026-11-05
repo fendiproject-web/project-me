@@ -1,3 +1,4 @@
+// URL DEPLOYMENT APPS SCRIPT BARU KAMU
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyujJrRhXbjhvGzldJXm9jjZf79J5ASTtBOgZ9GiBSFiFSN7211nEmb3coub3MDpr4/exec";
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
@@ -71,27 +72,25 @@ function matchCategory(productCat, targetFilter) {
   return cat === filter;
 }
 
-// KOMPRESI FOTO OTOMATIS SEBELUM DIKIRIM (MEMASTIKAN BASE64 SANGAT RINGAN & CLEAN)
-function compressImageFile(file) {
-  return new Promise((resolve, reject) => {
+// KOMPRESI FOTO SANGAT RINGAN (<80KB) AGAR BASE64 TIDAK TERPOTONG DILUAR KAPASITAS
+function compressImageForAppsScript(file) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.onerror = () => reject('Gagal membaca file foto');
     reader.onload = (e) => {
       const img = new Image();
-      img.onerror = () => reject('File gambar rusak');
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
-        const max = 800; // Resolusi ideal untuk katalog HP
+        const maxDim = 500; // Ditingkatkan ke resolusi ideal HP
 
-        if (width > max || height > max) {
+        if (width > maxDim || height > maxDim) {
           if (width > height) {
-            height = Math.round((height * max) / width);
-            width = max;
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
           } else {
-            width = Math.round((width * max) / height);
-            height = max;
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
           }
         }
 
@@ -100,12 +99,13 @@ function compressImageFile(file) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-        const base64Pure = dataUrl.replace(/^data:image\/\w+;base64,/, '');
-        resolve(base64Pure);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.4); // Kualitas 40% sangat ringan
+        resolve(dataUrl.replace(/^data:image\/\w+;base64,/, ''));
       };
+      img.onerror = () => resolve(null);
       img.src = e.target.result;
     };
+    reader.onerror = () => resolve(null);
     reader.readAsDataURL(file);
   });
 }
@@ -571,9 +571,9 @@ document.getElementById('admin-upload-form')?.addEventListener('submit', async f
 
   if (fileInput && fileInput.files.length > 0) {
     try {
-      imageBase64 = await compressImageFile(fileInput.files[0]);
+      imageBase64 = await compressImageForAppsScript(fileInput.files[0]);
     } catch (err) {
-      console.error("Gagal memproses foto:", err);
+      console.error("Gagal kompres foto:", err);
     }
   }
 

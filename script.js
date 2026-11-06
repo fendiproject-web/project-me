@@ -1,6 +1,71 @@
-// ==========================================
-// SCRIPT FENDI STORE (TANPA DATA PRODUK)
-// ==========================================
+const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
+
+let currentCategory = 'all';
+let fetchedProducts = [];
+
+// --- LOGIKA OTOMATISASI ---
+function prosesDataProduk() {
+  if (typeof DAFTAR_PRODUK === 'undefined') {
+    console.error("File data-produk.js belum terpanggil atau kosong.");
+    return [];
+  }
+
+  return DAFTAR_PRODUK.map((item, index) => {
+    const namaFile = item.fileFoto.toLowerCase();
+    let category = "FREE FIRE";
+    let code = "#FF-" + String(index + 1).padStart(2, '0');
+
+    // AUTO DETEKSI KATEGORI DARI NAMA FILE
+    if (namaFile.includes('ml')) {
+      category = "MOBILE LEGENDS";
+      code = "#ML-" + String(index + 1).padStart(2, '0');
+    } else if (namaFile.includes('ff')) {
+      category = "FREE FIRE";
+      code = "#FF-" + String(index + 1).padStart(2, '0');
+    }
+
+    return {
+      id: String(index + 1),
+      fileFoto: item.fileFoto,
+      code: code,
+      category: category,
+      price: item.harga,
+      image: item.fileFoto,
+      specs: item.spesifikasi
+    };
+  });
+}
+
+// --- FUNGSI BANTUAN ---
+function formatRupiah(val) {
+  if (!val) return '0';
+  const cleanNum = String(val).replace(/\D/g, '');
+  return cleanNum ? new Intl.NumberFormat('id-ID').format(cleanNum) : '0';
+}
+
+function getCategoryLabel(catRaw) {
+  if (!catRaw) return 'FREE FIRE';
+  const cat = String(catRaw).toLowerCase().trim();
+  if (cat === 'ff' || cat.includes('free') || cat.includes('fire')) return 'FREE FIRE';
+  if (cat === 'ml' || cat.includes('mobile') || cat.includes('legend')) return 'MOBILE LEGENDS';
+  return String(catRaw).toUpperCase();
+}
+
+function parseSpecs(specs) {
+  if (Array.isArray(specs)) return specs;
+  if (!specs) return [];
+  return String(specs).split(',').map(s => s.trim()).filter(s => s.length > 0);
+}
+
+function matchCategory(productCat, targetFilter) {
+  if (!targetFilter || targetFilter === 'all') return true;
+  const cat = String(productCat || '').toLowerCase().trim();
+  const filter = String(targetFilter).toLowerCase().trim();
+
+  if (filter === 'ff') return cat.includes('free') || cat.includes('fire') || cat === 'ff';
+  if (filter === 'ml') return cat.includes('mobile') || cat.includes('legend') || cat === 'ml';
+  return cat === filter;
+}
 
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
@@ -28,6 +93,242 @@ if (themeToggleBtn) {
   });
 }
 
+// --- RENDER PRODUK (SESUAI PERMINTAAN) ---
+const productListContainer = document.getElementById('product-list-container');
+
+function loadProducts() {
+  fetchedProducts = prosesDataProduk();
+  renderProducts(currentCategory);
+  renderHomeRecommendations();
+  checkUrlForProductDetail();
+}
+
+function renderProducts(filterCat = 'all') {
+  currentCategory = filterCat.toLowerCase();
+  const filtered = fetchedProducts.filter(p => matchCategory(p.category, currentCategory));
+
+  if (!productListContainer) return;
+
+  if (filtered.length === 0) {
+    productListContainer.innerHTML = `<p style="grid-column: span 2; font-size: 13px; text-align:center; color: var(--text-sub); padding: 30px 0;">Belum ada akun jualan di kategori ini.</p>`;
+    return;
+  }
+
+  productListContainer.innerHTML = filtered.map(item => {
+    const specsArr = parseSpecs(item.specs);
+    const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
+    const gameCategoryLabel = getCategoryLabel(item.category);
+
+    // INI TAMPILAN KARTU SESUAI PERMINTAAN KAMU
+    return `
+      <div class="account-card catalog-card" data-id="${item.id}">
+        <div class="account-media" style="aspect-ratio: 4 / 5;">
+          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <span class="badge-cat-inline">${gameCategoryLabel}</span>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
+          <div class="card-seller-name" style="border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; margin-bottom: 4px;">Fendi Store</div>
+          
+          <div class="account-price-row">
+            <span class="price-label">Harga Akun</span>
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+          </div>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.catalog-card').forEach(card => {
+    card.addEventListener('click', function() {
+      openProductDetail(this.getAttribute('data-id'));
+    });
+  });
+}
+
+function renderHomeRecommendations() {
+  const homeRecContainer = document.getElementById('home-recommendation-grid');
+  if (!homeRecContainer) return;
+
+  if (fetchedProducts.length === 0) {
+    homeRecContainer.innerHTML = `<p style="grid-column: span 2; font-size: 12px; text-align:center; color: var(--text-sub); padding: 20px 0;">Belum ada produk jualan.</p>`;
+    return;
+  }
+
+  const homeProducts = fetchedProducts.slice(0, 4);
+
+  homeRecContainer.innerHTML = homeProducts.map(item => {
+    const gameCategoryLabel = getCategoryLabel(item.category);
+
+    // TAMPILAN KARTU UNTUK DI HALAMAN HOME
+    return `
+      <div class="account-card home-card" data-id="${item.id}">
+        <div class="account-media" style="aspect-ratio: 4 / 5;">
+          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <span class="badge-cat-inline">${gameCategoryLabel}</span>
+          <div class="card-stock-label">STOCK PRIBADI FENDI STORE</div>
+          <div class="card-seller-name" style="border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; margin-bottom: 4px;">Fendi Store</div>
+          
+          <div class="account-price-row">
+            <span class="price-label">Harga Akun</span>
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+          </div>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.home-card').forEach(card => {
+    card.addEventListener('click', function() {
+      switchTab('tab-produk', 1, false);
+      openProductDetail(this.getAttribute('data-id'));
+    });
+  });
+}
+
+// --- DETAIL PRODUK ---
+function openProductDetail(productId, updateHistory = true) {
+  const item = fetchedProducts.find(p => String(p.id) === String(productId));
+  if (!item) return;
+
+  const catalogView = document.getElementById('product-catalog-view');
+  const detailView = document.getElementById('product-detail-view');
+  const detailImg = document.getElementById('detail-img');
+
+  if (catalogView && detailView) {
+    catalogView.style.display = 'none';
+    detailView.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
+
+    detailImg.src = item.image;
+
+    const specsArr = parseSpecs(item.specs);
+
+    document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
+    document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
+    document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
+    document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
+
+    const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
+    const buyNowBtn = document.getElementById('btn-buy-now');
+    if (buyNowBtn) buyNowBtn.href = `https://wa.me/6285854325988?text=${waText}`;
+
+    renderRecommendations(productId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (updateHistory) {
+      const cleanCode = item.code.replace('#', '').toLowerCase();
+      window.history.pushState({ tabId: 'tab-produk', productId: productId }, '', `/produk?id=${cleanCode}`);
+    }
+  }
+}
+
+function checkUrlForProductDetail() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const prodCode = urlParams.get('id');
+
+  if (prodCode && fetchedProducts.length > 0) {
+    const matchedProduct = fetchedProducts.find(p => p.code.replace('#', '').toLowerCase() === prodCode.toLowerCase() || String(p.id) === prodCode);
+    if (matchedProduct) {
+      switchTab('tab-produk', 1, false);
+      openProductDetail(matchedProduct.id, false);
+    }
+  }
+}
+
+const zoomImgBox = document.getElementById('detail-img-box');
+const zoomModal = document.getElementById('image-zoom-modal');
+const modalImg = document.getElementById('img-full-zoom');
+const closeModalBtn = document.getElementById('modal-close-btn');
+
+if (zoomImgBox && zoomModal && modalImg) {
+  zoomImgBox.addEventListener('click', () => {
+    const detailImg = document.getElementById('detail-img');
+    if (detailImg && detailImg.src) {
+      modalImg.src = detailImg.src;
+      zoomModal.style.display = 'block';
+    }
+  });
+}
+
+if (closeModalBtn) {
+  closeModalBtn.addEventListener('click', () => {
+    zoomModal.style.display = 'none';
+  });
+}
+
+if (zoomModal) {
+  zoomModal.addEventListener('click', (e) => {
+    if (e.target === zoomModal) zoomModal.style.display = 'none';
+  });
+}
+
+document.getElementById('btn-back-catalog')?.addEventListener('click', () => {
+  const catalogView = document.getElementById('product-catalog-view');
+  const detailView = document.getElementById('product-detail-view');
+  if (catalogView && detailView) {
+    catalogView.style.display = 'flex';
+    detailView.style.display = 'none';
+    window.history.pushState({ tabId: 'tab-produk' }, '', '/produk');
+  }
+});
+
+function renderRecommendations(currentId) {
+  const recContainer = document.getElementById('recommendation-grid');
+  if (!recContainer) return;
+
+  const recs = fetchedProducts.filter(p => String(p.id) !== String(currentId)).slice(0, 4);
+
+  if (recs.length === 0) {
+    recContainer.innerHTML = `<p style="grid-column: span 2; font-size: 11px; color: var(--text-sub);">Tidak ada produk lain.</p>`;
+    return;
+  }
+
+  recContainer.innerHTML = recs.map(item => {
+    return `
+      <div class="account-card rec-card" data-id="${item.id}">
+        <div class="account-media" style="aspect-ratio: 4 / 5;">
+          <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
+          <div class="account-badge-group">
+            <span class="badge-code">${item.code}</span>
+          </div>
+        </div>
+        <div class="account-body">
+          <div class="account-price-row">
+            <span class="account-price">Rp ${formatRupiah(item.price)}</span>
+          </div>
+          <button type="button" class="btn-see-now">Lihat Sekarang</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.rec-card').forEach(card => {
+    card.addEventListener('click', function() {
+      openProductDetail(this.getAttribute('data-id'));
+    });
+  });
+}
+
+// --- NAVIGASI & TAB ---
+const subTabItems = document.querySelectorAll('.sub-tab-item');
+subTabItems.forEach((btn) => {
+  btn.addEventListener('click', function() {
+    subTabItems.forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    renderProducts(this.getAttribute('data-sub'));
+  });
+});
+
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.querySelector('.nav-indicator');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -45,6 +346,15 @@ function switchTab(targetTabId, navIndex, updateHistory = true) {
 
   const targetTab = document.getElementById(targetTabId);
   if (targetTab) targetTab.classList.add('active');
+
+  if (targetTabId === 'tab-produk') {
+    const catalogView = document.getElementById('product-catalog-view');
+    const detailView = document.getElementById('product-detail-view');
+    if (catalogView && detailView) {
+      catalogView.style.display = 'flex';
+      detailView.style.display = 'none';
+    }
+  }
 
   updateIndicator(navIndex);
 
@@ -83,6 +393,7 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// JALANKAN SAAT HALAMAN DIBUKA
+// --- MULAI SEMUA ---
 initTheme();
+loadProducts();
 handleRouting();

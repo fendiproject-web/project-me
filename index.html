@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FENDI STORE</title>
 
-  <!-- DUKUNGAN APLIKASI PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#000000">
   <link rel="apple-touch-icon" href="profile.webp">
@@ -30,7 +29,6 @@
       </div>
 
       <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
-        <!-- ICON SUN (TERTAMPIL DI MODE TERANG) -->
         <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -42,7 +40,6 @@
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <!-- ICON MOON (TERTAMPIL DI MODE GELAP) -->
         <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
@@ -183,7 +180,6 @@
           <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
         </div>
 
-        <!-- GRID PRODUK KATALOG LANGSUNG DI BAWAH TABS -->
         <div id="product-list-container" class="product-cards-grid"></div>
       </div>
 
@@ -339,129 +335,12 @@
       </div>
     </div>
 
-    <!-- TAB 4: AKUN -->
+    <!-- TAB 4: AKUN (DIKOSONGKAN) -->
     <div id="tab-akun" class="tab-content">
-      <div id="auth-guest-view" class="auth-card">
-        <div class="auth-toggle-bar">
-          <button type="button" class="auth-tab-btn active" data-auth="login">Masuk</button>
-          <button type="button" class="auth-tab-btn" data-auth="register">Daftar</button>
-        </div>
-
-        <form id="login-form" class="auth-form active">
-          <div class="form-header">
-            <h3>Login Akun</h3>
-            <p>Masuk untuk transaksi & kelola akun di FENDI STORE.</p>
-          </div>
-
-          <div class="form-group">
-            <label for="login-username">No. WhatsApp</label>
-            <input type="tel" id="login-username" placeholder="08xxxxxxxxxx" required>
-          </div>
-
-          <div class="form-group">
-            <label for="login-password">Kata Sandi</label>
-            <input type="password" id="login-password" placeholder="••••••••" required>
-          </div>
-
-          <button type="submit" id="btn-login" class="btn-auth-submit">Masuk Sekarang</button>
-        </form>
-
-        <form id="register-form" class="auth-form">
-          <div class="form-header">
-            <h3>Daftar Akun Baru</h3>
-            <p>Buat akun FENDI STORE kamu secara gratis.</p>
-          </div>
-
-          <div class="form-group">
-            <label for="reg-name">Nama Lengkap</label>
-            <input type="text" id="reg-name" placeholder="Nama kamu" required>
-          </div>
-
-          <div class="form-group">
-            <label for="reg-wa">Nomor WhatsApp</label>
-            <input type="tel" id="reg-wa" placeholder="08xxxxxxxxxx" required>
-          </div>
-
-          <div class="form-group">
-            <label for="reg-password">Kata Sandi</label>
-            <input type="password" id="reg-password" placeholder="Buat kata sandi" required>
-          </div>
-
-          <button type="submit" id="btn-register" class="btn-auth-submit">Daftar Akun</button>
-        </form>
+      <div class="auth-card" style="text-align: center; padding: 40px 20px;">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Fendi Store</h3>
+        <p style="font-size: 12px; color: var(--text-sub);">Fitur akun sedang dalam perbaikan.<br>Silakan hubungi admin via WhatsApp.</p>
       </div>
-
-      <div id="auth-logged-view" class="auth-card" style="display: none;">
-        <div class="user-profile-box">
-          <div class="user-info-row">
-            <div>
-              <h3 id="display-user-name">Nama User</h3>
-              <p id="display-user-wa" style="font-size: 11px; color: var(--text-sub);">08xxx</p>
-            </div>
-            <span id="display-user-role" class="badge-role">USER</span>
-          </div>
-          <button type="button" id="btn-logout" class="btn-logout">Keluar / Logout</button>
-        </div>
-
-        <div id="admin-panel-section" style="display: none;" class="admin-section">
-          <hr class="divider">
-          
-          <div class="admin-header">
-            <h3>Panel Admin Upload Stok Akun</h3>
-            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive & Google Sheets.</p>
-          </div>
-
-          <!-- FORM PENGISIAN UPLOAD STOK ADMIN (TERSEDIA INPUT LABEL STOK) -->
-          <form id="admin-upload-form" class="auth-form active">
-            <div class="form-group">
-              <label for="post-category">Kategori Game</label>
-              <select id="post-category" required>
-                <option value="ff">Free Fire</option>
-                <option value="ml">Mobile Legends</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="post-stock-label">Label Stok (Muncul di Kartu Jualan)</label>
-              <input type="text" id="post-stock-label" value="STOCK PRIBADI FENDI STORE" placeholder="STOCK PRIBADI FENDI STORE" required>
-            </div>
-
-            <div class="form-group">
-              <label>Nomor Urut / Kode Akun</label>
-              <div class="auto-code-badge">Otomatis Dideteksi Sistem (#FF-xx / #ML-xx)</div>
-            </div>
-
-            <div class="form-group">
-              <label for="post-price">Harga Akun (Rp)</label>
-              <input type="text" id="post-price" placeholder="Contoh: 162.999" required>
-            </div>
-
-            <div class="form-group">
-              <label for="post-file">Upload Foto Akun Jualan (Galeri/HP)</label>
-              <input type="file" id="post-file" accept="image/*">
-            </div>
-
-            <div class="form-group">
-              <label for="post-url">Atau URL/Link Foto Akun (Opsional)</label>
-              <input type="text" id="post-url" placeholder="https://...">
-            </div>
-
-            <div class="form-group">
-              <label for="post-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
-              <textarea id="post-specs" rows="3" placeholder="Contoh: BIND ON, VAULT 290+, Old Season, Log VK" required></textarea>
-            </div>
-
-            <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Katalog Stok</button>
-          </form>
-
-          <div style="margin-top: 14px;">
-            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola & Hapus Stok Akun</h4>
-            <div id="admin-manage-list" class="admin-manage-grid"></div>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
   </main>
@@ -538,6 +417,6 @@
     </div>
   </nav>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=18"></script>
 </body>
 </html>

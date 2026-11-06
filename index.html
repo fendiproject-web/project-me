@@ -2,121 +2,419 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FENDI STORE / PAPARA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FENDI STORE</title>
+
+  <!-- DUKUNGAN APLIKASI PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="profile.webp">
   
-  <!-- Memanggil file CSS -->
-  <link rel="stylesheet" href="style.css">
-  <!-- Font Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="profile.webp" as="image" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="banner1.png" as="image" type="image/png" fetchpriority="high">
+
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body class="dark-mode">
 
-  <div class="app-container">
-    
-    <!-- HEADER & THEME TOGGLE -->
-    <header class="top-header">
-      <div class="brand-title">PAPARA STORE</div>
-      <button id="themeToggle" class="btn-icon">🌓</button>
+  <!-- TOP BAR -->
+  <div class="top-bar-wrapper">
+    <header class="top-bar">
+      <div class="profile-section">
+        <div class="profile-avatar">
+          <img src="profile.webp" alt="Foto Profil" class="profile-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
+        </div>
+        <div class="brand-wrapper">
+          <span class="typing-text">FENDI STORE</span>
+        </div>
+      </div>
+
+      <button id="themeToggle" class="theme-toggle-btn" title="Ganti Mode" type="button">
+        <!-- ICON SUN (TERTAMPIL DI MODE TERANG) -->
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- ICON MOON (TERTAMPIL DI MODE GELAP) -->
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </header>
+  </div>
 
-    <!-- KONTEN UTAMA -->
-    <main class="main-content">
-      
-      <!-- ========================================== -->
-      <!-- TAB 1: HOME -->
-      <!-- ========================================== -->
-      <section id="tab-home" class="tab-content active">
-        <div class="profile-section">
-          <img src="profile.png" alt="Profile" class="profile-img">
-          <h2>PAPARA / FENDI STORE</h2>
-          <p class="typing-text">Pusat Jual Beli Akun Terpercaya</p>
+  <!-- KONTEN UTAMA -->
+  <main class="main-content">
+    
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-content active">
+      <div class="banner-container">
+        <img src="banner1.png" alt="Banner Utama" class="banner-img" fetchpriority="high" loading="eager" onload="this.parentElement.classList.add('loaded')">
+      </div>
+
+      <div class="home-actions">
+        <div class="action-row">
+          <a href="https://wa.me/6285854325988" target="_blank" class="btn-action btn-wa">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a9.93 9.93 0 0 0-8.48 15.09L2 22l5.06-1.32A9.93 9.93 0 1 0 12 2zm0 18a8.07 8.07 0 0 1-4.12-1.13l-.3-.18-3.06.8.82-2.98-.2-.31A8.07 8.07 0 1 1 12 20zm4.51-6.04c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13s-.66.8-.81.97c-.15.17-.3.19-.55.06a7.02 7.02 0 0 1-2.07-1.28 7.74 7.74 0 0 1-1.43-1.78c-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.57-1.37-.78-1.87c-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.45.06-.68.31s-.89.87-.89 2.13.91 2.47 1.04 2.64c.13.17 1.8 2.75 4.36 3.85.61.26 1.09.42 1.46.54.61.19 1.17.17 1.61.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.3z"/>
+            </svg>
+            <span>Chat Wa Admin</span>
+          </a>
+
+          <button type="button" class="btn-action btn-verify switch-tab-trigger" data-target-tab="tab-datame" data-nav-index="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            <span>Cek Keaslian Admin</span>
+          </button>
         </div>
+
+        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="btn-action btn-group">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Grup Whatsapp</span>
+        </a>
+      </div>
+
+      <!-- REKOMENDASI PRODUK DI HOME -->
+      <div class="home-recommendations-section">
+        <div class="section-title-box">
+          <span class="badge-theme-light">REKOMENDASI</span>
+          <h3 class="section-title">Produk Pilihan Fendi Store</h3>
+        </div>
+        <div id="home-recommendation-grid" class="product-cards-grid"></div>
+      </div>
+
+      <!-- FOOTER & SINYAL TRUST -->
+      <footer class="home-footer-section">
+        <hr class="footer-divider">
         
-        <!-- Link Sosial Media Neumorphism -->
-        <div class="social-links">
-          <a href="https://tiktok.com/@glenzi20" target="_blank" class="link-card">TikTok @glenzi20</a>
-          <a href="https://instagram.com/glenlendiansyah" target="_blank" class="link-card">Instagram @glenlendiansyah</a>
-          <a href="https://wa.me/6285788074348" target="_blank" class="link-card">WhatsApp Admin 1</a>
-          <a href="https://wa.me/6285854325988" target="_blank" class="link-card">WhatsApp Admin 2</a>
+        <div class="footer-block">
+          <h4 class="footer-block-title">Sosial Media</h4>
+          <ul class="footer-link-list">
+            <li>
+              <a href="https://tiktok.com/@fenditiktok__" target="_blank" class="footer-link-item">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                </svg>
+                <span>TikTok Resmi</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://instagram.com/fendi.store_" target="_blank" class="footer-link-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+                <span>Instagram Fendi Store</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://t.me/testifendistore" target="_blank" class="footer-link-item">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .54-1.42.53-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.96-.75 3.78-1.65 6.31-2.74 7.58-3.27 3.61-1.51 4.36-1.77 4.85-1.78.11 0 .35.03.5.16.13.13.17.3.18.44-.01.06-.01.12-.02.19z"/>
+                </svg>
+                <span>Telegram Testimoni</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="footer-link-item">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2a9.93 9.93 0 0 0-8.48 15.09L2 22l5.06-1.32A9.93 9.93 0 1 0 12 2zm0 18a8.07 8.07 0 0 1-4.12-1.13l-.3-.18-3.06.8.82-2.98-.2-.31A8.07 8.07 0 1 1 12 20zm4.51-6.04c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13s-.66.8-.81.97c-.15.17-.3.19-.55.06a7.02 7.02 0 0 1-2.07-1.28 7.74 7.74 0 0 1-1.43-1.78c-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.57-1.37-.78-1.87c-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.45.06-.68.31s-.89.87-.89 2.13.91 2.47 1.04 2.64c.13.17 1.8 2.75 4.36 3.85.61.26 1.09.42 1.46.54.61.19 1.17.17 1.61.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.3z"/>
+                </svg>
+                <span>Grup WhatsApp Official</span>
+              </a>
+            </li>
+          </ul>
         </div>
 
-        <h3 class="section-title">Rekomendasi Akun</h3>
-        <div id="home-recommendation-grid" class="account-grid"></div>
-      </section>
+        <div class="footer-block">
+          <h4 class="footer-block-title">Sinyal Trust</h4>
+          <ul class="footer-trust-list">
+            <li class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+              <span>Transaksi aman dan data jelas</span>
+            </li>
+            <li class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span>Proses cepat setelah pembayaran</span>
+            </li>
+            <li class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2H3z"></path>
+              </svg>
+              <span>Layanan admin setiap hari</span>
+            </li>
+          </ul>
+        </div>
 
-      <!-- ========================================== -->
-      <!-- TAB 2: PRODUK (KATALOG & DETAIL) -->
-      <!-- ========================================== -->
-      <section id="tab-produk" class="tab-content">
-        
-        <!-- Tampilan Katalog -->
-        <div id="product-catalog-view">
-          <div class="sub-tab-container">
-            <button class="sub-tab-item active" data-sub="all">Semua</button>
-            <button class="sub-tab-item" data-sub="ff">Free Fire</button>
-            <button class="sub-tab-item" data-sub="ml">Mobile Legends</button>
+        <div class="footer-bottom-credits">
+          <p>© 2026 FENDI STORE. All rights reserved.</p>
+          <p class="credit-sub">Real Admin Region Madura</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- TAB 2: PRODUK -->
+    <div id="tab-produk" class="tab-content">
+      <div id="product-catalog-view">
+        <div class="sub-tab-bar">
+          <button type="button" class="sub-tab-item active" data-sub="all">Semua</button>
+          <button type="button" class="sub-tab-item" data-sub="ff">Free Fire</button>
+          <button type="button" class="sub-tab-item" data-sub="ml">Mobile Legends</button>
+        </div>
+
+        <!-- GRID PRODUK KATALOG LANGSUNG DI BAWAH TABS -->
+        <div id="product-list-container" class="product-cards-grid"></div>
+      </div>
+
+      <div id="product-detail-view" style="display: none;" class="detail-container">
+        <button type="button" id="btn-back-catalog" class="btn-back-nav">&larr; Kembali ke Katalog</button>
+
+        <div class="zoom-image-wrapper" id="detail-img-box">
+          <span class="zoom-tag">Klik foto untuk lihat full</span>
+          <img id="detail-img" src="" alt="Foto Produk" class="detail-img-full">
+        </div>
+
+        <div class="detail-card">
+          <div class="badge-row">
+            <span id="detail-cat-badge" class="badge-theme">FREE FIRE</span>
+            <span class="badge-theme-light">Ready</span>
           </div>
-          <div id="product-list-container" class="account-grid"></div>
-        </div>
-
-        <!-- Tampilan Detail Produk (Disembunyikan Otomatis) -->
-        <div id="product-detail-view" style="display: none;">
-          <button id="btn-back-catalog" class="btn-back">⬅ Kembali ke Katalog</button>
+          <h2 id="detail-title" class="detail-product-title">STOCK PRIBADI FENDI STORE</h2>
           
-          <div id="detail-img-box" class="detail-img-wrapper">
-            <img id="detail-img" src="" alt="Detail Produk">
+          <div class="price-box">
+            <span class="price-label-sm">HARGA AKUN</span>
+            <div id="detail-price" class="detail-price-text">Rp 0</div>
           </div>
-          
-          <span id="detail-cat-badge" class="badge"></span>
-          <h2 id="detail-title"></h2>
-          <div id="detail-price" class="price-large"></div>
-          
-          <div class="specs-box">
-            <h4>Spesifikasi Akun:</h4>
-            <p id="detail-specs-content"></p>
+        </div>
+
+        <div class="detail-card">
+          <h3 class="section-title">Spesifikasi Akun</h3>
+          <div id="detail-specs-content" class="detail-specs-text"></div>
+        </div>
+
+        <!-- SELLER CARD -->
+        <div class="detail-card seller-card">
+          <div class="seller-profile-row">
+            <div class="seller-left">
+              <div class="seller-avatar-box">
+                <div class="seller-avatar-wrapper">
+                  <img src="profile.webp" alt="Foto Penjual" class="seller-avatar-img" onload="this.parentElement.classList.add('loaded')">
+                </div>
+                <span class="online-indicator-dot" title="Online"></span>
+              </div>
+              <div class="seller-info">
+                <h3 class="seller-name">FENDI STORE</h3>
+                <span class="seller-status-text">● Online</span>
+              </div>
+            </div>
+
+            <a href="#" id="btn-buy-now" target="_blank" class="btn-buy-now">Beli Sekarang</a>
           </div>
+
+          <div class="seller-region-badge">
+            Real Admin Fendi Store Region Madura
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <span class="badge-theme-light" style="font-size: 10px;">REKOMENDASI</span>
+          <h3 class="section-title" style="margin-top: 4px;">Produk lainnya</h3>
+          <div id="recommendation-grid" class="product-cards-grid" style="margin-top: 10px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: DATAME -->
+    <div id="tab-datame" class="tab-content">
+      <div class="datame-header">
+        <h2>Kontak & Sosmed Resmi</h2>
+        <p>Gunakan kontak di bawah untuk memastikan keaslian transaksi.</p>
+      </div>
+
+      <div class="contact-list">
+        <a href="https://wa.me/6285854325988" target="_blank" class="contact-card">
+          <div class="card-icon wa-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a9.93 9.93 0 0 0-8.48 15.09L2 22l5.06-1.32A9.93 9.93 0 1 0 12 2zm0 18a8.07 8.07 0 0 1-4.12-1.13l-.3-.18-3.06.8.82-2.98-.2-.31A8.07 8.07 0 1 1 12 20zm4.51-6.04c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13s-.66.8-.81.97c-.15.17-.3.19-.55.06a7.02 7.02 0 0 1-2.07-1.28 7.74 7.74 0 0 1-1.43-1.78c-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.57-1.37-.78-1.87c-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.45.06-.68.31s-.89.87-.89 2.13.91 2.47 1.04 2.64c.13.17 1.8 2.75 4.36 3.85.61.26 1.09.42 1.46.54.61.19 1.17.17 1.61.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.3z"/>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">WhatsApp Japost</span>
+            <span class="card-detail">085854325988</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <a href="https://wa.me/6281553801021" target="_blank" class="contact-card">
+          <div class="card-icon wa-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a9.93 9.93 0 0 0-8.48 15.09L2 22l5.06-1.32A9.93 9.93 0 1 0 12 2zm0 18a8.07 8.07 0 0 1-4.12-1.13l-.3-.18-3.06.8.82-2.98-.2-.31A8.07 8.07 0 1 1 12 20zm4.51-6.04c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13s-.66.8-.81.97c-.15.17-.3.19-.55.06a7.02 7.02 0 0 1-2.07-1.28 7.74 7.74 0 0 1-1.43-1.78c-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.57-1.37-.78-1.87c-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.45.06-.68.31s-.89.87-.89 2.13.91 2.47 1.04 2.64c.13.17 1.8 2.75 4.36 3.85.61.26 1.09.42 1.46.54.61.19 1.17.17 1.61.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.3z"/>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">WhatsApp Rekber</span>
+            <span class="card-detail">081553801021</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <a href="https://chat.whatsapp.com/CfEiHDqacvq6XxrrlPsRzf" target="_blank" class="contact-card">
+          <div class="card-icon group-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Grup Jb WhatsApp</span>
+            <span class="card-detail">Gabung Komunitas Jual Beli</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <a href="https://tiktok.com/@fenditiktok__" target="_blank" class="contact-card">
+          <div class="card-icon tiktok-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">TikTok Resmi</span>
+            <span class="card-detail">@fenditiktok__</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <a href="https://instagram.com/fendi.store_" target="_blank" class="contact-card">
+          <div class="card-icon ig-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Instagram</span>
+            <span class="card-detail">@fendi.store_</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <a href="https://t.me/testifendistore" target="_blank" class="contact-card">
+          <div class="card-icon tele-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .54-1.42.53-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.96-.75 3.78-1.65 6.31-2.74 7.58-3.27 3.61-1.51 4.36-1.77 4.85-1.78.11 0 .35.03.5.16.13.13.17.3.18.44-.01.06-.01.12-.02.19z"/>
+            </svg>
+          </div>
+          <div class="card-info">
+            <span class="card-title">Telegram / Testimoni</span>
+            <span class="card-detail">t.me/testifendistore</span>
+          </div>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 4: AKUN -->
+    <div id="tab-akun" class="tab-content">
+      <div id="auth-guest-view" class="auth-card">
+        <div class="auth-toggle-bar">
+          <button type="button" class="auth-tab-btn active" data-auth="login">Masuk</button>
+          <button type="button" class="auth-tab-btn" data-auth="register">Daftar</button>
+        </div>
+
+        <form id="login-form" class="auth-form active">
+          <div class="form-header">
+            <h3>Login Akun</h3>
+            <p>Masuk untuk transaksi & kelola akun di FENDI STORE.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="login-username">No. WhatsApp</label>
+            <input type="tel" id="login-username" placeholder="08xxxxxxxxxx" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Kata Sandi</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" id="btn-login" class="btn-auth-submit">Masuk Sekarang</button>
+        </form>
+
+        <form id="register-form" class="auth-form">
+          <div class="form-header">
+            <h3>Daftar Akun Baru</h3>
+            <p>Buat akun FENDI STORE kamu secara gratis.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-name">Nama Lengkap</label>
+            <input type="text" id="reg-name" placeholder="Nama kamu" required>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-wa">Nomor WhatsApp</label>
+            <input type="tel" id="reg-wa" placeholder="08xxxxxxxxxx" required>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-password">Kata Sandi</label>
+            <input type="password" id="reg-password" placeholder="Buat kata sandi" required>
+          </div>
+
+          <button type="submit" id="btn-register" class="btn-auth-submit">Daftar Akun</button>
+        </form>
+      </div>
+
+      <div id="auth-logged-view" class="auth-card" style="display: none;">
+        <div class="user-profile-box">
+          <div class="user-info-row">
+            <div>
+              <h3 id="display-user-name">Nama User</h3>
+              <p id="display-user-wa" style="font-size: 11px; color: var(--text-sub);">08xxx</p>
+            </div>
+            <span id="display-user-role" class="badge-role">USER</span>
+          </div>
+          <button type="button" id="btn-logout" class="btn-logout">Keluar / Logout</button>
+        </div>
+
+        <div id="admin-panel-section" style="display: none;" class="admin-section">
+          <hr class="divider">
           
-          <a id="btn-buy-now" href="#" target="_blank" class="btn-primary">Beli Sekarang (WhatsApp)</a>
+          <div class="admin-header">
+            <h3>Panel Admin Upload Stok Akun</h3>
+            <p style="font-size: 11px; color: var(--text-sub);">Upload foto jualan otomatis tersimpan ke Google Drive & Google Sheets.</p>
+          </div>
 
-          <h3 class="section-title mt-4">Rekomendasi Lainnya</h3>
-          <div id="recommendation-grid" class="account-grid"></div>
-        </div>
-      </section>
-
-      <!-- ========================================== -->
-      <!-- TAB 3: DATAME (QRIS & INFO BANK) -->
-      <!-- ========================================== -->
-      <section id="tab-datame" class="tab-content">
-        <h2 class="section-title">Metode Pembayaran</h2>
-        <div class="qris-container">
-          <img src="qris.png" alt="QRIS PAPARA" class="qris-img">
-          <p style="text-align: center; font-size: 13px; margin-top: 15px; color: var(--text-sub);">
-            Scan QRIS di atas untuk melakukan pembayaran otomatis tanpa biaya admin.
-          </p>
-        </div>
-      </section>
-
-      <!-- ========================================== -->
-      <!-- TAB 4: AKUN (PANEL ADMIN MURNI LOKAL) -->
-      <!-- ========================================== -->
-      <section id="tab-akun" class="tab-content">
-        
-        <!-- Form Auth Dikosongkan via JS -->
-        <div id="auth-guest-view" style="display: none;"></div>
-        <div id="auth-logged-view" style="display: none;"></div>
-
-        <!-- PANEL ADMIN (LANGSUNG TAMPIL) -->
-        <div id="admin-panel-section" style="display: block;">
-          <h2 class="section-title">Panel Admin Upload Stok</h2>
-          <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 20px;">
-            Data disimpan instan (tanpa loading server).
-          </p>
-
-          <form id="admin-upload-form" class="neumorph-form">
-            
+          <!-- FORM PENGISIAN UPLOAD STOK ADMIN (TERSEDIA INPUT LABEL STOK) -->
+          <form id="admin-upload-form" class="auth-form active">
             <div class="form-group">
-              <label>Kategori Game</label>
+              <label for="post-category">Kategori Game</label>
               <select id="post-category" required>
                 <option value="ff">Free Fire</option>
                 <option value="ml">Mobile Legends</option>
@@ -124,65 +422,122 @@
             </div>
 
             <div class="form-group">
-              <label>Harga Akun (Rp)</label>
-              <input type="text" id="post-price" placeholder="Contoh: 150.000" required>
-            </div>
-
-            <!-- BAGIAN UPLOAD FILE DIHAPUS TOTAL! GANTI JADI INPUT URL -->
-            <div class="form-group">
-              <label>URL Gambar (Tempel Link Foto)</label>
-              <input type="url" id="post-url" placeholder="https://..." required>
+              <label for="post-stock-label">Label Stok (Muncul di Kartu Jualan)</label>
+              <input type="text" id="post-stock-label" value="STOCK PRIBADI FENDI STORE" placeholder="STOCK PRIBADI FENDI STORE" required>
             </div>
 
             <div class="form-group">
-              <label>Spesifikasi (Pisahkan dengan koma)</label>
-              <textarea id="post-specs" placeholder="BIND FB, EP MAX, SG 2" rows="3" required></textarea>
+              <label>Nomor Urut / Kode Akun</label>
+              <div class="auto-code-badge">Otomatis Dideteksi Sistem (#FF-xx / #ML-xx)</div>
             </div>
 
-            <button type="submit" id="btn-submit-product" class="btn-primary">+ Simpan Produk</button>
+            <div class="form-group">
+              <label for="post-price">Harga Akun (Rp)</label>
+              <input type="text" id="post-price" placeholder="Contoh: 162.999" required>
+            </div>
+
+            <div class="form-group">
+              <label for="post-file">Upload Foto Akun Jualan (Galeri/HP)</label>
+              <input type="file" id="post-file" accept="image/*">
+            </div>
+
+            <div class="form-group">
+              <label for="post-url">Atau URL/Link Foto Akun (Opsional)</label>
+              <input type="text" id="post-url" placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+              <label for="post-specs">Spesifikasi Akun (Pisahkan dengan koma)</label>
+              <textarea id="post-specs" rows="3" placeholder="Contoh: BIND ON, VAULT 290+, Old Season, Log VK" required></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-product" class="btn-auth-submit">+ Upload Akun Ke Katalog Stok</button>
           </form>
 
-          <h3 class="section-title mt-4">Kelola Stok Akun</h3>
-          <div id="admin-manage-list" class="manage-list-container"></div>
+          <div style="margin-top: 14px;">
+            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Kelola & Hapus Stok Akun</h4>
+            <div id="admin-manage-list" class="admin-manage-grid"></div>
+          </div>
         </div>
-      </section>
 
-    </main>
+      </div>
 
-    <!-- ========================================== -->
-    <!-- BOTTOM NAVIGATION (NAVBAR BAWAH) -->
-    <!-- ========================================== -->
-    <nav class="bottom-nav">
-      <div class="nav-indicator"></div>
-      <a href="#" class="nav-item active" data-index="0" data-target="tab-home">
-        <span class="icon">🏠</span>
-        <span class="text">Home</span>
-      </a>
-      <a href="#" class="nav-item" data-index="1" data-target="tab-produk">
-        <span class="icon">🛍️</span>
-        <span class="text">Produk</span>
-      </a>
-      <a href="#" class="nav-item" data-index="2" data-target="tab-datame">
-        <span class="icon">💳</span>
-        <span class="text">DataMe</span>
-      </a>
-      <a href="#" class="nav-item" data-index="3" data-target="tab-akun">
-        <span class="icon">👤</span>
-        <span class="text">Akun</span>
-      </a>
-    </nav>
+    </div>
 
-  </div> <!-- Penutup .app-container -->
+  </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL ZOOM GAMBAR -->
-  <!-- ========================================== -->
-  <div id="image-zoom-modal" class="modal">
-    <span id="modal-close-btn" class="close">&times;</span>
-    <img id="img-full-zoom" class="modal-content">
+  <!-- MODAL FULL ZOOM FOTO PRODUK -->
+  <div id="image-zoom-modal" class="image-modal">
+    <span class="modal-close" id="modal-close-btn">&times;</span>
+    <img class="modal-content" id="img-full-zoom">
   </div>
 
-  <!-- Memanggil script.js -->
+  <!-- POPUP NOTIFIKASI INSTALL APLIKASI PWA -->
+  <div id="pwa-install-banner" class="pwa-banner-modal" style="display: none;">
+    <div class="pwa-banner-card">
+      <div class="pwa-banner-header">
+        <img src="profile.webp" alt="Icon Fendi Store" class="pwa-banner-icon">
+        <div class="pwa-banner-text">
+          <h3>FENDI STORE OFFICIAL</h3>
+          <p>Download Aplikasi Fendi Store Biar Mudah Untuk Membuka Website Ini, Terimakasih Yang Udah Mau Mampir Dan Lihat-Lihat</p>
+        </div>
+      </div>
+      <div class="pwa-banner-actions">
+        <button type="button" id="btn-pwa-dismiss" class="btn-pwa-later">Nanti</button>
+        <button type="button" id="btn-pwa-install" class="btn-pwa-install">Install</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav-wrapper">
+    <div class="bottom-nav">
+      <div class="nav-indicator"></div>
+
+      <a href="#home" class="nav-item active" data-index="0" data-target="tab-home">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <span>Home</span>
+      </a>
+
+      <a href="#produk" class="nav-item" data-index="1" data-target="tab-produk">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </div>
+        <span>Produk</span>
+      </a>
+
+      <a href="#datame" class="nav-item" data-index="2" data-target="tab-datame">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M21 19c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+          </svg>
+        </div>
+        <span>DataMe</span>
+      </a>
+
+      <a href="#akun" class="nav-item" data-index="3" data-target="tab-akun">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span>Akun</span>
+      </a>
+    </div>
+  </nav>
+
   <script src="script.js"></script>
 </body>
 </html>

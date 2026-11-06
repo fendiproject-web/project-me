@@ -1,8 +1,30 @@
+// ==========================================
+// DATA PRODUK STATIS (TANPA APPS SCRIPT)
+// ==========================================
+// Silakan edit data di bawah ini untuk menambah/mengubah produk.
+const PRODUCTS_DATA = [
+  {
+    id: "1",
+    code: "#FF-01",
+    category: "FREE FIRE",
+    price: "150000",
+    image: "banner1.png", // Ganti dengan URL gambar atau nama file di folder Vercel kamu
+    specs: "BIND ON, VAULT 290+, Old Season, Log VK"
+  },
+  {
+    id: "2",
+    code: "#ML-01",
+    category: "MOBILE LEGENDS",
+    price: "250000",
+    image: "profile.webp", 
+    specs: "BIND ON, HERO LENGKAP, SKIN 50+"
+  }
+];
+
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
-// Langsung ambil data dari memori lokal browser
-let fetchedProducts = JSON.parse(localStorage.getItem('fendi_local_products')) || [];
+let fetchedProducts = [];
 
 function initTheme() {
   const savedTheme = localStorage.getItem('fendi_theme') || 'dark';
@@ -67,11 +89,11 @@ function matchCategory(productCat, targetFilter) {
 
 const productListContainer = document.getElementById('product-list-container');
 
-// Load produk langsung dari memori lokal (tanpa server)
+// FUNGSI INI SEKARANG LANGSUNG MENGAMBIL DATA DARI PRODUCTS_DATA
 function loadProductsFromSheets() {
+  fetchedProducts = PRODUCTS_DATA;
   renderProducts(currentCategory);
   renderHomeRecommendations();
-  renderAdminManageList();
   checkUrlForProductDetail();
 }
 
@@ -177,7 +199,7 @@ function openProductDetail(productId, updateHistory = true) {
 
   if (catalogView && detailView) {
     catalogView.style.display = 'none';
-    detailView.style.display = 'flex';
+    detailView.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
 
     detailImg.src = fixImageUrl(item.image);
 
@@ -345,7 +367,6 @@ function handleRouting() {
   };
   const currentRoute = routeMap[path] || routeMap['/'];
   switchTab(currentRoute.tab, currentRoute.index, false);
-  checkUrlForProductDetail();
 }
 
 window.addEventListener('popstate', handleRouting);
@@ -364,93 +385,8 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-function setupEmptyAccountTab() {
-  const guestView = document.getElementById('auth-guest-view');
-  const loggedView = document.getElementById('auth-logged-view');
-  const adminPanel = document.getElementById('admin-panel-section');
-  
-  if (guestView) guestView.style.display = 'none';
-  if (loggedView) loggedView.style.display = 'none';
-  if (adminPanel) adminPanel.style.display = 'block';
-}
-
-// SUBMIT PRODUK BARU (MURNI LOKAL)
-document.getElementById('admin-upload-form')?.addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const category = document.getElementById('post-category').value;
-  const rawPrice = document.getElementById('post-price').value.trim();
-  const cleanPrice = rawPrice.replace(/\D/g, '');
-  const urlInput = document.getElementById('post-url')?.value.trim() || '';
-  const specsRaw = document.getElementById('post-specs').value.trim();
-  const btn = document.getElementById('btn-submit-product');
-
-  btn.textContent = "Menyimpan ke Browser...";
-  btn.disabled = true;
-
-  // Bikin ID/Kode otomatis
-  const catPrefix = (category.toLowerCase().includes('mobile') || category.toLowerCase() === 'ml') ? 'ML' : 'FF';
-  const nextId = fetchedProducts.length + 1;
-  const generatedCode = `#${catPrefix}-${String(nextId).padStart(2, '0')}`;
-
-  // Buat objek produk baru
-  const newProduct = {
-    id: String(Date.now()),
-    code: generatedCode,
-    category: (catPrefix === 'ML') ? 'MOBILE LEGENDS' : 'FREE FIRE',
-    stockLabel: 'STOCK PRIBADI FENDI STORE',
-    price: cleanPrice || '0',
-    image: urlInput,
-    specs: specsRaw
-  };
-
-  // Masukkan ke data dan simpan ke Local Storage
-  fetchedProducts.push(newProduct);
-  localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
-
-  alert("Berhasil ditambahkan!");
-  document.getElementById('admin-upload-form').reset();
-  
-  loadProductsFromSheets();
-  switchTab('tab-produk', 1);
-
-  btn.textContent = "+ Tambah Akun Ke Produk";
-  btn.disabled = false;
-});
-
-function renderAdminManageList() {
-  const adminManageList = document.getElementById('admin-manage-list');
-  if (!adminManageList) return;
-
-  if (fetchedProducts.length === 0) {
-    adminManageList.innerHTML = `<p style="font-size: 11px; color: var(--text-sub);">Belum ada akun jualan.</p>`;
-    return;
-  }
-
-  adminManageList.innerHTML = fetchedProducts.map(item => `
-    <div class="manage-item">
-      <div>
-        <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category})</span>
-        <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
-      </div>
-      <button type="button" class="btn-delete-prod" onclick="deleteProductLocal('${item.id}')">Hapus</button>
-    </div>
-  `).join('');
-}
-
-// FUNGSI HAPUS PRODUK LOKAL
-window.deleteProductLocal = function(productId) {
-  if (confirm("Yakin mau menghapus produk akun ini?")) {
-    fetchedProducts = fetchedProducts.filter(p => String(p.id) !== String(productId));
-    localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
-    
-    alert("Produk berhasil dihapus!");
-    loadProductsFromSheets();
-  }
-};
+// HAPUS SEMUA FUNGSI LOGIN / REGISTER / UPLOAD ADMIN
 
 initTheme();
-renderProducts(currentCategory);
 loadProductsFromSheets();
-setupEmptyAccountTab(); 
 handleRouting();

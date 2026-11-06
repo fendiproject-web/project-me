@@ -1,11 +1,7 @@
-// ==========================================
-// 100% MURNI FRONTEND - TANPA GOOGLE SHEETS, TANPA CODE.GS, TANPA DRIVE
-// ==========================================
-
 const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>";
 
 let currentCategory = 'all';
-// Mengambil data langsung dari penyimpanan lokal HP/Browser kamu
+// Langsung ambil data dari memori lokal browser
 let fetchedProducts = JSON.parse(localStorage.getItem('fendi_local_products')) || [];
 
 function initTheme() {
@@ -36,7 +32,7 @@ if (themeToggleBtn) {
 
 function fixImageUrl(url) {
   if (!url) return FALLBACK_SVG;
-  return url; 
+  return url;
 }
 
 function formatRupiah(val) {
@@ -71,9 +67,8 @@ function matchCategory(productCat, targetFilter) {
 
 const productListContainer = document.getElementById('product-list-container');
 
-// FUNGSI LOAD TANPA FETCH KE SERVER
+// Load produk langsung dari memori lokal (tanpa server)
 function loadProductsFromSheets() {
-  // Hanya membaca variabel lokal
   renderProducts(currentCategory);
   renderHomeRecommendations();
   renderAdminManageList();
@@ -369,9 +364,6 @@ switchTabTriggers.forEach((trigger) => {
   });
 });
 
-// ==========================================
-// PENGOSONGAN LOGIN & REGISTER
-// ==========================================
 function setupEmptyAccountTab() {
   const guestView = document.getElementById('auth-guest-view');
   const loggedView = document.getElementById('auth-logged-view');
@@ -379,77 +371,51 @@ function setupEmptyAccountTab() {
   
   if (guestView) guestView.style.display = 'none';
   if (loggedView) loggedView.style.display = 'none';
-  
-  // Langsung buka form upload agar kamu bisa langsung tes secara lokal
   if (adminPanel) adminPanel.style.display = 'block';
 }
 
-// BACA FILE GAMBAR SEBAGAI URL DATA (MURNI LOKAL JAVASCRIPT)
-function getLocalImageURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-    reader.readAsDataURL(file);
-  });
-}
-
-// ==========================================
-// SUBMIT UPLOAD LOKAL (TANPA SERVER, TANPA GOOGLE)
-// ==========================================
-document.getElementById('admin-upload-form')?.addEventListener('submit', async function(e) {
+// SUBMIT PRODUK BARU (MURNI LOKAL)
+document.getElementById('admin-upload-form')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
   const category = document.getElementById('post-category').value;
   const rawPrice = document.getElementById('post-price').value.trim();
   const cleanPrice = rawPrice.replace(/\D/g, '');
-  let urlInput = document.getElementById('post-url')?.value.trim() || '';
+  const urlInput = document.getElementById('post-url')?.value.trim() || '';
   const specsRaw = document.getElementById('post-specs').value.trim();
-  const fileInput = document.getElementById('post-file');
   const btn = document.getElementById('btn-submit-product');
 
   btn.textContent = "Menyimpan ke Browser...";
   btn.disabled = true;
 
-  try {
-    // Jika upload foto dari HP, jadikan URL lokal langsung (tanpa dikirim kemana-mana)
-    if (fileInput && fileInput.files.length > 0) {
-      urlInput = await getLocalImageURL(fileInput.files[0]);
-    }
+  // Bikin ID/Kode otomatis
+  const catPrefix = (category.toLowerCase().includes('mobile') || category.toLowerCase() === 'ml') ? 'ML' : 'FF';
+  const nextId = fetchedProducts.length + 1;
+  const generatedCode = `#${catPrefix}-${String(nextId).padStart(2, '0')}`;
 
-    // Buat kode otomatis
-    const catPrefix = (category.toLowerCase().includes('mobile') || category.toLowerCase() === 'ml') ? 'ML' : 'FF';
-    const nextId = fetchedProducts.length + 1;
-    const generatedCode = `#${catPrefix}-${String(nextId).padStart(2, '0')}`;
+  // Buat objek produk baru
+  const newProduct = {
+    id: String(Date.now()),
+    code: generatedCode,
+    category: (catPrefix === 'ML') ? 'MOBILE LEGENDS' : 'FREE FIRE',
+    stockLabel: 'STOCK PRIBADI FENDI STORE',
+    price: cleanPrice || '0',
+    image: urlInput,
+    specs: specsRaw
+  };
 
-    // Simpan objek produk ke array lokal
-    const newProduct = {
-      id: String(Date.now()),
-      code: generatedCode,
-      category: (catPrefix === 'ML') ? 'MOBILE LEGENDS' : 'FREE FIRE',
-      stockLabel: 'STOCK PRIBADI FENDI STORE',
-      price: cleanPrice || '0',
-      image: urlInput,
-      specs: specsRaw
-    };
+  // Masukkan ke data dan simpan ke Local Storage
+  fetchedProducts.push(newProduct);
+  localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
 
-    fetchedProducts.push(newProduct);
-    
-    // Simpan ke memory browser (Local Storage)
-    localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
+  alert("Berhasil ditambahkan!");
+  document.getElementById('admin-upload-form').reset();
+  
+  loadProductsFromSheets();
+  switchTab('tab-produk', 1);
 
-    alert("Berhasil ditambahkan!");
-    document.getElementById('admin-upload-form').reset();
-    
-    loadProductsFromSheets(); // Memanggil fungsi render ulang
-    switchTab('tab-produk', 1);
-
-  } catch (err) {
-    alert("Gagal menyimpan lokal: " + err.toString());
-  } finally {
-    btn.textContent = "+ Upload Akun Ke Produk";
-    btn.disabled = false;
-  }
+  btn.textContent = "+ Tambah Akun Ke Produk";
+  btn.disabled = false;
 });
 
 function renderAdminManageList() {
@@ -467,17 +433,15 @@ function renderAdminManageList() {
         <span style="font-size: 12px; font-weight: 700;">${item.code} (${item.category})</span>
         <p style="font-size: 11px; color: var(--text-sub);">Rp ${formatRupiah(item.price)}</p>
       </div>
-      <button type="button" class="btn-delete-prod" onclick="deleteProductFromSheets('${item.id}')">Hapus</button>
+      <button type="button" class="btn-delete-prod" onclick="deleteProductLocal('${item.id}')">Hapus</button>
     </div>
   `).join('');
 }
 
-window.deleteProductFromSheets = function(productId) {
+// FUNGSI HAPUS PRODUK LOKAL
+window.deleteProductLocal = function(productId) {
   if (confirm("Yakin mau menghapus produk akun ini?")) {
-    // Hapus dari array lokal
     fetchedProducts = fetchedProducts.filter(p => String(p.id) !== String(productId));
-    
-    // Update Local Storage
     localStorage.setItem('fendi_local_products', JSON.stringify(fetchedProducts));
     
     alert("Produk berhasil dihapus!");

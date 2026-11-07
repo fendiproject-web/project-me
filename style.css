@@ -440,6 +440,19 @@ body.dark-mode .moon-icon {
   backdrop-filter: blur(4px);
 }
 
+/* BADGE DISKON MERAH */
+.badge-diskon {
+  background: var(--danger-red);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+}
+
 /* KONTEN KARTU STOK DENGAN TEKS KATEGORI, JUDUL, SELLER, HARGA */
 .account-body {
   padding: 10px;
@@ -494,6 +507,14 @@ body.dark-mode .moon-icon {
   font-size: 9px;
   color: var(--text-sub);
   font-weight: 600;
+}
+
+/* HARGA CORET */
+.harga-coret {
+  font-size: 9px;
+  color: var(--text-sub);
+  text-decoration: line-through;
+  font-weight: 500;
 }
 
 .account-price {

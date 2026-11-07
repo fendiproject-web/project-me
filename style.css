@@ -1040,13 +1040,23 @@ body.light-mode .manage-item { background: #e2e8f0; }
 .datame-header h2 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
 .datame-header p { font-size: 11px; color: var(--text-sub); }
 
-.contact-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+/* UBAH JADI 2 KOLOM (GRID) */
+.contact-list { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); /* Membagi 2 kolom sama besar */
+  gap: 12px; 
+  width: 100%; 
+}
 
+/* KARTU DIBUAT VERTIKAL & LEBIH BESAR */
 .contact-card {
   display: flex;
+  flex-direction: column; 
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 16px 12px; /* Padding diperbesar biar gede */
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -1057,22 +1067,23 @@ body.light-mode .manage-item { background: #e2e8f0; }
 }
 
 .card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 50px; /* Ikon diperbesar */
+  height: 50px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
+  margin-bottom: 4px;
 }
 
 body.light-mode .card-icon { background: #e2e8f0; }
 
 .card-icon svg { 
-  width: 20px; 
-  height: 20px; 
+  width: 26px; /* SVG diperbesar */
+  height: 26px; 
   display: block; 
 }
 
@@ -1096,10 +1107,19 @@ body.light-mode .card-icon { background: #e2e8f0; }
 .group-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
 .group-icon svg { stroke: #25d366; }
 
-.card-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.card-title { font-size: 12px; font-weight: 600; }
-.card-detail { font-size: 10px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-arrow { font-size: 13px; color: var(--text-sub); }
+.card-info { 
+  display: flex; 
+  flex-direction: column; 
+  flex: 1; 
+  min-width: 0; 
+  align-items: center;
+}
+
+.card-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.card-detail { font-size: 10px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+
+/* Panah dihilangkan karena sudah bentuk kotak/table */
+.card-arrow { display: none; }
 
 /* BOTTOM NAV BAR */
 .bottom-nav-wrapper {

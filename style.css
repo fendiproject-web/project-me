@@ -423,8 +423,8 @@ body.dark-mode .moon-icon {
   top: 8px;
   left: 8px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row; /* Dibuat sejajar ke samping */
+  align-items: center;
   gap: 4px;
   z-index: 2;
 }

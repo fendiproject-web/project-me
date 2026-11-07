@@ -1098,6 +1098,11 @@ body.light-mode .card-icon { background: #e2e8f0; }
 }
 .tiktok-icon svg { fill: #ffffff; }
 
+/* MEMATIKAN SHADOW TIKTOK SAAT MODE TERANG */
+body.light-mode .tiktok-icon {
+  box-shadow: none;
+}
+
 .ig-icon { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
 .ig-icon svg { stroke: #e1306c; }
 

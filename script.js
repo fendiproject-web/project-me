@@ -3,7 +3,7 @@ const FALLBACK_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000
 let currentCategory = 'all';
 let fetchedProducts = [];
 
-// --- LOGIKA OTOMATISASI ---
+// --- LOGIKA OTOMATISASI & HITUNG DISKON ---
 function prosesDataProduk() {
   if (typeof DAFTAR_PRODUK === 'undefined') {
     console.error("File data-produk.js belum terpanggil atau kosong.");
@@ -15,7 +15,6 @@ function prosesDataProduk() {
     let category = "FREE FIRE";
     let code = "#FF-" + String(index + 1).padStart(2, '0');
 
-    // AUTO DETEKSI KATEGORI DARI NAMA FILE
     if (namaFile.includes('ml')) {
       category = "MOBILE LEGENDS";
       code = "#ML-" + String(index + 1).padStart(2, '0');
@@ -24,12 +23,23 @@ function prosesDataProduk() {
       code = "#FF-" + String(index + 1).padStart(2, '0');
     }
 
+    // Hitung Diskon Otomatis
+    let diskonPersen = 0;
+    let hargaAsliNum = parseInt(String(item.hargaAsli || 0).replace(/\D/g, ''));
+    let hargaJualNum = parseInt(String(item.harga || 0).replace(/\D/g, ''));
+
+    if (hargaAsliNum > 0 && hargaJualNum > 0 && hargaAsliNum > hargaJualNum) {
+      diskonPersen = Math.round(((hargaAsliNum - hargaJualNum) / hargaAsliNum) * 100);
+    }
+
     return {
       id: String(index + 1),
       fileFoto: item.fileFoto,
       code: code,
       category: category,
       price: item.harga,
+      hargaAsli: item.hargaAsli,
+      diskon: diskonPersen,
       image: item.fileFoto,
       specs: item.spesifikasi
     };
@@ -93,7 +103,7 @@ if (themeToggleBtn) {
   });
 }
 
-// --- RENDER PRODUK (SESUAI PERMINTAAN) ---
+// --- RENDER PRODUK ---
 const productListContainer = document.getElementById('product-list-container');
 
 function loadProducts() {
@@ -119,13 +129,25 @@ function renderProducts(filterCat = 'all') {
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const gameCategoryLabel = getCategoryLabel(item.category);
 
-    // INI TAMPILAN KARTU SESUAI PERMINTAAN KAMU
+    // Tampilan Badge Diskon di sebelah Kode
+    let badgeDiskon = '';
+    if (item.diskon > 0) {
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+    }
+
+    // Tampilan Harga Coret
+    let hargaCoret = '';
+    if (item.diskon > 0 && item.hargaAsli) {
+      hargaCoret = `<span class="harga-coret">Rp ${formatRupiah(item.hargaAsli)}</span>`;
+    }
+
     return `
       <div class="account-card catalog-card" data-id="${item.id}">
         <div class="account-media" style="aspect-ratio: 4 / 5;">
           <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
+            ${badgeDiskon}
           </div>
         </div>
         <div class="account-body">
@@ -135,6 +157,7 @@ function renderProducts(filterCat = 'all') {
           
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
+            ${hargaCoret}
             <span class="account-price">Rp ${formatRupiah(item.price)}</span>
           </div>
           <button type="button" class="btn-see-now">Lihat Sekarang</button>
@@ -164,13 +187,23 @@ function renderHomeRecommendations() {
   homeRecContainer.innerHTML = homeProducts.map(item => {
     const gameCategoryLabel = getCategoryLabel(item.category);
 
-    // TAMPILAN KARTU UNTUK DI HALAMAN HOME
+    let badgeDiskon = '';
+    if (item.diskon > 0) {
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+    }
+
+    let hargaCoret = '';
+    if (item.diskon > 0 && item.hargaAsli) {
+      hargaCoret = `<span class="harga-coret">Rp ${formatRupiah(item.hargaAsli)}</span>`;
+    }
+
     return `
       <div class="account-card home-card" data-id="${item.id}">
         <div class="account-media" style="aspect-ratio: 4 / 5;">
           <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
+            ${badgeDiskon}
           </div>
         </div>
         <div class="account-body">
@@ -180,6 +213,7 @@ function renderHomeRecommendations() {
           
           <div class="account-price-row">
             <span class="price-label">Harga Akun</span>
+            ${hargaCoret}
             <span class="account-price">Rp ${formatRupiah(item.price)}</span>
           </div>
           <button type="button" class="btn-see-now">Lihat Sekarang</button>
@@ -215,7 +249,14 @@ function openProductDetail(productId, updateHistory = true) {
 
     document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
-    document.getElementById('detail-price').textContent = `Rp ${formatRupiah(item.price)}`;
+    
+    // Tampilkan Harga Coret & Diskon di Halaman Detail
+    let detailHargaHTML = `Rp ${formatRupiah(item.price)}`;
+    if (item.diskon > 0 && item.hargaAsli) {
+      detailHargaHTML = `<span style="text-decoration: line-through; color: var(--text-sub); font-size: 14px; font-weight: 500; margin-right: 8px;">Rp ${formatRupiah(item.hargaAsli)}</span> Rp ${formatRupiah(item.price)} <span class="badge-diskon" style="font-size: 11px; vertical-align: middle;">${item.diskon}% OFF</span>`;
+    }
+    document.getElementById('detail-price').innerHTML = detailHargaHTML;
+
     document.getElementById('detail-specs-content').textContent = specsArr.join(" || ");
 
     const waText = encodeURIComponent(`Halo Admin Fendi Store, saya mau beli akun Kode: ${item.code} dengan harga Rp ${formatRupiah(item.price)}.`);
@@ -294,12 +335,17 @@ function renderRecommendations(currentId) {
   }
 
   recContainer.innerHTML = recs.map(item => {
+    let badgeDiskon = '';
+    if (item.diskon > 0) {
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+    }
     return `
       <div class="account-card rec-card" data-id="${item.id}">
         <div class="account-media" style="aspect-ratio: 4 / 5;">
           <img src="${item.image}" alt="${item.code}" class="account-img" loading="lazy" onerror="this.src='${FALLBACK_SVG}';">
           <div class="account-badge-group">
             <span class="badge-code">${item.code}</span>
+            ${badgeDiskon}
           </div>
         </div>
         <div class="account-body">

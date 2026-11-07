@@ -129,10 +129,10 @@ function renderProducts(filterCat = 'all') {
     const displaySpecs = specsArr.slice(0, 2).map(s => `<li class="spec-item">${s}</li>`).join('');
     const gameCategoryLabel = getCategoryLabel(item.category);
 
-    // Tampilan Badge Diskon di sebelah Kode
+    // Tampilan Badge Diskon di sebelah Kode (TANPA KATA OFF)
     let badgeDiskon = '';
     if (item.diskon > 0) {
-      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}%</span>`;
     }
 
     // Tampilan Harga Coret
@@ -189,7 +189,7 @@ function renderHomeRecommendations() {
 
     let badgeDiskon = '';
     if (item.diskon > 0) {
-      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}%</span>`;
     }
 
     let hargaCoret = '';
@@ -250,10 +250,10 @@ function openProductDetail(productId, updateHistory = true) {
     document.getElementById('detail-cat-badge').textContent = getCategoryLabel(item.category);
     document.getElementById('detail-title').textContent = `STOCK PRIBADI FENDI STORE ${item.code.replace('#', '')}`;
     
-    // Tampilkan Harga Coret & Diskon di Halaman Detail
+    // Tampilkan Harga Coret & Diskon di Halaman Detail (TANPA KATA OFF)
     let detailHargaHTML = `Rp ${formatRupiah(item.price)}`;
     if (item.diskon > 0 && item.hargaAsli) {
-      detailHargaHTML = `<span style="text-decoration: line-through; color: var(--text-sub); font-size: 14px; font-weight: 500; margin-right: 8px;">Rp ${formatRupiah(item.hargaAsli)}</span> Rp ${formatRupiah(item.price)} <span class="badge-diskon" style="font-size: 11px; vertical-align: middle;">${item.diskon}% OFF</span>`;
+      detailHargaHTML = `<span style="text-decoration: line-through; color: var(--text-sub); font-size: 14px; font-weight: 500; margin-right: 8px;">Rp ${formatRupiah(item.hargaAsli)}</span> Rp ${formatRupiah(item.price)} <span class="badge-diskon" style="font-size: 11px; vertical-align: middle;">${item.diskon}%</span>`;
     }
     document.getElementById('detail-price').innerHTML = detailHargaHTML;
 
@@ -337,7 +337,7 @@ function renderRecommendations(currentId) {
   recContainer.innerHTML = recs.map(item => {
     let badgeDiskon = '';
     if (item.diskon > 0) {
-      badgeDiskon = `<span class="badge-diskon">${item.diskon}% OFF</span>`;
+      badgeDiskon = `<span class="badge-diskon">${item.diskon}%</span>`;
     }
     return `
       <div class="account-card rec-card" data-id="${item.id}">

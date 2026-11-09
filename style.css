@@ -423,7 +423,7 @@ body.dark-mode .moon-icon {
   top: 8px;
   left: 8px;
   display: flex;
-  flex-direction: row; /* Dibuat sejajar ke samping */
+  flex-direction: row;
   align-items: center;
   gap: 4px;
   z-index: 2;
@@ -1132,6 +1132,10 @@ body.light-mode .tiktok-icon {
 
 .group-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
 .group-icon svg { stroke: #25d366; }
+
+/* IKON SALURAN WHATSAPP (CHANNEL) */
+.channel-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+.channel-icon svg { stroke: #25d366; }
 
 .card-info { 
   display: flex; 

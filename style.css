@@ -50,6 +50,8 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  overflow-y: auto; /* Memastikan scroll hanya aktif jika konten panjang */
+  overscroll-behavior-y: none; /* Mematikan efek pantulan/bounce saat scroll di ujung */
 }
 
 /* ANIMASI SHIMMER PLACEHOLDER */

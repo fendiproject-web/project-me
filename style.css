@@ -930,11 +930,87 @@ body.light-mode .seller-region-badge { background: #e2e8f0; }
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* =======================================================
-   DESAIN DATAME BARU (PROFIL & KATEGORI LINK)
-   ======================================================= */
+/* DATAME HEADER */
+.datame-header { text-align: center; margin-bottom: 6px; }
+.datame-header h2 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.datame-header p { font-size: 11px; color: var(--text-sub); }
 
-/* 1. KARTU PROFIL UTAMA */
+/* UBAH JADI 2 KOLOM (GRID) */
+.contact-list { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px; 
+  width: 100%; 
+}
+
+/* =======================================================
+   DESAIN TOMBOL 3D (KHUSUS DATAME)
+   ======================================================= */
+.contact-card.btn-3d {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 8px 12px 8px 8px;
+  border-radius: 50px; /* Membuat bentuk kapsul */
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+  border: none;
+  transition: transform 0.1s ease, filter 0.2s;
+}
+
+.contact-card.btn-3d:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Lingkaran Ikon */
+.card-icon-3d {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top left, #ffffff, #d1d5db);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.card-icon-3d svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Teks di dalam tombol */
+.card-title-3d {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Warna Tema Tombol */
+.wa-theme { background: linear-gradient(180deg, #25d366, #128c7e); }
+.wa-theme .card-icon-3d svg { stroke: #25d366; fill: none; }
+.wa-theme .card-icon-3d svg[fill="currentColor"] { fill: #25d366; stroke: none; }
+
+.tiktok-theme { background: linear-gradient(180deg, #2a2a2a, #000000); border: 1px solid #333; }
+.tiktok-theme .card-icon-3d { background: radial-gradient(circle at top left, #ffffff, #888); }
+.tiktok-theme .card-icon-3d svg { fill: #000; }
+
+.ig-theme { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.ig-theme .card-icon-3d svg { stroke: #dc2743; }
+
+.tele-theme { background: linear-gradient(180deg, #0088cc, #005580); }
+.tele-theme .card-icon-3d { background: radial-gradient(circle at top left, #ffffff, #b3d9ff); }
+.tele-theme .card-icon-3d svg { fill: #0088cc; }
+
+/* KARTU PROFIL UTAMA */
 .profile-hero-card {
   display: flex;
   flex-direction: column;
@@ -961,6 +1037,14 @@ body.light-mode .seller-region-badge { background: #e2e8f0; }
   object-fit: cover;
 }
 
+/* UKURAN FOTO PROFIL DATAME YANG LEBIH BESAR */
+.hero-avatar-big {
+  width: 110px;
+  height: 110px;
+  border-width: 4px;
+  margin-bottom: 16px;
+}
+
 .hero-name {
   font-size: 20px;
   font-weight: 800;
@@ -980,7 +1064,7 @@ body.light-mode .seller-region-badge { background: #e2e8f0; }
   font-weight: 700;
 }
 
-/* 2. JUDUL KATEGORI & GRUP LINK */
+/* Grup Link / Kategori */
 .link-group {
   display: flex;
   flex-direction: column;
@@ -996,72 +1080,6 @@ body.light-mode .seller-region-badge { background: #e2e8f0; }
   margin-bottom: 2px;
   padding-left: 4px;
 }
-
-/* 3. TOMBOL 3D (1 KOLOM PENUH) */
-.contact-card.btn-3d {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  width: 100%;
-  padding: 12px 16px 12px 12px;
-  border-radius: 50px; /* Membuat bentuk kapsul */
-  text-decoration: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: none;
-  transition: transform 0.1s ease, filter 0.2s;
-}
-
-.contact-card.btn-3d:active {
-  transform: scale(0.95);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Lingkaran Ikon di kiri */
-.card-icon-3d {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at top left, #ffffff, #d1d5db);
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
-}
-
-.card-icon-3d svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* Teks di dalam tombol */
-.card-title-3d {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Warna Tema Tombol */
-.wa-theme { background: linear-gradient(180deg, #25d366, #128c7e); }
-.wa-theme .card-icon-3d svg { stroke: #25d366; fill: none; }
-.wa-theme .card-icon-3d svg[fill="currentColor"] { fill: #25d366; stroke: none; }
-
-.tiktok-theme { background: linear-gradient(180deg, #2a2a2a, #000000); border: 1px solid #333; }
-.tiktok-theme .card-icon-3d { background: radial-gradient(circle at top left, #ffffff, #888); }
-.tiktok-theme .card-icon-3d svg { fill: #000; }
-
-.ig-theme { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-.ig-theme .card-icon-3d svg { stroke: #dc2743; }
-
-.tele-theme { background: linear-gradient(180deg, #0088cc, #005580); }
-.tele-theme .card-icon-3d { background: radial-gradient(circle at top left, #ffffff, #b3d9ff); }
-.tele-theme .card-icon-3d svg { fill: #0088cc; }
 
 /* BOTTOM NAV BAR */
 .bottom-nav-wrapper {

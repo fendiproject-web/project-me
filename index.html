@@ -20,6 +20,9 @@
 </head>
 <body class="dark-mode">
 
+  <!-- NOTIFIKASI SOLD (muncul masuk-keluar di atas layar) -->
+  <div id="sold-notif-container"></div>
+
   <!-- TOP BAR -->
   <div class="top-bar-wrapper">
     <header class="top-bar">
@@ -435,5 +438,9 @@
   <!-- PANGGIL DATA PRODUK DULU, BARU SCRIPT UTAMA -->
   <script src="data-produk.js"></script>
   <script src="script.js?v=36"></script>
+
+  <!-- NOTIFIKASI SOLD (butuh DAFTAR_PRODUK & DAFTAR_SOLD) -->
+  <script src="data-sold.js"></script>
+  <script src="sold-notif.js"></script>
 </body>
 </html>

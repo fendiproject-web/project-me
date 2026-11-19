@@ -16,7 +16,7 @@
 
 const DAFTAR_SOLD = [
   // ---- CONTOH (boleh dihapus / diubah) ----
-  { fileFoto: "FF1.webp", nama: "Fendi",  waktu: "2026-02-18T07:54:00" },
+  { fileFoto: "FF1.webp", nama: "Tatast",  waktu: "2026-11-18T07:54:00" },
 
   // ---- TAMBAHKAN DATA SOLD BARU DI SINI ----
 ];

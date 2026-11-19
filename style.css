@@ -1291,3 +1291,97 @@ body.light-mode .seller-region-badge { background: #e2e8f0; }
   #product-detail-view .detail-card:last-child { grid-column: span 2; }
   .pwa-banner-modal { max-width: 500px; bottom: 95px; }
 }
+
+/* =======================================================
+   SOLD NOTIFIKASI (muncul masuk-keluar di atas layar)
+   ======================================================= */
+#sold-notif-container {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translate(-50%, -120%);
+  width: calc(100% - 32px);
+  max-width: 410px;
+  z-index: 1100;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease;
+}
+
+#sold-notif-container.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sold-notif-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 8px 10px 8px 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sold-notif-text {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.sold-notif-text strong {
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.sold-notif-price {
+  color: #25d366;
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+.sold-notif-time {
+  color: var(--text-sub);
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.sold-notif-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.light-mode .sold-notif-close {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.sold-notif-close:active {
+  transform: scale(0.9);
+}
+
+/* Desktop sedikit lebih lebar */
+@media (min-width: 768px) {
+  #sold-notif-container { max-width: 520px; top: 18px; }
+  .sold-notif-text { font-size: 12px; }
+}

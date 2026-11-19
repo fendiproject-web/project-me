@@ -1,5 +1,6 @@
 // ============================================================
 // SOLD NOTIFIKASI — muncul masuk-keluar bergantian di atas layar
+// Versi: manual (tanpa fileFoto, tanpa DAFTAR_PRODUK)
 // ============================================================
 
 (function () {
@@ -36,59 +37,35 @@
     return hari + ' hari lalu';
   }
 
-  // --- AMBIL KODE #FF01 DARI fileFoto ---
-  function kodeDariFile(fileFoto) {
-    if (!fileFoto) return '';
-    const nama = String(fileFoto).toLowerCase();
-    // Cari angka di nama file
-    const angka = nama.match(/\d+/);
-    const nomor = angka ? angka[0].padStart(2, '0') : '00';
-    if (nama.includes('ml')) return '#ML' + nomor;
-    if (nama.includes('ff')) return '#FF' + nomor;
-    return '#' + nomor;
-  }
-
-  // --- CARI HARGA DARI DAFTAR_PRODUK ---
-  function hargaDariFile(fileFoto) {
-    if (typeof DAFTAR_PRODUK === 'undefined') return 0;
-    const match = DAFTAR_PRODUK.find(p =>
-      String(p.fileFoto).toLowerCase() === String(fileFoto).toLowerCase()
-    );
-    if (!match) return 0;
-    return String(match.harga || 0).replace(/\D/g, '');
-  }
-
+  // --- FORMAT RUPIAH ---
   function formatRupiah(val) {
-    const clean = String(val).replace(/\D/g, '');
+    const clean = String(val || 0).replace(/\D/g, '');
     return clean ? new Intl.NumberFormat('id-ID').format(clean) : '0';
   }
 
-  // --- BANGUN DAFTAR NOTIFIKASI ---
+  // --- BANGUN DAFTAR NOTIFIKASI DARI data-sold.js ---
   function buildNotifList() {
     if (typeof DAFTAR_SOLD === 'undefined' || !Array.isArray(DAFTAR_SOLD)) return [];
 
     return DAFTAR_SOLD
       .map(item => {
         const waktuMs = new Date(item.waktu).getTime();
-        const kode = kodeDariFile(item.fileFoto);
-        const harga = hargaDariFile(item.fileFoto);
         return {
           nama: sensorNama(item.nama),
-          kode: kode,
-          harga: harga,
+          kode: item.kode || '00',
+          kategori: (item.kategori || 'FF').toUpperCase(),
+          harga: item.harga || 0,
           waktuMs: isNaN(waktuMs) ? 0 : waktuMs,
           waktuRaw: item.waktu
         };
       })
-      .filter(item => item.kode)
+      .filter(item => item.nama && item.waktuMs > 0)
       .sort((a, b) => b.waktuMs - a.waktuMs); // terbaru di atas
   }
 
   // --- RENDER SATU NOTIFIKASI ---
   function renderNotif(item) {
-    const kodeTeks = item.kode.replace('#', '');
-    // "STOCK PRIBADI 01" -> ambil angka saja
-    const nomorStock = kodeTeks.replace(/[A-Z]/gi, '');
+    const nomorStock = String(item.kode).replace(/\D/g, '').padStart(2, '0');
     return `
       <div class="sold-notif-item">
         <span class="sold-notif-text">
@@ -110,7 +87,7 @@
     const stop = () => {
       stopped = true;
       container.classList.remove('show');
-      container.innerHTML = '';
+      setTimeout(() => { container.innerHTML = ''; }, 400);
     };
 
     const showNext = () => {
@@ -118,14 +95,12 @@
       if (index >= items.length) index = 0; // loop
 
       container.innerHTML = renderNotif(items[index]);
-      // tombol close
+
       const closeBtn = container.querySelector('.sold-notif-close');
       if (closeBtn) closeBtn.addEventListener('click', stop);
 
-      // masuk
       requestAnimationFrame(() => container.classList.add('show'));
 
-      // tampil 4 detik, lalu keluar
       setTimeout(() => {
         if (stopped) return;
         container.classList.remove('show');
@@ -143,16 +118,21 @@
   // --- INIT ---
   function init() {
     const container = document.getElementById(CONTAINER_ID);
-    if (!container) return;
+    if (!container) {
+      console.warn('[sold-notif] Container #sold-notif-container tidak ditemukan di HTML.');
+      return;
+    }
 
-    // Tunggu data-produk.js & data-sold.js siap
     const tryInit = () => {
-      if (typeof DAFTAR_PRODUK === 'undefined' || typeof DAFTAR_SOLD === 'undefined') {
+      if (typeof DAFTAR_SOLD === 'undefined') {
         setTimeout(tryInit, 200);
         return;
       }
       const items = buildNotifList();
-      if (items.length === 0) return;
+      if (items.length === 0) {
+        console.warn('[sold-notif] DAFTAR_SOLD kosong atau format waktu salah (harus ISO: 2026-02-18T07:54:00).');
+        return;
+      }
       startNotifLoop(container, items);
     };
 
